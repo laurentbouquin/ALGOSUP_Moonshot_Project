@@ -62,7 +62,7 @@ ${\color{red}{Abondonned}}$
 
 #### Status
 
-${\color{red}{On \ the \ drawing \ board}}$
+${\color{lime}{On \ the \ drawing \ board}}$
 
 #### Purpose
 
