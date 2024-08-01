@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
+
 import 'functions.dart';
 
 class customisables extends StatefulWidget {
@@ -18,7 +20,10 @@ class _customisablesState extends State<customisables> {
   @override
   Widget build(BuildContext context) {
 
+    ColorScheme theme = AdaptiveTheme.of(context).theme.colorScheme;
+
     return Scaffold(
+      backgroundColor: theme.outline,
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -148,10 +153,11 @@ class _customisablesState extends State<customisables> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: theme.surface,
         onPressed: () {
           print('Floating Button Clicked');
         },
-        child: const Icon(Icons.publish),
+        child: Icon(Icons.publish, color: theme.primary),
       ),
     );
   }
