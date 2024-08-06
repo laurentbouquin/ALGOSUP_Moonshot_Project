@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-
 // Packages imports
 import 'package:adaptive_theme/adaptive_theme.dart';
 
-
-
-
 // Pages imports
-import 'customisables.dart';
+import 'customize/customisables.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +17,6 @@ class MainApp extends StatelessWidget {
   @override
   // Main build function
   Widget build(BuildContext context) {
-
     // Return the AdaptiveTheme widget
     return AdaptiveTheme(
       // Set the light and dark theme options
@@ -29,7 +24,9 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 0, 0, 0),
-          surface: const Color(0xFF007198),
+          surface: const Color(0xFFFFFFFF),
+          onSurface: const Color(0xFF007198),
+          surfaceContainer: const Color(0xFFDDDDDD),
           primary: const Color(0xff003C57),
           secondary: const Color(0xff0594D0),
           tertiary: const Color(0xff04BBFF),
@@ -72,52 +69,53 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   // Add your stateful widget implementation here
 
-  List<String> navBarNames = ["Home", "Modify", "Themes", "Settings"];
-
-
+  List<String> navBarNames = ["Home", "Extensions", "Settings"];
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[
-
-            for (int i = 0; i < 4; i++)
-              Container(
-                width: MediaQuery.of(context).size.width * 0.25,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                    border: Border(
-                      bottom: BorderSide(
+        appBar: PreferredSize(
+          preferredSize:
+              Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
+          child: AppBar(
+            actions: <Widget>[
+              for (int i = 0; i < navBarNames.length; i++)
+                Container(
+                  width: MediaQuery.of(context).size.width *
+                      (1 / navBarNames.length),
+                      height: MediaQuery.of(context).size.height * 0.1,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Theme.of(context).colorScheme.outline,
+                          width: 2,
+                        ),
+                      )),
+                  child: TextButton(
+                    onHover: (value) {
+                      // Add your onPressed function here
+                    },
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0),
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      navBarNames[i],
+                      style: TextStyle(
                         color: Theme.of(context).colorScheme.outline,
-                        width: 2,
-                      ),
-                    )
-                ),
-                child: TextButton(
-                  onHover: (value) {
-                    // Add your onPressed function here
-                  },
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0),
+                        fontSize: MediaQuery.of(context).size.height * 0.05,
                       ),
                     ),
                   ),
-                  child: Text(
-                    navBarNames[i],
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.outline,
-                      fontSize: MediaQuery.of(context).size.height * 0.05,
-                    ),
-                  ),
                 ),
-              ),
-
-          ],
+            ],
+          ),
         ),
         body: const customisables(),
       ),
