@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-import 'package:flex_color_picker/flex_color_picker.dart';
+// import 'package:flex_color_picker/flex_color_picker.dart';
 
 class ThemePage extends StatefulWidget {
   const ThemePage({super.key});
@@ -11,11 +12,32 @@ class ThemePage extends StatefulWidget {
 
 class _ThemePageState extends State<ThemePage> {
   // Color for the picker shown in Card on the screen.
-  Color backgroundC = Colors.white;
-  // Color for the picker in a dialog using onChanged.
-  late Color dialogPickerColor;
-  // Color for picker using the color select dialog.
-  late Color dialogSelectColor;
+  List<Color> colors = [
+    Colors.white,
+    Colors.black,
+    Colors.blue,
+    Colors.purple,
+    Colors.orange,
+    Colors.green,
+  ];
+
+  int bgColor = 0;
+  int keywordColor = 1;
+  int functionColor = 1;
+  int variableColor = 1;
+  int stringColor = 1;
+  int commentColor = 1;
+  int commonColor = 1;
+
+  List<String> categories = [
+    "Background",
+    "Keywords",
+    "Functions",
+    "Variables",
+    "Strings",
+    "Comments",
+    "Base"
+  ];
 
   @override
   void initState() {
@@ -24,9 +46,11 @@ class _ThemePageState extends State<ThemePage> {
 
   @override
   Widget build(BuildContext context) {
+    double windowWidth = MediaQuery.of(context).size.width;
+    double windowHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SizedBox(
-        height: MediaQuery.of(context).size.height,
+        height: windowHeight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -34,101 +58,425 @@ class _ThemePageState extends State<ThemePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Background: ',
+                  'Colors: ',
                   style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.025,
+                    fontSize: windowWidth * 0.025,
                     color: Colors.black,
                   ),
                 ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      'Primary: ',
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width * 0.025,
-                        color: Colors.black,
+                for (var k = 0; k < categories.length; k++)
+                  Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 230,
+                        child: Text(
+                          '${categories[k]} : ',
+                          style: TextStyle(
+                            fontSize: windowWidth * 0.025,
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      color: Colors.black,
-                      child: IconButton(
-                        icon: const Icon(Icons.color_lens),
-                        color: Colors.black,
-                        onPressed: (){
-                          setState(() {
-                            backgroundC = Colors.black;
-                          });
-                        },
-                      ),
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      color: Colors.blue,
-                      child: IconButton(
-                        icon: const Icon(Icons.color_lens),
-                        color: Colors.blue,
-                        onPressed: (){
-                          setState(() {
-                            backgroundC = Colors.blue;
-                          });
-                        },
-                      ),
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      color: Colors.red,
-                      child: IconButton(
-                        icon: const Icon(Icons.color_lens),
-                        color: Colors.red,
-                        onPressed: (){
-                          setState(() {
-                            backgroundC = Colors.red;
-                          });
-                        },
-                      ),
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      color: Colors.grey,
-                      child: IconButton(
-                        icon: const Icon(Icons.color_lens),
-                        color: Colors.grey,
-                        onPressed: (){
-                          setState(() {
-                            backgroundC = Colors.grey;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                )
+                      for (var i = 0; i < colors.length; i++)
+                        Container(
+                          width: 50,
+                          height: 50,
+                          margin: const EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: FilledButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  WidgetStateProperty.all(colors[i]),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                k == 0
+                                    ? bgColor = i
+                                    : k == 1
+                                        ? keywordColor = i
+                                        : k == 2
+                                            ? functionColor = i
+                                            : k == 3
+                                                ? variableColor = i
+                                                : k == 4
+                                                    ? stringColor = i
+                                                    : k == 5
+                                                        ? commentColor = i
+                                                        : commonColor = i;
+                              });
+                            },
+                            child: Container(),
+                          ),
+                        ),
+                    ],
+                  ),
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  height: MediaQuery.of(context).size.height * 0.83,
-                  color: backgroundC,
-                  child: Text(
-                    'Theme: ',
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.width * 0.025,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            )
+            visualisation(
+                windowHeight,
+                windowWidth,
+                colors,
+                bgColor,
+                keywordColor,
+                functionColor,
+                variableColor,
+                stringColor,
+                commentColor,
+                commonColor),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        // backgroundColor: theme.onSurface,
+        onPressed: () {
+          print('Floating Button Clicked');
+        },
+        child: const Icon(Icons.save),
+      ),
     );
   }
+}
+
+Column visualisation(windowHeight, windowWidth, colors, bgColor, keywordColor,
+    functionColor, variableColor, stringColor, commentColor, commonColor) {
+  return Column(
+    children: <Widget>[
+      Container(
+        width: windowWidth * 0.5,
+        height: windowHeight * 0.83,
+        decoration: BoxDecoration(
+          color: colors[bgColor],
+          border: const Border(left: BorderSide(color: Colors.black, width: 1)),
+        ),
+        child: Container(
+          width: windowWidth * 0.25,
+          margin: EdgeInsets.only(left: windowWidth * 0.125),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: textToVisualize(colors, keywordColor, functionColor,
+                variableColor, stringColor, commentColor, commonColor),
+          ),
+        ),
+      )
+    ],
+  );
+}
+
+List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
+    stringColor, commentColor, commonColor) {
+  return [
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('#include '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[functionColor],
+          ),
+        ),
+        Text(
+          ('<iostream>'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[stringColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('using namespace '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[keywordColor],
+          ),
+        ),
+        Text(
+          ('std;'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[variableColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('\n// Check if a number is even or odd'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commentColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('int '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[keywordColor],
+          ),
+        ),
+        Text(
+          ('main'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[functionColor],
+          ),
+        ),
+        Text(
+          ('() {'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('    int '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[keywordColor],
+          ),
+        ),
+        Text(
+          ('n'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('\n    cout '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[variableColor],
+          ),
+        ),
+        Text(
+          ('\n<< '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+        Text(
+          ('\n"Enter an integer: "'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[stringColor],
+          ),
+        ),
+        Text(
+          ('\n;'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('    cin '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[variableColor],
+          ),
+        ),
+        Text(
+          ('>> n;'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('\n    if '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[keywordColor],
+          ),
+        ),
+        Text(
+          ('\n( n % '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+        Text(
+          ('\n2 '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[variableColor],
+          ),
+        ),
+        Text(
+          ('\n== '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+        Text(
+          ('\n0'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[variableColor],
+          ),
+        ),
+        Text(
+          ('\n)'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('        cout '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[variableColor],
+          ),
+        ),
+        Text(
+          ('<< n << '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+        Text(
+          ('" is even."'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[stringColor],
+          ),
+        ),
+        Text(
+          (';'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('    else'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[keywordColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('        cout '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[variableColor],
+          ),
+        ),
+        Text(
+          ('<< n << '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+        Text(
+          ('" is odd."'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[stringColor],
+          ),
+        ),
+        Text(
+          (';'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('\n    return '),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[keywordColor],
+          ),
+        ),
+        Text(
+          ('\n0'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[variableColor],
+          ),
+        ),
+        Text(
+          ('\n;'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+      ],
+    ),
+    Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ('}'),
+          style: TextStyle(
+            fontSize: 25,
+            color: colors[commonColor],
+          ),
+        ),
+      ],
+    ),
+  ];
 }

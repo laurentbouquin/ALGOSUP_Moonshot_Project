@@ -261,13 +261,6 @@ class _customisablesState extends State<customisables> {
           ),
         ],
       ),),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: theme.onSurface,
-        onPressed: () {
-          print('Floating Button Clicked');
-        },
-        child: Icon(Icons.publish, color: theme.outline),
-      ),
     );
   }
 }
