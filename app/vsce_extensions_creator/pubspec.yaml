@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  shared_preferences: ^2.3.0
+  adaptive_theme: ^3.6.0
+  flex_color_picker: ^3.5.1
 
 dev_dependencies:
   flutter_test:
