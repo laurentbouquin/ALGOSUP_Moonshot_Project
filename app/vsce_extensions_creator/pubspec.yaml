@@ -11,7 +11,9 @@ dependencies:
     sdk: flutter
   shared_preferences: ^2.3.0
   adaptive_theme: ^3.6.0
-  flex_color_picker: ^3.5.1
+  path_provider: ^2.1.4
+  
+
 
 dev_dependencies:
   flutter_test:
@@ -20,3 +22,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets: 
+    - lib/storage/theming.json
+    - lib/storage/commentsandstrings.json

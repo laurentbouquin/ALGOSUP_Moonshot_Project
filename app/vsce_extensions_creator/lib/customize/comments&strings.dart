@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 
-// import '../functions.dart';
+import '../functions.dart';
+
+import 'dart:convert';
 
 class CommentsAndStringsPage extends StatefulWidget {
   const CommentsAndStringsPage({super.key});
@@ -15,9 +17,30 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
   List<List<String>> values = [
     ['"//"', '"#"', '"##"', "add your own"],
     ['"/* */"', '"<!-- -->"', '"<!--- --->"'],
-    ['only "" accepted', 'only \'\' accepted', 'only `` accepted', '"" and \'\' accepted'],
+    [
+      'only "" accepted',
+      'only \'\' accepted',
+      'only `` accepted',
+      '"" and \'\' accepted'
+    ],
   ];
   List<int> indexes = [0, 0, 0, 0];
+
+  @override
+  void initState() {
+    super.initState();
+    _asyncCallForParameters();
+  }
+
+  _asyncCallForParameters() async {
+    Map<String, dynamic> jsonData =
+        await loadJsonFromAssets('lib/storage/commentsandstrings.json');
+    setState(() {
+      indexes[0] = jsonData['slc'];
+      indexes[1] = jsonData['mlc'];
+      indexes[2] = jsonData['quotes'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -221,6 +244,25 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        // backgroundColor: theme.onSurface,
+        onPressed: () async {
+          Map<String, dynamic> data = {
+            'slc': indexes[0],
+            'mlc': indexes[1],
+            'quotes': indexes[2],
+          };
+          String datas = jsonEncode(data);
+          await writeData(datas, '../vsce_extensions_creator/lib/storage',
+                  'commentsandstrings.json')
+              .then((value) {
+            setState(() {
+              print("Saved");
+            });
+          });
+        },
+        child: const Icon(Icons.save),
       ),
     );
   }

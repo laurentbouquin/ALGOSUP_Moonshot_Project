@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
+import '../functions.dart';
+import 'dart:convert';
 // import 'package:flex_color_picker/flex_color_picker.dart';
 
 class ThemePage extends StatefulWidget {
@@ -25,7 +25,7 @@ class _ThemePageState extends State<ThemePage> {
   int keywordColor = 1;
   int functionColor = 1;
   int variableColor = 1;
-  int stringColor = 1;
+  int stringColor = 2;
   int commentColor = 1;
   int commonColor = 1;
 
@@ -39,13 +39,48 @@ class _ThemePageState extends State<ThemePage> {
     "Base"
   ];
 
+  List<String> names = [
+    "bgColor",
+    "keywordColor",
+    "functionColor",
+    "variableColor",
+    "stringColor",
+    "commentColor",
+    "commonColor"
+  ];
+
+  bool upToDate = true;
+  bool first = true;
+
+  Map<String, dynamic> jsonDataTemp = {};
+
   @override
   void initState() {
     super.initState();
+    _asyncCallForTheme();
+  }
+
+  _asyncCallForTheme() async {
+    Map<String, dynamic> jsonData =
+        await loadJsonFromAssets('lib/storage/theming.json');
+    jsonDataTemp = jsonData;
+    setState(() {
+      bgColor = jsonData['bgColor'];
+      keywordColor = jsonData['keywordColor'];
+      functionColor = jsonData['functionColor'];
+      variableColor = jsonData['variableColor'];
+      stringColor = jsonData['stringColor'];
+      commentColor = jsonData['commentColor'];
+      commonColor = jsonData['commonColor'];
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (upToDate && first) {
+      first = false;
+      _asyncCallForTheme();
+    }
     double windowWidth = MediaQuery.of(context).size.width;
     double windowHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -83,7 +118,35 @@ class _ThemePageState extends State<ThemePage> {
                           height: 50,
                           margin: const EdgeInsets.only(right: 10),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black),
+                            border: Border.all(
+                              color: k == 0
+                                      ? bgColor == i
+                                          ? Colors.red
+                                          : Colors.black
+                                      : k == 1
+                                          ? keywordColor == i
+                                              ? Colors.red
+                                              : Colors.black
+                                          : k == 2
+                                              ? functionColor == i
+                                                  ? Colors.red
+                                                  : Colors.black
+                                              : k == 3
+                                                  ? variableColor == i
+                                                      ? Colors.red
+                                                      : Colors.black
+                                                  : k == 4
+                                                      ? stringColor == i
+                                                          ? Colors.red
+                                                          : Colors.black
+                                                      : k == 5
+                                                          ? commentColor == i
+                                                              ? Colors.red
+                                                              : Colors.black
+                                                          : commonColor == i
+                                                              ? Colors.red
+                                                              : Colors.black,
+                            ),
                             borderRadius: BorderRadius.circular(50),
                           ),
                           child: FilledButton(
@@ -131,8 +194,23 @@ class _ThemePageState extends State<ThemePage> {
       ),
       floatingActionButton: FloatingActionButton(
         // backgroundColor: theme.onSurface,
-        onPressed: () {
-          print('Floating Button Clicked');
+        onPressed: () async {
+          Map<String, dynamic> data = {
+            "bgColor": bgColor,
+            "keywordColor": keywordColor,
+            "functionColor": functionColor,
+            "variableColor": variableColor,
+            "stringColor": stringColor,
+            "commentColor": commentColor,
+            "commonColor": commonColor
+          };
+          String datas = jsonEncode(data);
+          writeData(datas, '../vsce_extensions_creator/lib/storage', 'theming.json');
+          setState(() {
+            upToDate = true;
+            first = true;
+            print("Saved");
+          });
         },
         child: const Icon(Icons.save),
       ),
