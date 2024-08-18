@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 
-import '../functions.dart';
+import '../functionals/functions.dart';
 
 import 'dart:convert';
+
+
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class CommentsAndStringsPage extends StatefulWidget {
   const CommentsAndStringsPage({super.key});
@@ -33,8 +37,10 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
   }
 
   _asyncCallForParameters() async {
-    Map<String, dynamic> jsonData =
-        await loadJsonFromAssets('lib/storage/commentsandstrings.json');
+    final dir = await getApplicationDocumentsDirectory();
+    File jsonFile = File(
+        "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/commentsandstrings.json");
+    var jsonData = json.decode(jsonFile.readAsStringSync());
     setState(() {
       indexes[0] = jsonData['slc'];
       indexes[1] = jsonData['mlc'];

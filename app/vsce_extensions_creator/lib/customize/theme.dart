@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../functions.dart';
+import '../functionals/functions.dart';
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 // import 'package:flex_color_picker/flex_color_picker.dart';
 
 class ThemePage extends StatefulWidget {
@@ -49,9 +51,6 @@ class _ThemePageState extends State<ThemePage> {
     "commonColor"
   ];
 
-  bool upToDate = true;
-  bool first = true;
-
   Map<String, dynamic> jsonDataTemp = {};
 
   @override
@@ -61,8 +60,10 @@ class _ThemePageState extends State<ThemePage> {
   }
 
   _asyncCallForTheme() async {
-    Map<String, dynamic> jsonData =
-        await loadJsonFromAssets('lib/storage/theming.json');
+    final dir = await getApplicationDocumentsDirectory();
+    File jsonFile = File(
+        "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/theming.json");
+    var jsonData = json.decode(jsonFile.readAsStringSync());
     jsonDataTemp = jsonData;
     setState(() {
       bgColor = jsonData['bgColor'];
@@ -77,10 +78,6 @@ class _ThemePageState extends State<ThemePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (upToDate && first) {
-      first = false;
-      _asyncCallForTheme();
-    }
     double windowWidth = MediaQuery.of(context).size.width;
     double windowHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -120,32 +117,32 @@ class _ThemePageState extends State<ThemePage> {
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: k == 0
-                                      ? bgColor == i
+                                  ? bgColor == i
+                                      ? Colors.red
+                                      : Colors.black
+                                  : k == 1
+                                      ? keywordColor == i
                                           ? Colors.red
                                           : Colors.black
-                                      : k == 1
-                                          ? keywordColor == i
+                                      : k == 2
+                                          ? functionColor == i
                                               ? Colors.red
                                               : Colors.black
-                                          : k == 2
-                                              ? functionColor == i
+                                          : k == 3
+                                              ? variableColor == i
                                                   ? Colors.red
                                                   : Colors.black
-                                              : k == 3
-                                                  ? variableColor == i
+                                              : k == 4
+                                                  ? stringColor == i
                                                       ? Colors.red
                                                       : Colors.black
-                                                  : k == 4
-                                                      ? stringColor == i
+                                                  : k == 5
+                                                      ? commentColor == i
                                                           ? Colors.red
                                                           : Colors.black
-                                                      : k == 5
-                                                          ? commentColor == i
-                                                              ? Colors.red
-                                                              : Colors.black
-                                                          : commonColor == i
-                                                              ? Colors.red
-                                                              : Colors.black,
+                                                      : commonColor == i
+                                                          ? Colors.red
+                                                          : Colors.black,
                             ),
                             borderRadius: BorderRadius.circular(50),
                           ),
@@ -205,10 +202,9 @@ class _ThemePageState extends State<ThemePage> {
             "commonColor": commonColor
           };
           String datas = jsonEncode(data);
-          writeData(datas, '../vsce_extensions_creator/lib/storage', 'theming.json');
+          writeData(
+              datas, '../vsce_extensions_creator/lib/storage', 'theming.json');
           setState(() {
-            upToDate = true;
-            first = true;
             print("Saved");
           });
         },

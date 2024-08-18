@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 
 // import pages
-import 'keywords.dart';
+import 'format.dart';
 import 'theme.dart';
 import 'misceleanous.dart';
 import 'comments&strings.dart';
 import 'functionalities.dart';
 
 
-class customisables extends StatefulWidget {
-  const customisables({super.key});
+class Customisables extends StatefulWidget {
+  const Customisables({super.key});
 
   @override
-  State<customisables> createState() => _customisablesState();
+  State<Customisables> createState() => _CustomisablesState();
 }
 
-class _customisablesState extends State<customisables> {
+class _CustomisablesState extends State<Customisables> {
 
 
   int indexOfPage = 0;
@@ -72,7 +72,7 @@ class _customisablesState extends State<customisables> {
                         ),
                       ),
                       child: Text(
-                        "Keywords",
+                        "Format",
                         style: TextStyle(
                           color: theme.onSurface,
                           fontSize: MediaQuery.of(context).size.width * 0.014,
@@ -248,7 +248,7 @@ class _customisablesState extends State<customisables> {
             color: Colors.black,
           ),
           child: indexOfPage == 0
-            ? const KeywordsPage()
+            ? const FormatPage()
             : indexOfPage == 1
               ? const ThemePage()
               : indexOfPage == 2

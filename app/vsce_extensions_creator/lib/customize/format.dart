@@ -1,20 +1,45 @@
 import 'package:flutter/material.dart';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:path_provider/path_provider.dart';
 
-class KeywordsPage extends StatefulWidget {
-  const KeywordsPage({super.key});
+import '../functionals/functions.dart';
+import 'dart:convert';
+import 'dart:io';
+
+class FormatPage extends StatefulWidget {
+  const FormatPage({super.key});
+
 
   @override
-  State<KeywordsPage> createState() => _KeywordsPageState();
+  State<FormatPage> createState() => _FormatPageState();
 }
 
-class _KeywordsPageState extends State<KeywordsPage> {
+class _FormatPageState extends State<FormatPage> {
+  _FormatPageState();
   final _formKey = GlobalKey<FormState>();
 
   String currentKeyword = '';
 
-  List<String> keywords = ["if"];
+  List<String> keywords = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _asyncCallForKeywords();
+  }
+
+  _asyncCallForKeywords() async {
+    final dir = await getApplicationDocumentsDirectory();
+    print(dir.path);
+    File jsonFile = File(
+        "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/format.json");
+    var jsonData = json.decode(jsonFile.readAsStringSync());
+    print(jsonData);
+    setState(() {
+      keywords = jsonData['keywords'].cast<String>();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +65,7 @@ class _KeywordsPageState extends State<KeywordsPage> {
                   children: <Widget>[
                     SizedBox(
                       height: 50,
-                      width: "else".length * 10.0,
+                      width: keywords[i].length * 10.0,
                       child: TextField(
                         readOnly: true,
                         controller: TextEditingController(text: keywords[i]),
@@ -58,7 +83,20 @@ class _KeywordsPageState extends State<KeywordsPage> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        keywords.removeAt(i);
+                        Map<String, dynamic> data = {
+                          'keywords': keywords,
+                        };
+                        String datas = jsonEncode(data);
+                        await writeData(
+                                datas,
+                                '../vsce_extensions_creator/lib/storage',
+                                'keywords.json')
+                            .then((value) {
+                          setState(() {});
+                        });
+                      },
                       icon: Icon(Icons.highlight_remove_sharp,
                           color: theme.onSurface),
                     ),
@@ -99,12 +137,22 @@ class _KeywordsPageState extends State<KeywordsPage> {
                                   onChanged: (value) => currentKeyword = value,
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    keywords.add(currentKeyword);
                                     if (currentKeyword.isNotEmpty) {
-                                      setState(() {
-                                        keywords.add(currentKeyword);
+                                      Map<String, dynamic> data = {
+                                        'keywords': keywords,
+                                      };
+                                      String datas = jsonEncode(data);
+                                      await writeData(
+                                              datas,
+                                              '../vsce_extensions_creator/lib/storage',
+                                              'keywords.json')
+                                          .then((value) {
+                                        setState(() {
+                                          Navigator.of(context).pop();
+                                        });
                                       });
-                                      Navigator.of(context).pop();
                                     }
                                     print(keywords);
                                   },
@@ -123,6 +171,26 @@ class _KeywordsPageState extends State<KeywordsPage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        // backgroundColor: theme.onSurface,
+        onPressed: () async {
+          Map<String, dynamic> data = {
+            'keywords': keywords,
+          };
+          String datas = jsonEncode(data);
+          await writeData(datas, '../vsce_extensions_creator/lib/storage',
+                  'keywords.json')
+              .then((value) {
+            keywords = data['keywords'].cast<String>();
+            return Future.delayed(const Duration(seconds: 1));
+            // sleep(const Duration(seconds: 1));
+          }).then((onValue) {
+            setState(() {});
+            print("test");
+          });
+        },
+        child: const Icon(Icons.save),
       ),
     );
   }

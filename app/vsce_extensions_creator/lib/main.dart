@@ -6,6 +6,9 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 // Pages imports
 import 'customize/customisables.dart';
 
+import 'home.dart';
+import 'settings.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MainApp());
@@ -71,6 +74,8 @@ class _RootPageState extends State<RootPage> {
 
   List<String> navBarNames = ["Home", "Extensions", "Settings"];
 
+  int index = 1;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -84,7 +89,7 @@ class _RootPageState extends State<RootPage> {
                 Container(
                   width: MediaQuery.of(context).size.width *
                       (1 / navBarNames.length),
-                      height: MediaQuery.of(context).size.height * 0.1,
+                  height: MediaQuery.of(context).size.height * 0.1,
                   decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       border: Border(
@@ -97,7 +102,11 @@ class _RootPageState extends State<RootPage> {
                     onHover: (value) {
                       // Add your onPressed function here
                     },
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        index = i;
+                      });
+                    },
                     style: ButtonStyle(
                       shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
@@ -117,7 +126,11 @@ class _RootPageState extends State<RootPage> {
             ],
           ),
         ),
-        body: const customisables(),
+        body: index == 0
+            ? const HomePage()
+            : index == 1
+                ? const Customisables()
+                : const SettingsPage(),
       ),
     );
   }
