@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _formKey = GlobalKey<FormState>();
   String name = "";
   String version = "";
   String publisher = "";
@@ -66,7 +67,7 @@ class _HomePageState extends State<HomePage> {
               height
             ]),
             for (int i = 0; i < data.length; i++)
-              tableRow(data, i, [width, height]),
+              tableRow(data, i, [width, height], context, _formKey),
           ],
         ),
       ),
@@ -143,7 +144,7 @@ Row headRow(List<String> labels, List<double> size) {
   ]);
 }
 
-Row tableRow(List<dynamic> data, int index, List<double> size) {
+Row tableRow(List<dynamic> data, int index, List<double> size, BuildContext context, GlobalKey<FormState> formKey) {
   return Row(
     children: <Widget>[
       for (int i = 0; i < 5; i++)
@@ -217,9 +218,55 @@ Row tableRow(List<dynamic> data, int index, List<double> size) {
           ),
         ),
         child: TextButton(
-          onPressed: () {
-            // Add your onPressed function here
-          },
+              onPressed: () async {
+                await showDialog<void>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    content: Stack(
+                      clipBehavior: Clip.none,
+                      children: <Widget>[
+                        Positioned(
+                          right: -40,
+                          top: -40,
+                          child: InkResponse(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const CircleAvatar(
+                              backgroundColor: Colors.red,
+                              child: Icon(Icons.close),
+                            ),
+                          ),
+                        ),
+                        Form(
+                          key: formKey,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                TextFormField(
+                                  initialValue: data[index]["name"],
+                                  textAlign: TextAlign.center,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                  ),
+                                  onChanged: (value) {
+                                    //
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
           child:  const Text("Modify"),),
       ),
     ],

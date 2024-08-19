@@ -169,25 +169,25 @@ class _FormatPageState extends State<FormatPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        // backgroundColor: theme.onSurface,
-        onPressed: () async {
-          Map<String, dynamic> data = {
-            'keywords': keywords,
-          };
-          String datas = jsonEncode(data);
-          await writeData(datas, '../vsce_extensions_creator/lib/storage',
-                  'keywords.json')
-              .then((value) {
-            keywords = data['keywords'].cast<String>();
-            return Future.delayed(const Duration(seconds: 1));
-            // sleep(const Duration(seconds: 1));
-          }).then((onValue) {
-            setState(() {});
-          });
-        },
-        child: const Icon(Icons.save),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   // backgroundColor: theme.onSurface,
+      //   onPressed: () async {
+      //     Map<String, dynamic> data = {
+      //       'keywords': keywords,
+      //     };
+      //     String datas = jsonEncode(data);
+      //     await writeData(datas, '../vsce_extensions_creator/lib/storage',
+      //             'keywords.json')
+      //         .then((value) {
+      //       keywords = data['keywords'].cast<String>();
+      //       return Future.delayed(const Duration(seconds: 1));
+      //       // sleep(const Duration(seconds: 1));
+      //     }).then((onValue) {
+      //       setState(() {});
+      //     });
+      //   },
+      //   child: const Icon(Icons.save),
+      // ),
     );
   }
 }

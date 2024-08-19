@@ -91,12 +91,13 @@ class _RootPageState extends State<RootPage> {
                       (1 / navBarNames.length),
                   height: MediaQuery.of(context).size.height * 0.1,
                   decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
+                      color: index == i ? Colors.grey[300] : Colors.white,
                       border: Border(
                         bottom: BorderSide(
                           color: Theme.of(context).colorScheme.outline,
                           width: 2,
                         ),
+                        right: i != 2 ? const BorderSide(color: Colors.black) : BorderSide.none,
                       )),
                   child: TextButton(
                     onHover: (value) {
