@@ -31,11 +31,9 @@ class _FormatPageState extends State<FormatPage> {
 
   _asyncCallForKeywords() async {
     final dir = await getApplicationDocumentsDirectory();
-    print(dir.path);
     File jsonFile = File(
         "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/format.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
-    print(jsonData);
     setState(() {
       keywords = jsonData['keywords'].cast<String>();
     });
@@ -154,7 +152,6 @@ class _FormatPageState extends State<FormatPage> {
                                         });
                                       });
                                     }
-                                    print(keywords);
                                   },
                                   child: const Text('Add'),
                                 ),
@@ -187,7 +184,6 @@ class _FormatPageState extends State<FormatPage> {
             // sleep(const Duration(seconds: 1));
           }).then((onValue) {
             setState(() {});
-            print("test");
           });
         },
         child: const Icon(Icons.save),

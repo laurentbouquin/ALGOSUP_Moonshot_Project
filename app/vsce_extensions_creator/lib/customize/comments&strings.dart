@@ -94,8 +94,6 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         onChanged: (value) {
                           setState(() {
                             indexes[0] = values[0].indexOf(value!);
-                            print(
-                                'DropdownButton Selected: $value / ${values[0].indexOf(value)} - ${indexes[0]}');
                           });
                         },
                       ),
@@ -126,8 +124,6 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         onChanged: (value) {
                           setState(() {
                             indexes[1] = values[1].indexOf(value!);
-                            print(
-                                'DropdownButton Selected: $value / ${values[1].indexOf(value)} - ${indexes[1]}');
                           });
                         },
                       ),
@@ -165,8 +161,6 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         onChanged: (value) {
                           setState(() {
                             indexes[2] = values[2].indexOf(value!);
-                            print(
-                                'DropdownButton Selected: $value / ${values[2].indexOf(value)} - ${indexes[2]}');
                           });
                         },
                       ),
@@ -263,9 +257,7 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
           await writeData(datas, '../vsce_extensions_creator/lib/storage',
                   'commentsandstrings.json')
               .then((value) {
-            setState(() {
-              print("Saved");
-            });
+            setState(() {});
           });
         },
         child: const Icon(Icons.save),

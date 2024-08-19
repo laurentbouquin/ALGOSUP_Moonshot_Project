@@ -31,11 +31,9 @@ class _HomePageState extends State<HomePage> {
 
   _asyncCallForKeywords() async {
     final dir = await getApplicationDocumentsDirectory();
-    print(dir.path);
     File jsonFile = File(
         "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/extensions_list.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
-    print(jsonData['extensions']);
     setState(() {
       data = jsonData['extensions'];
     });

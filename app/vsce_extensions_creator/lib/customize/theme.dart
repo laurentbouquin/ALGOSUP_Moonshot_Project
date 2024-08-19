@@ -205,7 +205,6 @@ class _ThemePageState extends State<ThemePage> {
           writeData(
               datas, '../vsce_extensions_creator/lib/storage', 'theming.json');
           setState(() {
-            print("Saved");
           });
         },
         child: const Icon(Icons.save),
