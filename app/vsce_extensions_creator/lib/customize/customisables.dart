@@ -243,9 +243,9 @@ class _CustomisablesState extends State<Customisables> {
                             onPressed: null,
                             // TODO: Uncomment after adding the functionalities page.
                             // onPressed: () {
-                              // setState(() {
-                              //   indexOfPage = 4;
-                              // });
+                            // setState(() {
+                            //   indexOfPage = 4;
+                            // });
                             // },
                             style: ButtonStyle(
                               shape: WidgetStateProperty.all<
@@ -314,8 +314,8 @@ class _CustomisablesState extends State<Customisables> {
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
-                      onPressed: () {},
-                      tooltip: 'Publish',
+                      onPressed: isMenuOpen ? null : null,
+                      tooltip: isMenuOpen ? 'Publish' : null,
                       child: const Icon(Icons.publish_rounded),
                     ),
                   ),
@@ -327,8 +327,8 @@ class _CustomisablesState extends State<Customisables> {
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
-                      onPressed: () {},
-                      tooltip: 'Save',
+                      onPressed: isMenuOpen ? () {} : null,
+                      tooltip: isMenuOpen ? 'Save' : null,
                       child: const Icon(Icons.save),
                     ),
                   ),
@@ -340,8 +340,8 @@ class _CustomisablesState extends State<Customisables> {
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
-                      onPressed: () {},
-                      tooltip: "Cancel",
+                      onPressed: isMenuOpen ? () {} : null,
+                      tooltip: isMenuOpen ? "Cancel" : null,
                       child: const Icon(Icons.cancel),
                     ),
                   ),
