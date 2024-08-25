@@ -10,6 +10,7 @@ import 'theme.dart';
 import 'miscellaneous.dart';
 import 'comments&strings.dart';
 import 'functionalities.dart';
+import '../functionals/convert.dart';
 
 class Customisables extends StatefulWidget {
   const Customisables({super.key});
@@ -327,7 +328,9 @@ class _CustomisablesState extends State<Customisables> {
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
-                      onPressed: isMenuOpen ? () {} : null,
+                      onPressed: isMenuOpen ? () {
+                        convertLocalsToFullExtension('toBeDetermined', 'tbd', 'To be determined', '0.0.2', "testingInProgress", ['Programming Languages'], "");
+                      } : null,
                       tooltip: isMenuOpen ? 'Save' : null,
                       child: const Icon(Icons.save),
                     ),

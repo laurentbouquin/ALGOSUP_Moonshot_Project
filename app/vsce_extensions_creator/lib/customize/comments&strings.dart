@@ -6,7 +6,6 @@ import '../functionals/functions.dart';
 
 import 'dart:convert';
 
-
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
@@ -91,9 +90,21 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         menuMaxHeight: MediaQuery.of(context).size.height * 0.4,
                         borderRadius: BorderRadius.circular(10),
                         value: values[0][indexes[0]],
-                        onChanged: (value) {
-                          setState(() {
-                            indexes[0] = values[0].indexOf(value!);
+                        onChanged: (value) async {
+                          indexes[0] = values[0].indexOf(value!);
+
+                          Map<String, dynamic> data = {
+                            'slc': indexes[0],
+                            'mlc': indexes[1],
+                            'quotes': indexes[2],
+                          };
+                          String datas = jsonEncode(data);
+                          await writeData(
+                                  datas,
+                                  '../vsce_extensions_creator/lib/storage',
+                                  'commentsandstrings.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),
@@ -121,9 +132,21 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         menuMaxHeight: MediaQuery.of(context).size.height * 0.4,
                         borderRadius: BorderRadius.circular(10),
                         value: values[1][indexes[1]],
-                        onChanged: (value) {
-                          setState(() {
-                            indexes[1] = values[1].indexOf(value!);
+                        onChanged: (value) async {
+                          indexes[1] = values[1].indexOf(value!);
+
+                          Map<String, dynamic> data = {
+                            'slc': indexes[0],
+                            'mlc': indexes[1],
+                            'quotes': indexes[2],
+                          };
+                          String datas = jsonEncode(data);
+                          await writeData(
+                                  datas,
+                                  '../vsce_extensions_creator/lib/storage',
+                                  'commentsandstrings.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),
@@ -158,9 +181,20 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         menuMaxHeight: MediaQuery.of(context).size.height * 0.4,
                         borderRadius: BorderRadius.circular(10),
                         value: values[2][indexes[2]],
-                        onChanged: (value) {
-                          setState(() {
-                            indexes[2] = values[2].indexOf(value!);
+                        onChanged: (value) async {
+                          indexes[2] = values[2].indexOf(value!);
+                          Map<String, dynamic> data = {
+                            'slc': indexes[0],
+                            'mlc': indexes[1],
+                            'quotes': indexes[2],
+                          };
+                          String datas = jsonEncode(data);
+                          await writeData(
+                                  datas,
+                                  '../vsce_extensions_creator/lib/storage',
+                                  'commentsandstrings.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),
@@ -244,23 +278,6 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        // backgroundColor: theme.onSurface,
-        onPressed: () async {
-          Map<String, dynamic> data = {
-            'slc': indexes[0],
-            'mlc': indexes[1],
-            'quotes': indexes[2],
-          };
-          String datas = jsonEncode(data);
-          await writeData(datas, '../vsce_extensions_creator/lib/storage',
-                  'commentsandstrings.json')
-              .then((value) {
-            setState(() {});
-          });
-        },
-        child: const Icon(Icons.save),
       ),
     );
   }
