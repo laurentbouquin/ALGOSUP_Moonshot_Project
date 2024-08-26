@@ -72,9 +72,9 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   // Add your stateful widget implementation here
 
-  List<String> navBarNames = ["Home", "Extensions", "Settings"];
+  List<String> navBarNames = ["Home", "Customize", "Settings"];
 
-  int index = 1;
+  int index = 0;
 
   @override
   Widget build(BuildContext context) {

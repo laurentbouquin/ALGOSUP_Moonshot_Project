@@ -1,8 +1,8 @@
 {
 	"extensions": [
 		{
-			"name": "tbd language",
-			"version": "1.4.1",
+			"name": "Angular Snippets (Version 18)",
+			"version": "18.0.2",
 			"publisher": "vsce_extensions_creator",
 			"engines": {
 				"vscode": "^1.0.0"
@@ -12,21 +12,7 @@
 			],
 			"lastUpdated": "2024-08-18T15:01:42.080Z",
 			"displayName": "vsce_extensions_creator",
-			"description": "a special programming language"
-		},
-		{
-			"name": "Rainbow Theming",
-			"version": "7.4.3",
-			"publisher": "vsce_extensions_creator",
-			"engines": {
-				"vscode": "^1.0.0"
-			},
-			"categories": [
-				"Other"
-			],
-			"lastUpdated": "2023-09-26T09:26:20.020Z",
-			"displayName": "vsce_extensions_creator",
-			"description": "a colorful theme"
+			"description": "Angular version 18 snippets by John Papa"
 		}
 	]
 }

@@ -11,7 +11,8 @@ void convertLocalsToFullExtension(
     String version,
     String publisherName,
     List<String> categories,
-    String iconPath) async {
+    String iconPath,
+		bool isThemeActive) async {
   // Get the path of the project
   final dir = await getApplicationDocumentsDirectory();
   String projectPath =
@@ -27,8 +28,8 @@ void convertLocalsToFullExtension(
   }
 
   // Generate the package.json file's content
-  final pkgData =
-      generatePackageJson(name, extension, description, version, publisherName, categories);
+  final pkgData = generatePackageJson(
+      name, extension, description, version, publisherName, categories, isThemeActive);
 
   // Write the package.json file
   await pkg.writeAsString(pkgData);
@@ -138,54 +139,67 @@ void convertLocalsToFullExtension(
   // Write the syntaxes file
   await syntax.writeAsString(syntaxData);
 
+/*
+	// Create the themes folder
+	Directory('${'$projectPath\\out\\$name'}\\themes').createSync();
 
+	// Create the themes file
+	final theme = File(
+			'${'$projectPath\\out\\$name'}\\themes\\$extension.thTheme.json');
+	if (!theme.existsSync()) {
+		theme.createSync();
+	}
 
+	// Generate the themes file's content
+	final themeData = await generateTheme(name);
 
-  // Create the themes folder
-  Directory('${'$projectPath\\out\\$name'}\\themes').createSync();
-
-  // Create the themes file
-  final theme = File(
-      '${'$projectPath\\out\\$name'}\\themes\\$extension.thTheme.json');
-  if (!theme.existsSync()) {
-    theme.createSync();
-  }
-
-  // Generate the themes file's content
-  final themeData = await generateTheme(name);
-
-  // Write the themes file
-  await theme.writeAsString(themeData);
+	// Write the themes file
+	await theme.writeAsString(themeData);
+*/
 }
 
 String generatePackageJson(String name, String extension, String description,
-    String version, String publisherName, List<String> categories) {
+    String version, String publisherName, List<String> categories, bool isThemeActive) {
+  String theme = ''',
+		"themes": [
+			{
+				"label": "$name",
+				"uiTheme": "vs-dark",
+				"path": "./themes/$extension.thTheme.json"
+			}
+		],
+		"configurationDefaults": {
+			"[$extension]": {
+				"editor.semanticHighlighting.enabled": "configuredByTheme"
+			}
+		}''';
+
   return '''
 {
-  "name": "$name",
-  "displayName": "$name",
-  "description": "$description",
-  "version": "$version",
-  "publisher": "$publisherName",
-  "engines": {
-    "vscode": "^1.92.0"
-  },
-  "categories": [
-    ${categories.map((e) => '"$e"').join(', ')}
-  ],
-  "contributes": {
-    "languages": [{
-      "id": "$extension",
-      "aliases": ["TBD", "$extension"],
-      "extensions": ["$extension"],
-      "configuration": "./language-configuration.json"
-    }],
-    "grammars": [{
-      "language": "$extension",
-      "scopeName": "source.$extension",
-      "path": "./syntaxes/$extension.tmLanguage.json"
-    }]
-  }
+	"name": "$name",
+	"displayName": "$name",
+	"description": "$description",
+	"version": "$version",
+	"publisher": "$publisherName",
+	"engines": {
+		"vscode": "^1.92.0"
+	},
+	"categories": [
+		${categories.map((e) => '"$e"').join(', ')}
+	],
+	"contributes": {
+		"languages": [{
+			"id": "$extension",
+			"aliases": ["TBD", "$extension"],
+			"extensions": ["$extension"],
+			"configuration": "./language-configuration.json"
+		}],
+		"grammars": [{
+			"language": "$extension",
+			"scopeName": "source.$extension",
+			"path": "./syntaxes/$extension.tmLanguage.json"
+		}]
+	}${isThemeActive ? theme : ''}
 }''';
 }
 
@@ -385,34 +399,34 @@ Future<String> generateLanguageConfigurationJSON() async {
 
   return '''
 {
-    "comments": {
-        // symbol used for single line comment. Remove this entry if your language does not support line comments
-        "lineComment": $slc,
-        // symbols used for start and end a block comment. Remove this entry if your language does not support block comments
-        "blockComment": [ $mlc1, $mlc2 ]
-    },
-    // symbols used as brackets
-    "brackets": [
-        ["{", "}"],
-        ["[", "]"],
-        ["(", ")"]
-    ],
-    // symbols that are auto closed when typing
-    "autoClosingPairs": [
-        ["{", "}"],
-        ["[", "]"],
-        ["(", ")"],
-        ["\\"", "\\""],
-        ["'", "'"]
-    ],
-    // symbols that can be used to surround a selection
-    "surroundingPairs": [
-        ["{", "}"],
-        ["[", "]"],
-        ["(", ")"],
-        ["\\"", "\\""],
-        ["'", "'"]
-    ]
+		"comments": {
+				// symbol used for single line comment. Remove this entry if your language does not support line comments
+				"lineComment": $slc,
+				// symbols used for start and end a block comment. Remove this entry if your language does not support block comments
+				"blockComment": [ $mlc1", "$mlc2 ]
+		},
+		// symbols used as brackets
+		"brackets": [
+				["{", "}"],
+				["[", "]"],
+				["(", ")"]
+		],
+		// symbols that are auto closed when typing
+		"autoClosingPairs": [
+				["{", "}"],
+				["[", "]"],
+				["(", ")"],
+				["\\"", "\\""],
+				["'", "'"]
+		],
+		// symbols that can be used to surround a selection
+		"surroundingPairs": [
+				["{", "}"],
+				["[", "]"],
+				["(", ")"],
+				["\\"", "\\""],
+				["'", "'"]
+		]
 }
 ''';
 }
@@ -423,6 +437,59 @@ Future<String> generateSyntax(String extension) async {
       "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/format.json");
   var jsonData = json.decode(jsonFile.readAsStringSync());
   List<String> keywords = jsonData['keywords'].cast<String>();
+  List<String> types = jsonData['types'].cast<String>();
+
+  File jsonFile2 = File(
+      "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/commentsandstrings.json");
+  var jsonData2 = json.decode(jsonFile2.readAsStringSync());
+  int stringType = jsonData2['quotes'];
+  int multiCommentType = jsonData2['mlc'];
+  String multiComment = multiCommentType == 0
+      ? ''',
+				{
+					"begin": "/\\\\*",
+					"end": "\\\\*/",
+					"name": "comment.block.tbd"
+				}'''
+      : multiCommentType == 1
+          ? ''',
+				{
+						"begin": "<!--",
+						"end": "-->",
+						"name": "comment.block.tbd"
+				}'''
+          : ''',
+				{
+						"begin": "<!---",
+						"end": "--->",
+						"name": "comment.block.tbd"
+				}''';
+
+  String strings = stringType == 0
+      ? ''',
+				{
+						"begin": "\\"",
+						"end": "\\"",
+						"name": "string.quoted.double"
+				}'''
+      : stringType == 1
+          ? ''',
+				{
+						"begin": "'",
+						"end": "'",
+						"name": "string.quoted.single"
+				}'''
+          : ''',
+				{
+						"begin": "'",
+						"end": "'",
+						"name": "string.quoted.single"
+				},
+				{
+						"begin": "\\"",
+						"end": "\\"",
+						"name": "string.quoted.double"
+				}''';
 
   return '''
 {
@@ -436,14 +503,20 @@ Future<String> generateSyntax(String extension) async {
 			"include": "#const"
 		},
 		{
-			"include": "#comment"
+			"include": "#comments"
 		},
 		{
-			"include": "#label"
+			"include": "#functions"
 		},
 		{
-			"include": "#strings"
-		}
+			"include": "#types"
+		},
+		{
+			"include": "#variables"
+		},
+		{
+			"include": "#numbers"
+		}$strings
 	],
 	"repository": {
 		"keywords": {
@@ -454,38 +527,51 @@ Future<String> generateSyntax(String extension) async {
 				}
 			]
 		},
-		"comment": {
+		"comments": {
 			"patterns": [
 				{
 					"name": "comment.$extension",
 					"match": "(//).*\\\\n?"
-				}
+				}$multiComment
 			]
 		},
 		"const": {
 			"patterns": [
 				{
 					"name": "constant.other.$extension",
-					"match": "(\\\\..*).*\\\\n?"
+					"match": "\\\\b(true|false)\\\\b"
 				}
 			]
 		},
-		"strings": {
-			"name": "string.quoted.double.$extension",
-			"begin": "\\"",
-			"end": "\\"",
+		"functions": {
 			"patterns": [
 				{
-					"name": "constant.character.escape.$extension",
-					"match": "\\\\\\\\."
+					"name": "entity.name.function.$extension",
+					"match": "\\\\w+\\\\s*\\\\(\\\\s*"
 				}
 			]
 		},
-		"label":{
-			"patterns":[
+		"types": {
+			"patterns": [
 				{
-					"name":"label.$extension",
-					"match":"(\\\\w+:).*\\\\n?"
+					"name": "storage.type.$extension",
+					"match": "\\\\b(${types.map((e) => e).join('|')})\\\\b"
+				}
+			]
+		},
+		"numbers": {
+			"patterns": [
+				{
+					"name": "constant.numeric.$extension",
+					"match": "\\\\b\\\\d+\\\\b"
+				}
+			]
+		},
+		"variables": {
+			"patterns": [
+				{
+					"name": "variable.other.$extension",
+					"match": "\\\\b\\\\w+\\\\b"
 				}
 			]
 		}
@@ -498,7 +584,14 @@ Future<String> generateSyntax(String extension) async {
 Future<String> generateTheme(String name) async {
   final dir = await getApplicationDocumentsDirectory();
 
-  List<String> colorsIds = ["#ffffff", "#000000", "#2196f3", "#9c27b0", "#ff9800", "#4caf50"];
+  List<String> colorsIds = [
+    "#ffffff",
+    "#000000",
+    "#2196f3",
+    "#9c27b0",
+    "#ff9800",
+    "#4caf50"
+  ];
 
   File jsonFile = File(
       "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/theming.json");
@@ -516,13 +609,12 @@ Future<String> generateTheme(String name) async {
 {
 	"name": "$name",
 	"colors": {
-		"editor.background": "#f5f5f5",
-		"editor.foreground": "$background",
-        "list.activeSelectionIconForeground": "#fff"
+		"editor.background": "$background",
+		"editor.foreground": "$common",
+				"list.activeSelectionIconForeground": "#fff"
 	},
 	"tokenColors": [
 		{
-			"name": "Comments",
 			"scope": [
 				"comment",
 				"punctuation.definition.comment"
@@ -533,39 +625,12 @@ Future<String> generateTheme(String name) async {
 			}
 		},
 		{
-			"name": "Comments: Preprocessor",
-			"scope": "comment.block.preprocessor",
-			"settings": {
-				"fontStyle": "",
-				"foreground": "#AAAAAA"
-			}
-		},
-		{
-			"name": "Comments: Documentation",
-			"scope": [
-				"comment.documentation",
-				"comment.block.documentation"
-			],
-			"settings": {
-				"foreground": "#448C27"
-			}
-		},
-		{
-			"name": "Invalid - Illegal",
-			"scope": "invalid.illegal",
-			"settings": {
-				"foreground": "#660000"
-			}
-		},
-		{
-			"name": "Operators",
 			"scope": "keyword.operator",
 			"settings": {
 				"foreground": "$common"
 			}
 		},
 		{
-			"name": "Keywords",
 			"scope": [
 				"keyword",
 				"storage"
@@ -575,7 +640,6 @@ Future<String> generateTheme(String name) async {
 			}
 		},
 		{
-			"name": "Types",
 			"scope": [
 				"storage.type",
 				"support.type"
@@ -585,7 +649,6 @@ Future<String> generateTheme(String name) async {
 			}
 		},
 		{
-			"name": "Language Constants",
 			"scope": [
 				"constant.language",
 				"support.constant",
@@ -596,7 +659,6 @@ Future<String> generateTheme(String name) async {
 			}
 		},
 		{
-			"name": "Variables",
 			"scope": [
 				"variable",
 				"support.variable"
@@ -606,7 +668,6 @@ Future<String> generateTheme(String name) async {
 			}
 		},
 		{
-			"name": "Functions",
 			"scope": [
 				"entity.name.function",
 				"support.function"
@@ -617,33 +678,12 @@ Future<String> generateTheme(String name) async {
 			}
 		},
 		{
-			"name": "Classes",
-			"scope": [
-				"entity.name.type",
-				"entity.other.inherited-class",
-				"support.class"
-			],
-			"settings": {
-				"fontStyle": "bold",
-				"foreground": "#7A3E9D"
-			}
-		},
-		{
-			"name": "Exceptions",
 			"scope": "entity.name.exception",
 			"settings": {
 				"foreground": "#660000"
 			}
 		},
 		{
-			"name": "Sections",
-			"scope": "entity.name.section",
-			"settings": {
-				"fontStyle": "bold"
-			}
-		},
-		{
-			"name": "Numbers, Characters",
 			"scope": [
 				"constant.numeric",
 				"constant.character",
@@ -654,277 +694,13 @@ Future<String> generateTheme(String name) async {
 			}
 		},
 		{
-			"name": "Strings",
 			"scope": "string",
 			"settings": {
 				"foreground": "$strings"
 			}
-		},
-		{
-			"name": "Strings: Escape Sequences",
-			"scope": "constant.character.escape",
-			"settings": {
-				"foreground": "#777777"
-			}
-		},
-		{
-			"name": "Strings: Regular Expressions",
-			"scope": "string.regexp",
-			"settings": {
-				"foreground": "#4B83CD"
-			}
-		},
-		{
-			"name": "Strings: Symbols",
-			"scope": "constant.other.symbol",
-			"settings": {
-				"foreground": "$common"
-			}
-		},
-		{
-			"name": "Punctuation",
-			"scope": "punctuation",
-			"settings": {
-				"foreground": "$common"
-			}
-		},
-		{
-			"name": "HTML: Doctype Declaration",
-			"scope": [
-				"meta.tag.sgml.doctype",
-				"meta.tag.sgml.doctype string",
-				"meta.tag.sgml.doctype entity.name.tag",
-				"meta.tag.sgml punctuation.definition.tag.html"
-			],
-			"settings": {
-				"foreground": "#AAAAAA"
-			}
-		},
-		{
-			"name": "HTML: Tags",
-			"scope": [
-				"meta.tag",
-				"punctuation.definition.tag.html",
-				"punctuation.definition.tag.begin.html",
-				"punctuation.definition.tag.end.html"
-			],
-			"settings": {
-				"foreground": "#91B3E0"
-			}
-		},
-		{
-			"name": "HTML: Tag Names",
-			"scope": "entity.name.tag",
-			"settings": {
-				"foreground": "#4B83CD"
-			}
-		},
-		{
-			"name": "HTML: Attribute Names",
-			"scope": [
-				"meta.tag entity.other.attribute-name",
-				"entity.other.attribute-name.html"
-			],
-			"settings": {
-				"fontStyle": "italic",
-				"foreground": "#91B3E0"
-			}
-		},
-		{
-			"name": "HTML: Entities",
-			"scope": [
-				"constant.character.entity",
-				"punctuation.definition.entity"
-			],
-			"settings": {
-				"foreground": "#AB6526"
-			}
-		},
-		{
-			"name": "CSS: Selectors",
-			"scope": [
-				"meta.selector",
-				"meta.selector entity",
-				"meta.selector entity punctuation",
-				"entity.name.tag.css"
-			],
-			"settings": {
-				"foreground": "#7A3E9D"
-			}
-		},
-		{
-			"name": "CSS: Property Names",
-			"scope": [
-				"meta.property-name",
-				"support.type.property-name"
-			],
-			"settings": {
-				"foreground": "#AB6526"
-			}
-		},
-		{
-			"name": "CSS: Property Values",
-			"scope": [
-				"meta.property-value",
-				"meta.property-value constant.other",
-				"support.constant.property-value"
-			],
-			"settings": {
-				"foreground": "#448C27"
-			}
-		},
-		{
-			"name": "CSS: Important Keyword",
-			"scope": "keyword.other.important",
-			"settings": {
-				"fontStyle": "bold"
-			}
-		},
-		{
-			"name": "Markup: Changed",
-			"scope": "markup.changed",
-			"settings": {
-				"foreground": "#000000"
-			}
-		},
-		{
-			"name": "Markup: Deletion",
-			"scope": "markup.deleted",
-			"settings": {
-				"foreground": "#000000"
-			}
-		},
-		{
-			"name": "Markup: Emphasis",
-			"scope": "markup.italic",
-			"settings": {
-				"fontStyle": "italic"
-			}
-		},
-		{
-			"name": "Markup: Error",
-			"scope": "markup.error",
-			"settings": {
-				"foreground": "#660000"
-			}
-		},
-		{
-			"name": "Markup: Insertion",
-			"scope": "markup.inserted",
-			"settings": {
-				"foreground": "#000000"
-			}
-		},
-		{
-			"name": "Markup: Link",
-			"scope": "meta.link",
-			"settings": {
-				"foreground": "#4B83CD"
-			}
-		},
-		{
-			"name": "Markup: Output",
-			"scope": [
-				"markup.output",
-				"markup.raw"
-			],
-			"settings": {
-				"foreground": "#777777"
-			}
-		},
-		{
-			"name": "Markup: Prompt",
-			"scope": "markup.prompt",
-			"settings": {
-				"foreground": "#777777"
-			}
-		},
-		{
-			"name": "Markup: Heading",
-			"scope": "markup.heading",
-			"settings": {
-				"foreground": "#AA3731"
-			}
-		},
-		{
-			"name": "Markup: Strong",
-			"scope": "markup.bold",
-			"settings": {
-				"fontStyle": "bold"
-			}
-		},
-		{
-			"name": "Markup: Traceback",
-			"scope": "markup.traceback",
-			"settings": {
-				"foreground": "#660000"
-			}
-		},
-		{
-			"name": "Markup: Underline",
-			"scope": "markup.underline",
-			"settings": {
-				"fontStyle": "underline"
-			}
-		},
-		{
-			"name": "Markup Quote",
-			"scope": "markup.quote",
-			"settings": {
-				"foreground": "#7A3E9D"
-			}
-		},
-		{
-			"name": "Markup Lists",
-			"scope": "markup.list",
-			"settings": {
-				"foreground": "#4B83CD"
-			}
-		},
-		{
-			"name": "Markup Styling",
-			"scope": [
-				"markup.bold",
-				"markup.italic"
-			],
-			"settings": {
-				"foreground": "#448C27"
-			}
-		},
-		{
-			"name": "Markup Inline",
-			"scope": "markup.inline.raw",
-			"settings": {
-				"fontStyle": "",
-				"foreground": "#AB6526"
-			}
-		},
-		{
-			"name": "Extra: Diff Range",
-			"scope": [
-				"meta.diff.range",
-				"meta.diff.index",
-				"meta.separator"
-			],
-			"settings": {
-				"foreground": "#434343"
-			}
-		},
-		{
-			"name": "Extra: Diff From",
-			"scope": "meta.diff.header.from-file",
-			"settings": {
-				"foreground": "#434343"
-			}
-		},
-		{
-			"name": "Extra: Diff To",
-			"scope": "meta.diff.header.to-file",
-			"settings": {
-				"foreground": "#434343"
-			}
 		}
-	]
+	],
+	"semanticHighlighting": true
 }
 
 ''';

@@ -3,8 +3,12 @@ import 'package:flutter/widgets.dart';
 
 import 'package:path_provider/path_provider.dart';
 
+import 'package:intl/intl.dart';
+
 import 'dart:io';
 import 'dart:convert';
+
+import 'package:vsce_extensions_creator/customize/customisables.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -47,6 +51,8 @@ class _HomePageState extends State<HomePage> {
     //   description = jsonData['description'];
   }
 
+  int selected = 0;
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -58,16 +64,16 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             headRow([
               "Name",
-              "Version",
-              "Categories",
               "Description",
+              "Categories",
               "Last Updated",
+              "Version",
             ], [
               width,
               height
             ]),
             for (int i = 0; i < data.length; i++)
-              tableRow(data, i, [width, height], context, _formKey),
+              tableRow(data, i, [width, height], context, _formKey, i == selected),
           ],
         ),
       ),
@@ -81,7 +87,7 @@ Row headRow(List<String> labels, List<double> size) {
       Container(
         alignment: Alignment.center,
         margin: EdgeInsets.only(top: 10, left: i == 0 ? size[0] * 0.05 : 0),
-        width: size[0] * 0.15,
+        width: i != 4 ? size[0] * 0.2 : size[0] * 0.05,
         height: size[1] * 0.05,
         decoration: BoxDecoration(
           color: Colors.grey[300],
@@ -108,52 +114,53 @@ Row headRow(List<String> labels, List<double> size) {
         ),
         child: Text(labels[i]),
       ),
-      Container(
-        alignment: Alignment.center,
-        margin: const EdgeInsets.only(top: 10),
-        width: size[0] * 0.15,
-        height: size[1] * 0.05,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          border: const Border(
-            right: BorderSide(
-              color: Colors.black,
-              width: 1,
-            ),
-            left: BorderSide(
-              color: Colors.black,
-              width: 1,
-            ),
-            bottom: BorderSide(
-              color: Colors.black,
-              width: 1,
-            ),
-            top: BorderSide(
-              color: Colors.black,
-              width: 1,
-            ),
+    Container(
+      alignment: Alignment.center,
+      margin: const EdgeInsets.only(top: 10),
+      width: size[0] * 0.05,
+      height: size[1] * 0.05,
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        border: const Border(
+          right: BorderSide(
+            color: Colors.black,
+            width: 1,
           ),
-          borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(10),
-            bottomRight: Radius.circular(10),
+          left: BorderSide(
+            color: Colors.black,
+            width: 1,
+          ),
+          bottom: BorderSide(
+            color: Colors.black,
+            width: 1,
+          ),
+          top: BorderSide(
+            color: Colors.black,
+            width: 1,
           ),
         ),
-        child: const Text("Modifying"),
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(10),
+          bottomRight: Radius.circular(10),
+        ),
       ),
-      
+      child: const Text("Selection"),
+    ),
   ]);
 }
 
-Row tableRow(List<dynamic> data, int index, List<double> size, BuildContext context, GlobalKey<FormState> formKey) {
+Row tableRow(List<dynamic> data, int index, List<double> size,
+    BuildContext context, GlobalKey<FormState> formKey, bool isSelected) {
   return Row(
     children: <Widget>[
       for (int i = 0; i < 5; i++)
         Container(
-          width: size[0] * 0.15,
+          width: i != 4 ? size[0] * 0.2 : size[0] * 0.05,
           height: size[1] * 0.1,
           margin: EdgeInsets.only(top: 10, left: i == 0 ? size[0] * 0.05 : 0),
           alignment: Alignment.center,
           decoration: BoxDecoration(
+            color: isSelected ? Colors.grey[200] : Colors.white,
             border: Border(
               right: const BorderSide(
                 color: Colors.black,
@@ -184,21 +191,23 @@ Row tableRow(List<dynamic> data, int index, List<double> size, BuildContext cont
           child: i == 0
               ? Text(data[index]["name"])
               : i == 1
-                  ? Text(data[index]["version"])
+                  ? Text(data[index]["description"],
+                      textAlign: TextAlign.center)
                   : i == 2
                       ? Text(data[index]["categories"].join(", "))
                       : i == 3
-                          ? Text(data[index]["description"])
-                          : Text(data[index]["lastUpdated"]),
+                          ? Text(DateFormat('yyyy-MM-dd - kk:mm:ss').format(
+                              DateTime.parse(data[index]["lastUpdated"])))
+                          : Text(data[index]["version"]),
         ),
-        Container(
+      Container(
         alignment: Alignment.center,
         margin: const EdgeInsets.only(top: 10),
-        width: size[0] * 0.15,
+        width: size[0] * 0.05,
         height: size[1] * 0.1,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.grey[200] : Colors.white,
+          border: const Border(
             right: BorderSide(
               color: Colors.black,
               width: 1,
@@ -212,62 +221,15 @@ Row tableRow(List<dynamic> data, int index, List<double> size, BuildContext cont
               width: 1,
             ),
           ),
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topRight: Radius.circular(10),
             bottomRight: Radius.circular(10),
           ),
         ),
         child: TextButton(
-              onPressed: () async {
-                await showDialog<void>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    content: Stack(
-                      clipBehavior: Clip.none,
-                      children: <Widget>[
-                        Positioned(
-                          right: -40,
-                          top: -40,
-                          child: InkResponse(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const CircleAvatar(
-                              backgroundColor: Colors.red,
-                              child: Icon(Icons.close),
-                            ),
-                          ),
-                        ),
-                        Form(
-                          key: formKey,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                TextFormField(
-                                  initialValue: data[index]["name"],
-                                  textAlign: TextAlign.center,
-                                  decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                  ),
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.black,
-                                  ),
-                                  onChanged: (value) {
-                                    //
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-          child:  const Text("Modify"),),
+          onPressed: () {},
+          child: const Text("Select", style: TextStyle(color: Colors.black)),
+        ),
       ),
     ],
   );

@@ -23,7 +23,6 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
     [
       'only "" accepted',
       'only \'\' accepted',
-      'only `` accepted',
       '"" and \'\' accepted'
     ],
   ];
