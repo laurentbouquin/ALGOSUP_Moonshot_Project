@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 
-// import '../functions.dart';
+import '../functionals/functions.dart';
+
+import 'dart:convert';
+import 'dart:io';
 
 class CommentsAndStringsPage extends StatefulWidget {
   const CommentsAndStringsPage({super.key});
@@ -15,9 +18,23 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
   List<List<String>> values = [
     ['"//"', '"#"', '"##"', "add your own"],
     ['"/* */"', '"<!-- -->"', '"<!--- --->"'],
-    ['only "" accepted', 'only \'\' accepted', 'only `` accepted', '"" and \'\' accepted'],
+    ['only "" accepted', 'only \'\' accepted', '"" and \'\' accepted'],
   ];
   List<int> indexes = [0, 0, 0, 0];
+  final dir = Directory.current.path;
+
+  @override
+  void initState() {
+    super.initState();
+    File jsonFile =
+        File("$dir/data/flutter_assets/lib/storage/commentsandstrings.json");
+    var jsonData = json.decode(jsonFile.readAsStringSync());
+    setState(() {
+      indexes[0] = jsonData['slc'];
+      indexes[1] = jsonData['mlc'];
+      indexes[2] = jsonData['quotes'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +79,21 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         menuMaxHeight: MediaQuery.of(context).size.height * 0.4,
                         borderRadius: BorderRadius.circular(10),
                         value: values[0][indexes[0]],
-                        onChanged: (value) {
-                          setState(() {
-                            indexes[0] = values[0].indexOf(value!);
-                            print(
-                                'DropdownButton Selected: $value / ${values[0].indexOf(value)} - ${indexes[0]}');
+                        onChanged: (value) async {
+                          indexes[0] = values[0].indexOf(value!);
+
+                          Map<String, dynamic> data = {
+                            'slc': indexes[0],
+                            'mlc': indexes[1],
+                            'quotes': indexes[2],
+                          };
+                          String datas = jsonEncode(data);
+                          await writeData(
+                                  datas,
+                                  '$dir/data/flutter_assets/lib/storage',
+                                  'commentsandstrings.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),
@@ -94,11 +121,21 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         menuMaxHeight: MediaQuery.of(context).size.height * 0.4,
                         borderRadius: BorderRadius.circular(10),
                         value: values[1][indexes[1]],
-                        onChanged: (value) {
-                          setState(() {
-                            indexes[1] = values[1].indexOf(value!);
-                            print(
-                                'DropdownButton Selected: $value / ${values[1].indexOf(value)} - ${indexes[1]}');
+                        onChanged: (value) async {
+                          indexes[1] = values[1].indexOf(value!);
+
+                          Map<String, dynamic> data = {
+                            'slc': indexes[0],
+                            'mlc': indexes[1],
+                            'quotes': indexes[2],
+                          };
+                          String datas = jsonEncode(data);
+                          await writeData(
+                                  datas,
+                                  '$dir/data/flutter_assets/lib/storage',
+                                  'commentsandstrings.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),
@@ -133,11 +170,20 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         menuMaxHeight: MediaQuery.of(context).size.height * 0.4,
                         borderRadius: BorderRadius.circular(10),
                         value: values[2][indexes[2]],
-                        onChanged: (value) {
-                          setState(() {
-                            indexes[2] = values[2].indexOf(value!);
-                            print(
-                                'DropdownButton Selected: $value / ${values[2].indexOf(value)} - ${indexes[2]}');
+                        onChanged: (value) async {
+                          indexes[2] = values[2].indexOf(value!);
+                          Map<String, dynamic> data = {
+                            'slc': indexes[0],
+                            'mlc': indexes[1],
+                            'quotes': indexes[2],
+                          };
+                          String datas = jsonEncode(data);
+                          await writeData(
+                                  datas,
+                                  '$dir/data/flutter_assets/lib/storage',
+                                  'commentsandstrings.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),

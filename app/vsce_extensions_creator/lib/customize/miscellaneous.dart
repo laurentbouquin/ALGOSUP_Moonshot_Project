@@ -20,7 +20,7 @@ class _MisceleanousPageState extends State<MisceleanousPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Miscelaneous: ',
+              'Snippets: ',
               style: TextStyle(
                 fontSize: MediaQuery.of(context).size.width * 0.025,
                 color: theme.onSurface,
