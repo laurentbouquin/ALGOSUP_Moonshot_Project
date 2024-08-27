@@ -130,8 +130,8 @@ class _RootPageState extends State<RootPage> {
         body: index == 0
             ? const HomePage()
             : index == 1
-                ? const Customisables()
-                : const SettingsPage(),
+                ? const Customisables(extensionIndex: 0,)
+                : const SettingsPage(extensionIndex: 0,),
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'dart:io';
 import 'dart:convert';
@@ -10,7 +9,7 @@ void convertLocalsToFullExtension(
     String description,
     String version,
     String publisherName,
-    List<String> categories,
+    String category,
     String iconPath,
     bool isThemeActive,
     String outputPath) async {
@@ -28,7 +27,7 @@ void convertLocalsToFullExtension(
 
   // Generate the package.json file's content
   final pkgData = generatePackageJson(name, extension, description, version,
-      publisherName, categories, isThemeActive);
+      publisherName, category, isThemeActive);
 
   // Write the package.json file
   await pkg.writeAsString(pkgData);
@@ -77,7 +76,7 @@ void convertLocalsToFullExtension(
   }
 
   // Generate the CHANGELOG.md file's content
-  final changeLogData = generateChangeLog('');
+  final changeLogData = generateChangeLog('', extension);
 
   // Write the CHANGELOG.md file
   await changeLog.writeAsString(changeLogData);
@@ -90,7 +89,7 @@ void convertLocalsToFullExtension(
   }
 
   // Generate the vsc-extension-quickstart.md file's content
-  final quickStartData = generateQuickStart('');
+  final quickStartData = generateQuickStart('', extension);
 
   // Write the vsc-extension-quickstart.md file
   await quickStart.writeAsString(quickStartData);
@@ -157,14 +156,8 @@ void convertLocalsToFullExtension(
 */
 }
 
-String generatePackageJson(
-    String name,
-    String extension,
-    String description,
-    String version,
-    String publisherName,
-    List<String> categories,
-    bool isThemeActive) {
+String generatePackageJson(String name, String extension, String description,
+    String version, String publisherName, String category, bool isThemeActive) {
   String theme = ''',
 		"themes": [
 			{
@@ -190,12 +183,12 @@ String generatePackageJson(
 		"vscode": "^1.92.0"
 	},
 	"categories": [
-		${categories.map((e) => '"$e"').join(', ')}
+		"$category"
 	],
 	"contributes": {
 		"languages": [{
 			"id": "$extension",
-			"aliases": ["TBD", "$extension"],
+			"aliases": ["${extension.toLowerCase()}", "${extension.toUpperCase()}"],
 			"extensions": ["$extension"],
 			"configuration": "./language-configuration.json"
 		}],
@@ -242,71 +235,9 @@ String generateLaunchJson() {
 String generateREADME(String readmeContent) {
   if (readmeContent == '') {
     readmeContent = '''
-# tbd README
+# README
 
-This is the README for your extension "tbd". After writing up a brief description, we recommend including the following sections.
-
-## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-![feature X](images/feature-x.png)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+` on macOS or `Ctrl+` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+As of now, this extension is still in development. Please check back later for updates.
 ''';
   }
   return '''
@@ -314,12 +245,12 @@ $readmeContent
 ''';
 }
 
-String generateChangeLog(String changeLogContent) {
+String generateChangeLog(String changeLogContent, String extension) {
   if (changeLogContent == '') {
     changeLogContent = '''
 # Change Log
 
-All notable changes to the "tbd" extension will be documented in this file.
+All notable changes to the "$extension" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
@@ -333,7 +264,7 @@ $changeLogContent
 ''';
 }
 
-String generateQuickStart(String quickStartContent) {
+String generateQuickStart(String quickStartContent, String extension) {
   if (quickStartContent == '') {
     quickStartContent = '''
 # Welcome to your VS Code Extension
@@ -342,7 +273,7 @@ String generateQuickStart(String quickStartContent) {
 
 * This folder contains all of the files necessary for your extension.
 * `package.json` - this is the manifest file in which you declare your language support and define the location of the grammar file that has been copied into your extension.
-* `syntaxes/tbd.tmLanguage.json` - this is the Text mate grammar file that is used for tokenization.
+* `syntaxes/$extension.tmLanguage.json` - this is the Text mate grammar file that is used for tokenization.
 * `language-configuration.json` - this is the language configuration, defining the tokens that are used for comments and brackets.
 
 ## Get up and running straight away
@@ -390,9 +321,8 @@ Future<String> generateLanguageConfigurationJSON() async {
   List<String> singleLineComments = ['"//"', '"#"', '"##"', "add your own"];
   List<String> multiLineComments = ['"/* */"', '"<!-- -->"', '"<!--- --->"'];
 
-  final dir = await getApplicationDocumentsDirectory();
-  File jsonFile = File(
-      "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/commentsandstrings.json");
+  final dir = Directory.current.path;
+  File jsonFile = File("$dir/lib/storage/commentsandstrings.json");
   var jsonData = json.decode(jsonFile.readAsStringSync());
   String slc = singleLineComments[jsonData['slc']];
   String mlc = multiLineComments[jsonData['mlc']];
@@ -437,15 +367,13 @@ Future<String> generateLanguageConfigurationJSON() async {
 }
 
 Future<String> generateSyntax(String extension) async {
-  final dir = await getApplicationDocumentsDirectory();
-  File jsonFile = File(
-      "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/format.json");
+  final dir = Directory.current.path;
+  File jsonFile = File("$dir/lib/storage/format.json");
   var jsonData = json.decode(jsonFile.readAsStringSync());
   List<String> keywords = jsonData['keywords'].cast<String>();
   List<String> types = jsonData['types'].cast<String>();
 
-  File jsonFile2 = File(
-      "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/commentsandstrings.json");
+  File jsonFile2 = File("$dir/lib/storage/commentsandstrings.json");
   var jsonData2 = json.decode(jsonFile2.readAsStringSync());
   int stringType = jsonData2['quotes'];
   int multiCommentType = jsonData2['mlc'];
@@ -454,20 +382,20 @@ Future<String> generateSyntax(String extension) async {
 				{
 					"begin": "/\\\\*",
 					"end": "\\\\*/",
-					"name": "comment.block.tbd"
+					"name": "comment.block.$extension"
 				}'''
       : multiCommentType == 1
           ? ''',
 				{
 						"begin": "<!--",
 						"end": "-->",
-						"name": "comment.block.tbd"
+						"name": "comment.block.$extension"
 				}'''
           : ''',
 				{
 						"begin": "<!---",
 						"end": "--->",
-						"name": "comment.block.tbd"
+						"name": "comment.block.$extension"
 				}''';
 
   String strings = stringType == 0
@@ -587,7 +515,7 @@ Future<String> generateSyntax(String extension) async {
 }
 
 Future<String> generateTheme(String name) async {
-  final dir = await getApplicationDocumentsDirectory();
+  final dir = Directory.current.path;
 
   List<String> colorsIds = [
     "#ffffff",
@@ -598,8 +526,7 @@ Future<String> generateTheme(String name) async {
     "#4caf50"
   ];
 
-  File jsonFile = File(
-      "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/theming.json");
+  File jsonFile = File("$dir/lib/storage/theming.json");
   var jsonData = json.decode(jsonFile.readAsStringSync());
 
   String background = colorsIds[jsonData['bgColor']];

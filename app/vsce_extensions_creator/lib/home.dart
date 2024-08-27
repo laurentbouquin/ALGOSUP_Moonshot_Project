@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:path_provider/path_provider.dart';
-
 import 'package:intl/intl.dart';
 
 import 'dart:io';
 import 'dart:convert';
-
-import 'package:vsce_extensions_creator/customize/customisables.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,9 +31,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   _asyncCallForKeywords() async {
-    final dir = await getApplicationDocumentsDirectory();
+  final dir = Directory.current.path;
     File jsonFile = File(
-        "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/extensions_list.json");
+        "$dir/lib/storage/extensions_list.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
     setState(() {
       data = jsonData['extensions'];
@@ -194,7 +190,7 @@ Row tableRow(List<dynamic> data, int index, List<double> size,
                   ? Text(data[index]["description"],
                       textAlign: TextAlign.center)
                   : i == 2
-                      ? Text(data[index]["categories"].join(", "))
+                      ? Text(data[index]["category"])
                       : i == 3
                           ? Text(DateFormat('yyyy-MM-dd - kk:mm:ss').format(
                               DateTime.parse(data[index]["lastUpdated"])))

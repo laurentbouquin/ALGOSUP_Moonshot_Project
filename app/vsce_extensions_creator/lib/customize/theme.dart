@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../functionals/functions.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 // import 'package:flex_color_picker/flex_color_picker.dart';
 
 class ThemePage extends StatefulWidget {

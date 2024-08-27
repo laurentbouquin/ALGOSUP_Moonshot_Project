@@ -1,18 +1,1 @@
-{
-	"extensions": [
-		{
-			"name": "Angular Snippets (Version 18)",
-			"version": "18.0.2",
-			"publisher": "vsce_extensions_creator",
-			"engines": {
-				"vscode": "^1.0.0"
-			},
-			"categories": [
-				"Programming Languages"
-			],
-			"lastUpdated": "2024-08-18T15:01:42.080Z",
-			"displayName": "vsce_extensions_creator",
-			"description": "Angular version 18 snippets by John Papa"
-		}
-	]
-}
+{"extensions":[{"name":"Presentation-Extension","description":"This extension is made for a school presentation","version":"1.2.8","category":"Programming Languages","lastUpdated":"2024-08-27 13:12:09.776771","publisher":"Laurent-B","extensionFileName":"mpp"}]}

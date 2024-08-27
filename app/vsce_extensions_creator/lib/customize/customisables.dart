@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 
+import 'dart:convert';
+import 'dart:io';
+
 // import pages
 import 'format.dart';
 import 'theme.dart';
@@ -14,16 +17,51 @@ import 'functionalities.dart';
 import '../functionals/convert.dart';
 
 class Customisables extends StatefulWidget {
-  const Customisables({super.key});
+  const Customisables({super.key, required this.extensionIndex});
+
+  final int extensionIndex;
 
   @override
-  State<Customisables> createState() => _CustomisablesState();
+  State<Customisables> createState() => _CustomisablesState(extensionIndex: extensionIndex);
 }
 
 class _CustomisablesState extends State<Customisables> {
+  _CustomisablesState({required this.extensionIndex});
+
+  int extensionIndex;
   bool isMenuOpen = false;
 
   int indexOfPage = 0;
+
+  String outputPath = "";
+  String extensionName = "";
+  String extensionFileName = "";
+  String extensionDescription = "";
+  String extensionVersion = "";
+  String publisherName = "";
+  String category = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final dir = Directory.current.path;
+    File settingsFile = File("$dir/lib/storage/settings.json");
+    var settingsData = json.decode(settingsFile.readAsStringSync());
+
+    outputPath = settingsData['outputDirectory'];
+
+    
+    File extensionsFile = File("$dir/lib/storage/extensions_list.json");
+    var extensionsData = json.decode(extensionsFile.readAsStringSync());
+
+    extensionName = extensionsData['extensions'][extensionIndex]['name'];
+    extensionDescription = extensionsData['extensions'][extensionIndex]['description'];
+    extensionVersion = extensionsData['extensions'][extensionIndex]['version'];
+    category = extensionsData['extensions'][extensionIndex]['category'];
+    publisherName = extensionsData['extensions'][extensionIndex]['publisher'];
+    extensionFileName = extensionsData['extensions'][extensionIndex]['extensionFileName'];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,11 +187,12 @@ class _CustomisablesState extends State<Customisables> {
                             ),
                           ),
                           child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                indexOfPage = 2;
-                              });
-                            },
+                            onPressed: null,
+                            // onPressed: () {
+                            //   setState(() {
+                            //     indexOfPage = 2;
+                            //   });
+                            // },
                             style: ButtonStyle(
                               shape: WidgetStateProperty.all<
                                   RoundedRectangleBorder>(
@@ -162,13 +201,29 @@ class _CustomisablesState extends State<Customisables> {
                                 ),
                               ),
                             ),
-                            child: Text(
-                              "Miscellaneous",
-                              style: TextStyle(
-                                color: theme.onSurface,
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.014,
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Snippets",
+                                  style: TextStyle(
+                                    // color: theme.onSurface,
+                                    color: Colors.blueGrey[600],
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.014,
+                                  ),
+                                ),
+                                Text(
+                                  "    (Comming Soon)",
+                                  style: TextStyle(
+                                    color: Colors.blueGrey[600],
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.014,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -293,7 +348,9 @@ class _CustomisablesState extends State<Customisables> {
                     color: Colors.black,
                   ),
                   child: indexOfPage == 0
-                      ? const FormatPage()
+                      ? const FormatPage(
+                          extensionIndex: 0,
+                        )
                       : indexOfPage == 1
                           ? const ThemePage()
                           : indexOfPage == 2
@@ -329,9 +386,20 @@ class _CustomisablesState extends State<Customisables> {
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
-                      onPressed: isMenuOpen ? () {
-                        convertLocalsToFullExtension('toBeDetermined', 'tbd', 'To be determined', '0.0.2', "testingInProgress", ['Programming Languages'], "", true, "${Directory.current.path}/lib");
-                      } : null,
+                      onPressed: isMenuOpen
+                          ? () {
+                              convertLocalsToFullExtension(
+                                  extensionName,
+                                  extensionFileName,
+                                  extensionDescription,
+                                  extensionVersion,
+                                  publisherName,
+                                  category,
+                                  "",
+                                  false,
+                                  outputPath);
+                            }
+                          : null,
                       tooltip: isMenuOpen ? 'Save' : null,
                       child: const Icon(Icons.save),
                     ),

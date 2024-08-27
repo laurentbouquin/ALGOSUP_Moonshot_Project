@@ -5,8 +5,6 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import '../functionals/functions.dart';
 
 import 'dart:convert';
-
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 class CommentsAndStringsPage extends StatefulWidget {
