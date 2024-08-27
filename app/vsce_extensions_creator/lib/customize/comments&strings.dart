@@ -20,24 +20,15 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
   List<List<String>> values = [
     ['"//"', '"#"', '"##"', "add your own"],
     ['"/* */"', '"<!-- -->"', '"<!--- --->"'],
-    [
-      'only "" accepted',
-      'only \'\' accepted',
-      '"" and \'\' accepted'
-    ],
+    ['only "" accepted', 'only \'\' accepted', '"" and \'\' accepted'],
   ];
   List<int> indexes = [0, 0, 0, 0];
 
   @override
   void initState() {
     super.initState();
-    _asyncCallForParameters();
-  }
-
-  _asyncCallForParameters() async {
-    final dir = await getApplicationDocumentsDirectory();
-    File jsonFile = File(
-        "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/commentsandstrings.json");
+    final dir = Directory.current.path;
+    File jsonFile = File("$dir/lib/storage/commentsandstrings.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
     setState(() {
       indexes[0] = jsonData['slc'];

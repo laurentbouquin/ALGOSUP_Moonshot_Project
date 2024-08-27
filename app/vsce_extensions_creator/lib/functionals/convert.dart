@@ -12,11 +12,10 @@ void convertLocalsToFullExtension(
     String publisherName,
     List<String> categories,
     String iconPath,
-		bool isThemeActive) async {
+    bool isThemeActive,
+    String outputPath) async {
   // Get the path of the project
-  final dir = await getApplicationDocumentsDirectory();
-  String projectPath =
-      '${dir.path}\\GitHub\\Moonshot_Docs\\ALGOSUP_Moonshot_Project\\app\\vsce_extensions_creator\\lib';
+  String projectPath = outputPath;
 
   // Create the extension folder
   Directory('$projectPath\\out\\$name').createSync(recursive: true);
@@ -28,8 +27,8 @@ void convertLocalsToFullExtension(
   }
 
   // Generate the package.json file's content
-  final pkgData = generatePackageJson(
-      name, extension, description, version, publisherName, categories, isThemeActive);
+  final pkgData = generatePackageJson(name, extension, description, version,
+      publisherName, categories, isThemeActive);
 
   // Write the package.json file
   await pkg.writeAsString(pkgData);
@@ -158,8 +157,14 @@ void convertLocalsToFullExtension(
 */
 }
 
-String generatePackageJson(String name, String extension, String description,
-    String version, String publisherName, List<String> categories, bool isThemeActive) {
+String generatePackageJson(
+    String name,
+    String extension,
+    String description,
+    String version,
+    String publisherName,
+    List<String> categories,
+    bool isThemeActive) {
   String theme = ''',
 		"themes": [
 			{

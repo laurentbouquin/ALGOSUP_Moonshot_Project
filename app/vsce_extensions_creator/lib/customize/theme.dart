@@ -56,13 +56,8 @@ class _ThemePageState extends State<ThemePage> {
   @override
   void initState() {
     super.initState();
-    _asyncCallForTheme();
-  }
-
-  _asyncCallForTheme() async {
-    final dir = await getApplicationDocumentsDirectory();
-    File jsonFile = File(
-        "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/theming.json");
+    final dir = Directory.current.path;
+    File jsonFile = File("$dir/lib/storage/theming.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
     jsonDataTemp = jsonData;
     setState(() {
@@ -204,8 +199,7 @@ class _ThemePageState extends State<ThemePage> {
           String datas = jsonEncode(data);
           writeData(
               datas, '../vsce_extensions_creator/lib/storage', 'theming.json');
-          setState(() {
-          });
+          setState(() {});
         },
         child: const Icon(Icons.save),
       ),

@@ -26,13 +26,8 @@ class _FormatPageState extends State<FormatPage> {
   @override
   void initState() {
     super.initState();
-    _asyncCallForKeywords();
-  }
-
-  _asyncCallForKeywords() async {
-    final dir = await getApplicationDocumentsDirectory();
-    File jsonFile = File(
-        "${dir.path}/GitHub/Moonshot_Docs/ALGOSUP_Moonshot_Project/app/vsce_extensions_creator/lib/storage/format.json");
+    final dir = Directory.current.path;
+    File jsonFile = File("$dir/lib/storage/format.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
     setState(() {
       keywords = jsonData['keywords'].cast<String>();
@@ -86,7 +81,7 @@ class _FormatPageState extends State<FormatPage> {
                           await writeData(
                                   datas,
                                   '../vsce_extensions_creator/lib/storage',
-                                  'keywords.json')
+                                  'format.json')
                               .then((value) {
                             setState(() {});
                           });
@@ -143,7 +138,7 @@ class _FormatPageState extends State<FormatPage> {
                                           await writeData(
                                                   datas,
                                                   '../vsce_extensions_creator/lib/storage',
-                                                  'keywords.json')
+                                                  'format.json')
                                               .then((value) {
                                             setState(() {
                                               Navigator.of(context).pop();

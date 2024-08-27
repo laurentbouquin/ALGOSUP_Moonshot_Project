@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -329,7 +330,7 @@ class _CustomisablesState extends State<Customisables> {
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
                       onPressed: isMenuOpen ? () {
-                        convertLocalsToFullExtension('toBeDetermined', 'tbd', 'To be determined', '0.0.2', "testingInProgress", ['Programming Languages'], "", true);
+                        convertLocalsToFullExtension('toBeDetermined', 'tbd', 'To be determined', '0.0.2', "testingInProgress", ['Programming Languages'], "", true, "${Directory.current.path}/lib");
                       } : null,
                       tooltip: isMenuOpen ? 'Save' : null,
                       child: const Icon(Icons.save),
