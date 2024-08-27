@@ -9,18 +9,14 @@
 [Project Report (PDF)](https://github.com/laurentbouquin/ALGOSUP_Moonshot_Project/tree/main/Docs/Project_Report.pdf) / [Project Report (Markdown)](https://github.com/laurentbouquin/ALGOSUP_Moonshot_Project/tree/main/Docs/Project_Report.md)
 
 
-## Installation
+## Installation (Windows)
 
-Create a folder where you want to install the project.
+Go on [This GitHub Repository](https://github.com/laurentbouquin/ALGOSUP_Moonshot_Project/releases) and download the zip file of the last version.
 
-Clone the project in the folder.
+Extract the zip file in a folder of your choice.
 
-```bash
-git clone
-```
+## Run the program
 
-Create a link to the executable file.
+(Optional) Create a link to the executable file (vsce_extensions_creator.exe).
 
-executable location: `ALGOSUP_Moonshot_Project/Executable/`
-
-then, double click on the executable or the link to run the program.
+Double click on the executable or the link to run the program.
