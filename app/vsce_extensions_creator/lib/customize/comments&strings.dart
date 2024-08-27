@@ -21,12 +21,13 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
     ['only "" accepted', 'only \'\' accepted', '"" and \'\' accepted'],
   ];
   List<int> indexes = [0, 0, 0, 0];
+  final dir = Directory.current.path;
 
   @override
   void initState() {
     super.initState();
-    final dir = Directory.current.path;
-    File jsonFile = File("$dir/lib/storage/commentsandstrings.json");
+    File jsonFile =
+        File("$dir/data/flutter_assets/lib/storage/commentsandstrings.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
     setState(() {
       indexes[0] = jsonData['slc'];
@@ -89,7 +90,7 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                           String datas = jsonEncode(data);
                           await writeData(
                                   datas,
-                                  '../vsce_extensions_creator/lib/storage',
+                                  '$dir/data/flutter_assets/lib/storage',
                                   'commentsandstrings.json')
                               .then((value) {
                             setState(() {});
@@ -131,7 +132,7 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                           String datas = jsonEncode(data);
                           await writeData(
                                   datas,
-                                  '../vsce_extensions_creator/lib/storage',
+                                  '$dir/data/flutter_assets/lib/storage',
                                   'commentsandstrings.json')
                               .then((value) {
                             setState(() {});
@@ -179,7 +180,7 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                           String datas = jsonEncode(data);
                           await writeData(
                                   datas,
-                                  '../vsce_extensions_creator/lib/storage',
+                                  '$dir/data/flutter_assets/lib/storage',
                                   'commentsandstrings.json')
                               .then((value) {
                             setState(() {});

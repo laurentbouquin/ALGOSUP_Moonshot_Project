@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   _asyncCallForKeywords() async {
   final dir = Directory.current.path;
     File jsonFile = File(
-        "$dir/lib/storage/extensions_list.json");
+        "$dir/data/flutter_assets/lib/storage/extensions_list.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
     setState(() {
       data = jsonData['extensions'];

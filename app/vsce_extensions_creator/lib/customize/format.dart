@@ -67,15 +67,16 @@ class _FormatPageState extends State<FormatPage> {
   Color nameColor = Colors.green;
   Color descriptionColor = Colors.green;
   Color versionColor = Colors.green;
+  final dir = Directory.current.path;
 
   @override
   void initState() {
     super.initState();
-    final dir = Directory.current.path;
-    File jsonFile = File("$dir/lib/storage/format.json");
+    File jsonFile = File("$dir/data/flutter_assets/lib/storage/format.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
 
-    File extensionsFile = File("$dir/lib/storage/extensions_list.json");
+    File extensionsFile =
+        File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
     var extensionData = extensionsData['extensions'][extensionIndex];
 
@@ -157,7 +158,7 @@ class _FormatPageState extends State<FormatPage> {
                             String datas = jsonEncode(data);
                             await writeData(
                                     datas,
-                                    '../vsce_extensions_creator/lib/storage',
+                                    '$dir/data/flutter_assets/lib/storage',
                                     'format.json')
                                 .then((value) {
                               setState(() {});
@@ -214,7 +215,7 @@ class _FormatPageState extends State<FormatPage> {
                                             String datas = jsonEncode(data);
                                             await writeData(
                                                     datas,
-                                                    '../vsce_extensions_creator/lib/storage',
+                                                    '$dir/data/flutter_assets/lib/storage',
                                                     'format.json')
                                                 .then((value) {
                                               setState(() {
@@ -290,7 +291,7 @@ class _FormatPageState extends State<FormatPage> {
                             String datas = jsonEncode(data);
                             await writeData(
                                     datas,
-                                    '../vsce_extensions_creator/lib/storage',
+                                    '$dir/data/flutter_assets/lib/storage',
                                     'format.json')
                                 .then((value) {
                               setState(() {});
@@ -347,7 +348,7 @@ class _FormatPageState extends State<FormatPage> {
                                             String datas = jsonEncode(data);
                                             await writeData(
                                                     datas,
-                                                    '../vsce_extensions_creator/lib/storage',
+                                                    '$dir/data/flutter_assets/lib/storage',
                                                     'format.json')
                                                 .then((value) {
                                               setState(() {
@@ -404,8 +405,8 @@ class _FormatPageState extends State<FormatPage> {
                               currentName = nameController.text;
 
                               String dir = Directory.current.path;
-                              File extensionsFile =
-                                  File("$dir/lib/storage/extensions_list.json");
+                              File extensionsFile = File(
+                                  "$dir/data/flutter_assets/lib/storage/extensions_list.json");
                               var extensionsData = json
                                   .decode(extensionsFile.readAsStringSync());
                               Map<String, dynamic> data = {
@@ -422,10 +423,9 @@ class _FormatPageState extends State<FormatPage> {
                               String datas = jsonEncode(extensionsData);
                               await writeData(
                                       datas,
-                                      '../vsce_extensions_creator/lib/storage',
+                                      '$dir/data/flutter_assets/lib/storage',
                                       'extensions_list.json')
-                                  .then((value) {
-                              });
+                                  .then((value) {});
                             },
                           ),
                         ),
@@ -458,8 +458,8 @@ class _FormatPageState extends State<FormatPage> {
                               currentDescription = descriptionController.text;
 
                               String dir = Directory.current.path;
-                              File extensionsFile =
-                                  File("$dir/lib/storage/extensions_list.json");
+                              File extensionsFile = File(
+                                  "$dir/data/flutter_assets/lib/storage/extensions_list.json");
                               var extensionsData = json
                                   .decode(extensionsFile.readAsStringSync());
                               Map<String, dynamic> data = {
@@ -476,10 +476,9 @@ class _FormatPageState extends State<FormatPage> {
                               String datas = jsonEncode(extensionsData);
                               await writeData(
                                       datas,
-                                      '../vsce_extensions_creator/lib/storage',
+                                      '$dir/data/flutter_assets/lib/storage',
                                       'extensions_list.json')
-                                  .then((value) {
-                              });
+                                  .then((value) {});
                             },
                           ),
                         ),
@@ -516,8 +515,8 @@ class _FormatPageState extends State<FormatPage> {
                               currentVersion = versionController.text;
 
                               String dir = Directory.current.path;
-                              File extensionsFile =
-                                  File("$dir/lib/storage/extensions_list.json");
+                              File extensionsFile = File(
+                                  "$dir/data/flutter_assets/lib/storage/extensions_list.json");
                               var extensionsData = json
                                   .decode(extensionsFile.readAsStringSync());
                               Map<String, dynamic> data = {
@@ -534,10 +533,9 @@ class _FormatPageState extends State<FormatPage> {
                               String datas = jsonEncode(extensionsData);
                               await writeData(
                                       datas,
-                                      '../vsce_extensions_creator/lib/storage',
+                                      '$dir/data/flutter_assets/lib/storage',
                                       'extensions_list.json')
-                                  .then((value) {
-                              });
+                                  .then((value) {});
                             },
                           ),
                         ),
@@ -571,8 +569,8 @@ class _FormatPageState extends State<FormatPage> {
                               extensionFileName = extensionController.text;
 
                               String dir = Directory.current.path;
-                              File extensionsFile =
-                                  File("$dir/lib/storage/extensions_list.json");
+                              File extensionsFile = File(
+                                  "$dir/data/flutter_assets/lib/storage/extensions_list.json");
                               var extensionsData = json
                                   .decode(extensionsFile.readAsStringSync());
                               Map<String, dynamic> data = {
@@ -589,10 +587,9 @@ class _FormatPageState extends State<FormatPage> {
                               String datas = jsonEncode(extensionsData);
                               await writeData(
                                       datas,
-                                      '../vsce_extensions_creator/lib/storage',
+                                      '$dir/data/flutter_assets/lib/storage',
                                       'extensions_list.json')
-                                  .then((value) {
-                              });
+                                  .then((value) {});
                             },
                           ),
                         ),
@@ -625,8 +622,8 @@ class _FormatPageState extends State<FormatPage> {
                             selectedCategory = categories.indexOf(newValue!);
 
                             String dir = Directory.current.path;
-                            File extensionsFile =
-                                File("$dir/lib/storage/extensions_list.json");
+                            File extensionsFile = File(
+                                "$dir/data/flutter_assets/lib/storage/extensions_list.json");
                             var extensionsData =
                                 json.decode(extensionsFile.readAsStringSync());
                             Map<String, dynamic> data = {
@@ -642,7 +639,7 @@ class _FormatPageState extends State<FormatPage> {
                             String datas = jsonEncode(extensionsData);
                             await writeData(
                                     datas,
-                                    '../vsce_extensions_creator/lib/storage',
+                                    '$dir/data/flutter_assets/lib/storage',
                                     'extensions_list.json')
                                 .then((value) {
                               setState(() {});

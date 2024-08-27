@@ -46,13 +46,13 @@ class _CustomisablesState extends State<Customisables> {
     // TODO: implement initState
     super.initState();
     final dir = Directory.current.path;
-    File settingsFile = File("$dir/lib/storage/settings.json");
+    File settingsFile = File("$dir/data/flutter_assets/lib/storage/settings.json");
     var settingsData = json.decode(settingsFile.readAsStringSync());
 
     outputPath = settingsData['outputDirectory'];
 
     
-    File extensionsFile = File("$dir/lib/storage/extensions_list.json");
+    File extensionsFile = File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
 
     extensionName = extensionsData['extensions'][extensionIndex]['name'];

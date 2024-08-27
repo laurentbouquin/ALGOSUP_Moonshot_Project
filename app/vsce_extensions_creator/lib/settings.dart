@@ -48,19 +48,21 @@ class _SettingsPageState extends State<SettingsPage> {
     // "Education",
     // "Testing"
   ];
+  final dir = Directory.current.path;
 
   String settingsPath = '';
 
   @override
   void initState() {
     super.initState();
-    final dir = Directory.current.path;
 
-    File extensionsFile = File("$dir/lib/storage/extensions_list.json");
+    File extensionsFile =
+        File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
     var extensionData = extensionsData['extensions'][extensionIndex];
 
-    File settingsFile = File("$dir/lib/storage/settings.json");
+    File settingsFile =
+        File("$dir/data/flutter_assets/lib/storage/settings.json");
     var settingsData = json.decode(settingsFile.readAsStringSync());
 
     setState(() {
@@ -97,8 +99,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   publisherName = text;
 
                   String dir = Directory.current.path;
-                  File extensionsFile =
-                      File("$dir/lib/storage/extensions_list.json");
+                  File extensionsFile = File(
+                      "$dir/data/flutter_assets/lib/storage/extensions_list.json");
                   var extensionsData =
                       json.decode(extensionsFile.readAsStringSync());
                   Map<String, dynamic> data = {
@@ -112,9 +114,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   };
                   extensionsData['extensions'][extensionIndex] = data;
                   String datas = jsonEncode(extensionsData);
-                  await writeData(
-                          datas,
-                          '../vsce_extensions_creator/lib/storage',
+                  await writeData(datas, '$dir/data/flutter_assets/lib/storage',
                           'extensions_list.json')
                       .then((value) {});
                 },
@@ -140,14 +140,17 @@ class _SettingsPageState extends State<SettingsPage> {
                       "outputDirectory": result,
                     };
                     var data = jsonEncode(dataRaw);
-                    writeData(data, '../vsce_extensions_creator/lib/storage',
+                    writeData(data, '$dir/data/flutter_assets/lib/storage',
                             'settings.json')
                         .then((value) {});
                   } else {
                     // User canceled the picker
                   }
                 },
-                child: const Text("Select Output Directory", style: TextStyle(color: Colors.black),),
+                child: const Text(
+                  "Select Output Directory",
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ),
             Container(
@@ -168,7 +171,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     }
                   }
                 },
-                child: const Text("Go To Output Directory", style: TextStyle(color: Colors.black),),
+                child: const Text(
+                  "Go To Output Directory",
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             )
           ],

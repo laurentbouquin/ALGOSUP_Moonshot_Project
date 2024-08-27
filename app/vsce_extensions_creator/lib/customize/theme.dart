@@ -49,14 +49,14 @@ class _ThemePageState extends State<ThemePage> {
     "commentColor",
     "commonColor"
   ];
+  final dir = Directory.current.path;
 
   Map<String, dynamic> jsonDataTemp = {};
 
   @override
   void initState() {
     super.initState();
-    final dir = Directory.current.path;
-    File jsonFile = File("$dir/lib/storage/theming.json");
+    File jsonFile = File("$dir/data/flutter_assets/lib/storage/theming.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
     jsonDataTemp = jsonData;
     setState(() {
@@ -197,7 +197,7 @@ class _ThemePageState extends State<ThemePage> {
           };
           String datas = jsonEncode(data);
           writeData(
-              datas, '../vsce_extensions_creator/lib/storage', 'theming.json');
+              datas, '$dir/data/flutter_assets/lib/storage', 'theming.json');
           setState(() {});
         },
         child: const Icon(Icons.save),

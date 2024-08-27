@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 
 // Packages imports
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'dart:io';
+import 'package:window_manager/window_manager.dart';
 
 // Pages imports
 import 'customize/customisables.dart';
 
 import 'home.dart';
 import 'settings.dart';
+import './functionals/functions.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+  Size windowSize = await WindowManager.instance.getSize();
+  await WindowManager.instance.setMinimumSize(windowSize *1.1);
+  await WindowManager.instance.maximize();
   runApp(const MainApp());
 }
 
@@ -77,6 +84,16 @@ class _RootPageState extends State<RootPage> {
   int index = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _asyncCallForFiles();
+  }
+
+  _asyncCallForFiles() async {
+    await createBaseFilesContent(Directory.current.path);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -97,7 +114,9 @@ class _RootPageState extends State<RootPage> {
                           color: Theme.of(context).colorScheme.outline,
                           width: 2,
                         ),
-                        right: i != 2 ? const BorderSide(color: Colors.black) : BorderSide.none,
+                        right: i != 2
+                            ? const BorderSide(color: Colors.black)
+                            : BorderSide.none,
                       )),
                   child: TextButton(
                     onHover: (value) {
@@ -130,8 +149,12 @@ class _RootPageState extends State<RootPage> {
         body: index == 0
             ? const HomePage()
             : index == 1
-                ? const Customisables(extensionIndex: 0,)
-                : const SettingsPage(extensionIndex: 0,),
+                ? const Customisables(
+                    extensionIndex: 0,
+                  )
+                : const SettingsPage(
+                    extensionIndex: 0,
+                  ),
       ),
     );
   }
