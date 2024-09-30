@@ -11,7 +11,7 @@
 
 ## Installation (Windows)
 
-Go on [This GitHub Repository](https://github.com/laurentbouquin/ALGOSUP_Moonshot_Project/releases) and download the zip file of the last version.
+Go on [This GitHub Repository](https://github.com/laurentbouquin/ALGOSUP_Moonshot_Project/releases) and download the zip file of the latest version.
 
 Extract the zip file in a folder of your choice.
 
