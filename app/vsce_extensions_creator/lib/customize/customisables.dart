@@ -15,6 +15,7 @@ import 'miscellaneous.dart';
 import 'comments&strings.dart';
 import 'functionalities.dart';
 import '../functionals/convert.dart';
+import '../functionals/constants.dart';
 
 class Customisables extends StatefulWidget {
   const Customisables({super.key, required this.extensionIndex});
@@ -43,16 +44,17 @@ class _CustomisablesState extends State<Customisables> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     final dir = Directory.current.path;
-    File settingsFile = File("$dir/data/flutter_assets/lib/storage/settings.json");
+    File settingsFile = DEBUG ? File("$dir/lib/storage/settings.json")
+    : File("$dir/data/flutter_assets/lib/storage/settings.json");
     var settingsData = json.decode(settingsFile.readAsStringSync());
 
     outputPath = settingsData['outputDirectory'];
 
     
-    File extensionsFile = File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
+    File extensionsFile = DEBUG ? File("$dir/lib/storage/extensions_list.json")
+    : File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
 
     extensionName = extensionsData['extensions'][extensionIndex]['name'];

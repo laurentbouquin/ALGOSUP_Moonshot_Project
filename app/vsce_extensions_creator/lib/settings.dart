@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'functionals/functions.dart';
+import 'functionals/constants.dart';
 
 import 'package:file_picker/file_picker.dart';
 
@@ -56,13 +57,15 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
 
-    File extensionsFile =
-        File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
+    File extensionsFile = DEBUG
+        ? File("$dir/lib/storage/extensions_list.json")
+        : File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
     var extensionData = extensionsData['extensions'][extensionIndex];
 
-    File settingsFile =
-        File("$dir/data/flutter_assets/lib/storage/settings.json");
+    File settingsFile = DEBUG
+        ? File("$dir/lib/storage/settings.json")
+        : File("$dir/data/flutter_assets/lib/storage/settings.json");
     var settingsData = json.decode(settingsFile.readAsStringSync());
 
     setState(() {
@@ -99,8 +102,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   publisherName = text;
 
                   String dir = Directory.current.path;
-                  File extensionsFile = File(
-                      "$dir/data/flutter_assets/lib/storage/extensions_list.json");
+                  File extensionsFile = DEBUG
+                      ? File("$dir/lib/storage/extensions_list.json")
+                      : File(
+                          "$dir/data/flutter_assets/lib/storage/extensions_list.json");
                   var extensionsData =
                       json.decode(extensionsFile.readAsStringSync());
                   Map<String, dynamic> data = {
@@ -114,9 +119,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   };
                   extensionsData['extensions'][extensionIndex] = data;
                   String datas = jsonEncode(extensionsData);
-                  await writeData(datas, '$dir/data/flutter_assets/lib/storage',
-                          'extensions_list.json')
-                      .then((value) {});
+                  await writeData(
+                    datas,
+                    DEBUG
+                        ? '../vsce_extensions_creator/lib/storage'
+                        : '$dir/data/flutter_assets/lib/storage',
+                    'extensions_list.json',
+                  ).then((value) {});
                 },
               ),
             ),
@@ -140,9 +149,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       "outputDirectory": result,
                     };
                     var data = jsonEncode(dataRaw);
-                    writeData(data, '$dir/data/flutter_assets/lib/storage',
-                            'settings.json')
-                        .then((value) {});
+                    writeData(
+                      data,
+                      DEBUG
+                          ? '../vsce_extensions_creator/lib/storage'
+                          : '$dir/data/flutter_assets/lib/storage',
+                      'settings.json',
+                    ).then((value) {});
                   } else {
                     // User canceled the picker
                   }

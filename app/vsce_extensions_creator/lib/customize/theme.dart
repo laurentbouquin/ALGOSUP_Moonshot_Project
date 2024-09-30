@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../functionals/functions.dart';
+import '../functionals/constants.dart';
 import 'dart:convert';
 import 'dart:io';
 // import 'package:flex_color_picker/flex_color_picker.dart';
@@ -56,7 +57,9 @@ class _ThemePageState extends State<ThemePage> {
   @override
   void initState() {
     super.initState();
-    File jsonFile = File("$dir/data/flutter_assets/lib/storage/theming.json");
+    File jsonFile = DEBUG
+        ? File("$dir/lib/storage/theming.json")
+        : File("$dir/data/flutter_assets/lib/storage/theming.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
     jsonDataTemp = jsonData;
     setState(() {
@@ -197,7 +200,12 @@ class _ThemePageState extends State<ThemePage> {
           };
           String datas = jsonEncode(data);
           writeData(
-              datas, '$dir/data/flutter_assets/lib/storage', 'theming.json');
+            datas,
+            DEBUG
+                ? '../vsce_extensions_creator/lib/storage'
+                : '$dir/data/flutter_assets/lib/storage',
+            'theming.json',
+          );
           setState(() {});
         },
         child: const Icon(Icons.save),
