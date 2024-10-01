@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'dart:io';
 import 'dart:convert';
 
+import 'functionals/constants.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -33,8 +35,8 @@ class _HomePageState extends State<HomePage> {
 
   _asyncCallForKeywords() async {
   final dir = Directory.current.path;
-    File jsonFile = File(
-        "$dir/data/flutter_assets/lib/storage/extensions_list.json");
+    File jsonFile = DEBUG ? File("$dir/lib/storage/extensions_list.json")
+    : File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
     var jsonData = json.decode(jsonFile.readAsStringSync());
     setState(() {
       data = jsonData['extensions'];
