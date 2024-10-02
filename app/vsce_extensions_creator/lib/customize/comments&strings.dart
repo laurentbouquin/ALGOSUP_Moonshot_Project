@@ -4,9 +4,9 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:vsce_extensions_creator/functionals/constants.dart';
 
 import '../functionals/functions.dart';
+import '../functionals/constants.dart';
 
 import 'dart:convert';
-import 'dart:io';
 
 class CommentsAndStringsPage extends StatefulWidget {
   const CommentsAndStringsPage({super.key});
@@ -22,14 +22,11 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
     ['only "" accepted', 'only \'\' accepted', '"" and \'\' accepted'],
   ];
   List<int> indexes = [0, 0, 0, 0];
-  final dir = Directory.current.path;
 
   @override
   void initState() {
     super.initState();
-    File jsonFile = DEBUG ? File("$dir/lib/storage/commentsandstrings.json")
-        : File("$dir/data/flutter_assets/lib/storage/commentsandstrings.json");
-    var jsonData = json.decode(jsonFile.readAsStringSync());
+    var jsonData = json.decode(commentsAndStringsFile.readAsStringSync());
     setState(() {
       indexes[0] = jsonData['slc'];
       indexes[1] = jsonData['mlc'];
@@ -91,8 +88,7 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                           String datas = jsonEncode(data);
                           await writeData(
                                   datas,
-                                  DEBUG ? '../vsce_extensions_creator/lib/storage'
-                                  :'$dir/data/flutter_assets/lib/storage',
+                                  storageAddress,
                                   'commentsandstrings.json')
                               .then((value) {
                             setState(() {});
@@ -134,8 +130,7 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                           String datas = jsonEncode(data);
                           await writeData(
                                   datas,
-                                  DEBUG ? '../vsce_extensions_creator/lib/storage'
-                                  : '$dir/data/flutter_assets/lib/storage',
+                                  storageAddress,
                                   'commentsandstrings.json')
                               .then((value) {
                             setState(() {});
@@ -183,8 +178,7 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                           String datas = jsonEncode(data);
                           await writeData(
                                   datas,
-                                  DEBUG ? '../vsce_extensions_creator/lib/storage'
-                                  : '$dir/data/flutter_assets/lib/storage',
+                                  storageAddress,
                                   'commentsandstrings.json')
                               .then((value) {
                             setState(() {});

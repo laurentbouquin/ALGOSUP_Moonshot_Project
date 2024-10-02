@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 
 import 'dart:convert';
-import 'dart:io';
 
 // import pages
 import 'format.dart';
@@ -45,16 +44,11 @@ class _CustomisablesState extends State<Customisables> {
   @override
   void initState() {
     super.initState();
-    final dir = Directory.current.path;
-    File settingsFile = DEBUG ? File("$dir/lib/storage/settings.json")
-    : File("$dir/data/flutter_assets/lib/storage/settings.json");
     var settingsData = json.decode(settingsFile.readAsStringSync());
 
     outputPath = settingsData['outputDirectory'];
 
     
-    File extensionsFile = DEBUG ? File("$dir/lib/storage/extensions_list.json")
-    : File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
 
     extensionName = extensionsData['extensions'][extensionIndex]['name'];

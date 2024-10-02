@@ -49,7 +49,6 @@ class _SettingsPageState extends State<SettingsPage> {
     // "Education",
     // "Testing"
   ];
-  final dir = Directory.current.path;
 
   String settingsPath = '';
 
@@ -57,15 +56,9 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
 
-    File extensionsFile = DEBUG
-        ? File("$dir/lib/storage/extensions_list.json")
-        : File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
     var extensionData = extensionsData['extensions'][extensionIndex];
 
-    File settingsFile = DEBUG
-        ? File("$dir/lib/storage/settings.json")
-        : File("$dir/data/flutter_assets/lib/storage/settings.json");
     var settingsData = json.decode(settingsFile.readAsStringSync());
 
     setState(() {
@@ -101,11 +94,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (text) async {
                   publisherName = text;
 
-                  String dir = Directory.current.path;
-                  File extensionsFile = DEBUG
-                      ? File("$dir/lib/storage/extensions_list.json")
-                      : File(
-                          "$dir/data/flutter_assets/lib/storage/extensions_list.json");
                   var extensionsData =
                       json.decode(extensionsFile.readAsStringSync());
                   Map<String, dynamic> data = {
@@ -121,9 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   String datas = jsonEncode(extensionsData);
                   await writeData(
                     datas,
-                    DEBUG
-                        ? '../vsce_extensions_creator/lib/storage'
-                        : '$dir/data/flutter_assets/lib/storage',
+                    storageAddress,
                     'extensions_list.json',
                   ).then((value) {});
                 },
@@ -151,9 +137,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     var data = jsonEncode(dataRaw);
                     writeData(
                       data,
-                      DEBUG
-                          ? '../vsce_extensions_creator/lib/storage'
-                          : '$dir/data/flutter_assets/lib/storage',
+                      storageAddress,
                       'settings.json',
                     ).then((value) {});
                   } else {

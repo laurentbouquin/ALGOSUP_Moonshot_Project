@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vsce_extensions_creator/functionals/constants.dart';
 import '../functionals/functions.dart';
 import '../functionals/constants.dart';
 import 'dart:convert';
@@ -57,10 +58,7 @@ class _ThemePageState extends State<ThemePage> {
   @override
   void initState() {
     super.initState();
-    File jsonFile = DEBUG
-        ? File("$dir/lib/storage/theming.json")
-        : File("$dir/data/flutter_assets/lib/storage/theming.json");
-    var jsonData = json.decode(jsonFile.readAsStringSync());
+    var jsonData = json.decode(themingFile.readAsStringSync());
     jsonDataTemp = jsonData;
     setState(() {
       bgColor = jsonData['bgColor'];
@@ -201,9 +199,7 @@ class _ThemePageState extends State<ThemePage> {
           String datas = jsonEncode(data);
           writeData(
             datas,
-            DEBUG
-                ? '../vsce_extensions_creator/lib/storage'
-                : '$dir/data/flutter_assets/lib/storage',
+            storageAddress,
             'theming.json',
           );
           setState(() {});

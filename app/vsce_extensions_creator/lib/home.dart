@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:intl/intl.dart';
 
-import 'dart:io';
 import 'dart:convert';
 
 import 'functionals/constants.dart';
@@ -34,10 +31,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _asyncCallForKeywords() async {
-  final dir = Directory.current.path;
-    File jsonFile = DEBUG ? File("$dir/lib/storage/extensions_list.json")
-    : File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
-    var jsonData = json.decode(jsonFile.readAsStringSync());
+    var jsonData = json.decode(extensionsFile.readAsStringSync());
     setState(() {
       data = jsonData['extensions'];
     });

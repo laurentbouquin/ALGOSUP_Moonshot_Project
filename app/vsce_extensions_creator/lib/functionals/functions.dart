@@ -31,34 +31,13 @@ Future<void> createBaseFilesContent(String path) async {
   ];
 
   final dir = Directory.current.path;
-  final storagePath = DEBUG
-      ? '../vsce_extensions_creator/lib/storage'
-      : '$dir/data/flutter_assets/lib/storage';
+  final storagePath = storageAddress;
   for (int i = 0; i < files.length; i++) {
     File file = File("$storagePath/${files[i]}.json");
     if (!file.existsSync()) {
       file.createSync();
     }
   }
-  File extensionsFile = DEBUG
-      ? File("$dir/lib/storage/extensions_list.json")
-      : File("$dir/data/flutter_assets/lib/storage/extensions_list.json");
-
-  File commentsAndStringsFile = DEBUG
-      ? File("$dir/lib/storage/commentsandstrings.json")
-      : File("$dir/data/flutter_assets/lib/storage/commentsandstrings.json");
-
-  File formatFile = DEBUG
-      ? File("$dir/lib/storage/format.json")
-      : File("$dir/data/flutter_assets/lib/storage/format.json");
-
-  File settingsFile = DEBUG
-      ? File("$dir/lib/storage/settings.json")
-      : File("$dir/data/flutter_assets/lib/storage/settings.json");
-
-  File themingFile = DEBUG
-      ? File("$dir/lib/storage/theming.json")
-      : File("$dir/data/flutter_assets/lib/storage/theming.json");
 
   extensionsFile.writeAsStringSync(
       '{"extensions":[{"name":"Template","description":"This extension is a simple template","version":"1.0.0","category":"Programming Languages","lastUpdated":"2024-08-27 13:12:09.776771","publisher":"temp","extensionFileName":"tmp"}]}');
