@@ -75,108 +75,205 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 50,
-              width: 200,
-              child: TextField(
-                controller: TextEditingController(text: publisherName),
-                textAlign: TextAlign.center,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Publisher Name',
-                ),
-                onChanged: (text) async {
-                  publisherName = text;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
-                  var extensionsData =
-                      json.decode(extensionsFile.readAsStringSync());
-                  Map<String, dynamic> data = {
-                    'name': currentName,
-                    'description': currentDescription,
-                    'version': currentVersion,
-                    'category': categories[selectedCategory],
-                    'lastUpdated': DateTime.now().toString(),
-                    'publisher': publisherName,
-                    'extensionFileName': extensionFileName,
-                  };
-                  extensionsData['extensions'][extensionIndex] = data;
-                  String datas = jsonEncode(extensionsData);
-                  await writeData(
-                    datas,
-                    storageAddress,
-                    'extensions_list.json',
-                  ).then((value) {});
-                },
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 50),
-              child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      WidgetStateProperty.all<Color>(Colors.grey.shade300),
-                ),
-                onPressed: () async {
-                  String? result = await FilePicker.platform.getDirectoryPath();
+    return Scaffold(
+      backgroundColor: surfaceCol,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: height / 8,
+                width: width / 2.25,
+                child: TextField(
+                  controller: TextEditingController(text: publisherName),
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: onSurfaceCol, width: 2),
+                    ),
+                    labelText: 'Publisher Name',
+                  ),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  onChanged: (text) async {
+                    publisherName = text;
 
-                  if (result != null) {
-                    Map<String, dynamic> dataRaw = {
-                      "outputDirectory": result,
+                    var extensionsData =
+                        json.decode(extensionsFile.readAsStringSync());
+                    Map<String, dynamic> data = {
+                      'name': currentName,
+                      'description': currentDescription,
+                      'version': currentVersion,
+                      'category': categories[selectedCategory],
+                      'lastUpdated': DateTime.now().toString(),
+                      'publisher': publisherName,
+                      'extensionFileName': extensionFileName,
                     };
-                    var data = jsonEncode(dataRaw);
-                    writeData(
-                      data,
+                    extensionsData['extensions'][extensionIndex] = data;
+                    String datas = jsonEncode(extensionsData);
+                    await writeData(
+                      datas,
                       storageAddress,
-                      'settings.json',
+                      'extensions_list.json',
                     ).then((value) {});
-                  } else {
-                    // User canceled the picker
-                  }
+                  },
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: height / 8,
+                width: width / 4.8,
+                margin: const EdgeInsets.only(top: 50),
+                decoration: BoxDecoration(
+                  color: surfaceCol,
+                  border: Border.all(color: onSurfaceCol, width: 2),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                ),
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all<Color>(surfaceCol),
+                    overlayColor:
+                        WidgetStateProperty.all<Color>(Colors.transparent),
+                  ),
+                  onPressed: () async {
+                    String? result =
+                        await FilePicker.platform.getDirectoryPath();
+
+                    if (result != null) {
+                      Map<String, dynamic> dataRaw = {
+                        "outputDirectory": result,
+                      };
+                      var data = jsonEncode(dataRaw);
+                      writeData(
+                        data,
+                        storageAddress,
+                        'settings.json',
+                      ).then((value) {});
+                    } else {
+                      // User canceled the picker
+                    }
+                  },
+                  child: Text(
+                    "Select Output Directory",
+                    style: TextStyle(
+                        color: onSurfaceCol, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              Container(
+                height: height / 8,
+                width: width / 4.8,
+                margin: const EdgeInsets.only(top: 50, left: 10),
+                decoration: BoxDecoration(
+                  color: surfaceCol,
+                  border: Border.all(color: onSurfaceCol, width: 2),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                ),
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all<Color>(surfaceCol),
+                    overlayColor:
+                        WidgetStateProperty.all<Color>(Colors.transparent),
+                  ),
+                  onPressed: () async {
+                    if (settingsPath != '') {
+                      if (Platform.isWindows) {
+                        await Process.run('explorer', [settingsPath]);
+                      } else if (Platform.isMacOS) {
+                        await Process.run('open', [settingsPath]);
+                      } else if (Platform.isLinux) {
+                        await Process.run('xdg-open', [settingsPath]);
+                      }
+                    }
+                  },
+                  child: Text(
+                    "Go To Output Directory",
+                    style: TextStyle(
+                        color: onSurfaceCol, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            height: height / 8,
+            width: width / 2.25,
+            margin: const EdgeInsets.only(top: 50, left: 10),
+            decoration: BoxDecoration(
+              color: surfaceCol,
+              border: Border.all(color: onSurfaceCol, width: 2),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+            ),
+            child: TextButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all<Color>(surfaceCol),
+                overlayColor:
+                    WidgetStateProperty.all<Color>(Colors.transparent),
+              ),
+              onPressed: () async {},
+              child: Text(
+                "Set Current Parameters As Template",
+                style:
+                    TextStyle(color: onSurfaceCol, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: height / 8),
+            child: Transform.scale(
+              scale: 1.5,
+              child: Switch(
+                value: isDark,
+                onChanged: (bool newValue) {
+                  setState(() {
+                    isDark = newValue;
+                    surfaceCol = isDark
+                        ? const Color(0xFF332E3C)
+                        : const Color(0xFFEDF6F9);
+                    primaryCol = isDark
+                        ? const Color(0xff1F1F1F)
+                        : const Color(0xffefefef);
+                    secondaryCol = isDark
+                        ? const Color(0xff434343)
+                        : const Color(0xffcccccc);
+                    onSurfaceCol = isDark
+                        ? const Color(0xFFD8D6F2)
+                        : const Color(0xFF006d77);
+                    onPrimaryCol = isDark
+                        ? const Color(0xffFFFFFF)
+                        : const Color(0xff000000);
+                    onSecondaryCol = isDark
+                        ? const Color(0xffFFFFFF)
+                        : const Color(0xff000000);
+                  });
                 },
-                child: const Text(
-                  "Select Output Directory",
-                  style: TextStyle(color: Colors.black),
+                thumbColor: WidgetStateProperty.all<Color>(primaryCol),
+                inactiveThumbColor: primaryCol,
+                activeTrackColor: onSurfaceCol,
+                inactiveTrackColor: onSurfaceCol,
+                trackOutlineColor: WidgetStateProperty.all<Color>(onSurfaceCol),
+                thumbIcon: WidgetStateProperty.all<Icon?>(
+                  Icon(
+                    isDark ? Icons.nightlight_round : Icons.wb_sunny,
+                    color: onSurfaceCol,
+                  ),
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 50, left: 10),
-              child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      WidgetStateProperty.all<Color>(Colors.grey.shade300),
-                ),
-                onPressed: () async {
-                  if (settingsPath != '') {
-                    if (Platform.isWindows) {
-                      await Process.run('explorer', [settingsPath]);
-                    } else if (Platform.isMacOS) {
-                      await Process.run('open', [settingsPath]);
-                    } else if (Platform.isLinux) {
-                      await Process.run('xdg-open', [settingsPath]);
-                    }
-                  }
-                },
-                child: const Text(
-                  "Go To Output Directory",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            )
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }

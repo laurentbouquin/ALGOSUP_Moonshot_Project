@@ -52,21 +52,35 @@ class _HomePageState extends State<HomePage> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: surfaceCol,
       body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            headRow([
-              "Name",
-              "Description",
-              "Categories",
-              "Last Updated",
-              "Version",
-            ], [
-              width,
-              height
-            ]),
-            for (int i = 0; i < data.length; i++)
-              tableRow(data, i, [width, height], context, _formKey, i == selected),
+        child: Stack(
+          children: [
+            SizedBox(
+              height: height,
+              child: Column(
+                children: <Widget>[
+                  headRow([
+                    "Name",
+                    "Description",
+                    "Categories",
+                    "Last Updated",
+                    "Version",
+                  ], [
+                    width,
+                    height
+                  ]),
+                  for (int i = 0; i < data.length; i++)
+                    tableRow(data, i, [width, height], context, _formKey,
+                        i == selected),
+                ],
+              ),
+            ),
+            Positioned(
+              top: height * 0.93,
+              left: 0,
+              child: Icon(Icons.settings, color: onSurfaceCol, size: 40),
+            ),
           ],
         ),
       ),
@@ -83,19 +97,19 @@ Row headRow(List<String> labels, List<double> size) {
         width: i != 4 ? size[0] * 0.2 : size[0] * 0.05,
         height: size[1] * 0.05,
         decoration: BoxDecoration(
-          color: Colors.grey[300],
-          border: const Border(
+          color: secondaryCol,
+          border: Border(
             left: BorderSide(
-              color: Colors.black,
-              width: 1,
+              color: onSurfaceCol,
+              width: 2,
             ),
             bottom: BorderSide(
-              color: Colors.black,
-              width: 1,
+              color: onSurfaceCol,
+              width: 2,
             ),
             top: BorderSide(
-              color: Colors.black,
-              width: 1,
+              color: onSurfaceCol,
+              width: 2,
             ),
           ),
           borderRadius: BorderRadius.only(
@@ -105,7 +119,13 @@ Row headRow(List<String> labels, List<double> size) {
                 i == 0 ? const Radius.circular(10) : const Radius.circular(0),
           ),
         ),
-        child: Text(labels[i]),
+        child: Text(
+          labels[i],
+          style: TextStyle(
+            color: onSecondaryCol,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     Container(
       alignment: Alignment.center,
@@ -113,23 +133,23 @@ Row headRow(List<String> labels, List<double> size) {
       width: size[0] * 0.05,
       height: size[1] * 0.05,
       decoration: BoxDecoration(
-        color: Colors.grey[300],
-        border: const Border(
+        color: secondaryCol,
+        border: Border(
           right: BorderSide(
-            color: Colors.black,
-            width: 1,
+            color: onSurfaceCol,
+            width: 2,
           ),
           left: BorderSide(
-            color: Colors.black,
-            width: 1,
+            color: onSurfaceCol,
+            width: 2,
           ),
           bottom: BorderSide(
-            color: Colors.black,
-            width: 1,
+            color: onSurfaceCol,
+            width: 2,
           ),
           top: BorderSide(
-            color: Colors.black,
-            width: 1,
+            color: onSurfaceCol,
+            width: 2,
           ),
         ),
         borderRadius: const BorderRadius.only(
@@ -137,7 +157,8 @@ Row headRow(List<String> labels, List<double> size) {
           bottomRight: Radius.circular(10),
         ),
       ),
-      child: const Text("Selection"),
+      child: Text("Select",
+          style: TextStyle(color: onSecondaryCol, fontWeight: FontWeight.bold)),
     ),
   ]);
 }
@@ -153,25 +174,25 @@ Row tableRow(List<dynamic> data, int index, List<double> size,
           margin: EdgeInsets.only(top: 10, left: i == 0 ? size[0] * 0.05 : 0),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: isSelected ? Colors.grey[200] : Colors.white,
+            color: isSelected ? surfaceCol : surfaceCol,
             border: Border(
-              right: const BorderSide(
-                color: Colors.black,
-                width: 1,
+              right: BorderSide(
+                color: onSurfaceCol,
+                width: 2,
               ),
               left: i == 0
-                  ? const BorderSide(
-                      color: Colors.black,
-                      width: 1,
+                  ? BorderSide(
+                      color: onSurfaceCol,
+                      width: 2,
                     )
                   : BorderSide.none,
-              bottom: const BorderSide(
-                color: Colors.black,
-                width: 1,
+              bottom: BorderSide(
+                color: onSurfaceCol,
+                width: 2,
               ),
-              top: const BorderSide(
-                color: Colors.black,
-                width: 1,
+              top: BorderSide(
+                color: onSurfaceCol,
+                width: 2,
               ),
             ),
             borderRadius: BorderRadius.only(
@@ -182,16 +203,38 @@ Row tableRow(List<dynamic> data, int index, List<double> size,
             ),
           ),
           child: i == 0
-              ? Text(data[index]["name"])
+              ? Text(
+                  data[index]["name"],
+                  style: TextStyle(
+                      color: onSurfaceCol, fontWeight: FontWeight.bold),
+                )
               : i == 1
-                  ? Text(data[index]["description"],
-                      textAlign: TextAlign.center)
+                  ? Text(
+                      data[index]["description"],
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: onSurfaceCol, fontWeight: FontWeight.bold),
+                    )
                   : i == 2
-                      ? Text(data[index]["category"])
+                      ? Text(
+                          data[index]["category"],
+                          style: TextStyle(
+                              color: onSurfaceCol, fontWeight: FontWeight.bold),
+                        )
                       : i == 3
-                          ? Text(DateFormat('yyyy-MM-dd - kk:mm:ss').format(
-                              DateTime.parse(data[index]["lastUpdated"])))
-                          : Text(data[index]["version"]),
+                          ? Text(
+                              DateFormat('yyyy-MM-dd - kk:mm:ss').format(
+                                  DateTime.parse(data[index]["lastUpdated"])),
+                              style: TextStyle(
+                                  color: onSurfaceCol,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : Text(
+                              data[index]["version"],
+                              style: TextStyle(
+                                  color: onSurfaceCol,
+                                  fontWeight: FontWeight.bold),
+                            ),
         ),
       Container(
         alignment: Alignment.center,
@@ -199,19 +242,19 @@ Row tableRow(List<dynamic> data, int index, List<double> size,
         width: size[0] * 0.05,
         height: size[1] * 0.1,
         decoration: BoxDecoration(
-          color: isSelected ? Colors.grey[200] : Colors.white,
-          border: const Border(
+          color: isSelected ? surfaceCol : surfaceCol,
+          border: Border(
             right: BorderSide(
-              color: Colors.black,
-              width: 1,
+              color: onSurfaceCol,
+              width: 2,
             ),
             bottom: BorderSide(
-              color: Colors.black,
-              width: 1,
+              color: onSurfaceCol,
+              width: 2,
             ),
             top: BorderSide(
-              color: Colors.black,
-              width: 1,
+              color: onSurfaceCol,
+              width: 2,
             ),
           ),
           borderRadius: const BorderRadius.only(
@@ -221,7 +264,9 @@ Row tableRow(List<dynamic> data, int index, List<double> size,
         ),
         child: TextButton(
           onPressed: () {},
-          child: const Text("Select", style: TextStyle(color: Colors.black)),
+          child: Text("Select",
+              style:
+                  TextStyle(color: onSurfaceCol, fontWeight: FontWeight.bold)),
         ),
       ),
     ],

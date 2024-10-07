@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+
 // === Constants ===
 const DEBUG = true;
 
-
+bool isDark = false;
 
 
 
@@ -44,3 +46,18 @@ File themingFile = DEBUG
     ? File("$dir/lib/storage/theming.json")
     : File("$dir/data/flutter_assets/lib/storage/theming.json");
 
+
+
+
+
+// === Colors ===
+
+// Define the color scheme
+
+Color surfaceCol = isDark ? const Color(0xFF332E3C) : const Color(0xFFEDF6F9);
+Color primaryCol = isDark ? const Color(0xff1F1F1F) : const Color(0xffefefef);
+Color secondaryCol = isDark ? const Color(0xff434343) : const Color(0xffcccccc);
+
+Color onSurfaceCol = isDark ? const Color(0xFFD8D6F2) : const Color(0xFF006d77);
+Color onPrimaryCol = isDark ? const Color(0xffFFFFFF) : const Color(0xff000000);
+Color onSecondaryCol = isDark ? const Color(0xffFFFFFF) : const Color(0xff000000);
