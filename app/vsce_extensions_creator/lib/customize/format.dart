@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import '../functionals/functions.dart';
 import '../functionals/constants.dart';
 import 'dart:convert';
-import 'dart:io';
 
 class FormatPage extends StatefulWidget {
   const FormatPage({super.key, required this.extensionIndex});

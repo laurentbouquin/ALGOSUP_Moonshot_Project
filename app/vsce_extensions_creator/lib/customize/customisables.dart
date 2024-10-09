@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -369,6 +368,7 @@ class _CustomisablesState extends State<Customisables> {
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
+                      heroTag: 'publish',
                       onPressed: isMenuOpen ? null : null,
                       tooltip: isMenuOpen ? 'Publish' : null,
                       child: const Icon(Icons.publish_rounded),
@@ -382,6 +382,7 @@ class _CustomisablesState extends State<Customisables> {
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
+                      heroTag: 'save',
                       onPressed: isMenuOpen
                           ? () {
                               convertLocalsToFullExtension(
@@ -394,6 +395,7 @@ class _CustomisablesState extends State<Customisables> {
                                   "",
                                   false,
                                   outputPath);
+                              Navigator.pop(context);
                             }
                           : null,
                       tooltip: isMenuOpen ? 'Save' : null,
@@ -408,6 +410,7 @@ class _CustomisablesState extends State<Customisables> {
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
+                      heroTag: 'cancel',
                       onPressed: isMenuOpen ? () {} : null,
                       tooltip: isMenuOpen ? "Cancel" : null,
                       child: const Icon(Icons.cancel),
@@ -420,6 +423,7 @@ class _CustomisablesState extends State<Customisables> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'menu',
         onPressed: () {
           setState(() {
             isMenuOpen = !isMenuOpen;

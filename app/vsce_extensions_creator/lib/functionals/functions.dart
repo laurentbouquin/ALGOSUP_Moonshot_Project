@@ -30,7 +30,6 @@ Future<void> createBaseFilesContent(String path) async {
     "theming"
   ];
 
-  final dir = Directory.current.path;
   final storagePath = storageAddress;
   for (int i = 0; i < files.length; i++) {
     File file = File("$storagePath/${files[i]}.json");

@@ -7,9 +7,7 @@ const DEBUG = true;
 
 bool isDark = false;
 
-
-
-
+int index = 0;
 
 // === JSON Files ===
 
@@ -46,18 +44,36 @@ File themingFile = DEBUG
     ? File("$dir/lib/storage/theming.json")
     : File("$dir/data/flutter_assets/lib/storage/theming.json");
 
-
-
-
-
 // === Colors ===
 
+bool colorUpdated = false;
+
+ThemeData lightTheme = ThemeData(
+  colorScheme: const ColorScheme(
+    brightness: Brightness.light,
+    primary: Color(0xffefefef),
+    onPrimary: Color(0xff000000),
+    secondary: Color(0xffcccccc),
+    onSecondary: Color(0xff000000),
+    surface: Color(0xffEDF6F9),
+    onSurface: Color(0xFF006d77),
+    error: Color(0xffB00020),
+    onError: Color(0xffFFFFFF),
+  ),
+);
+ThemeData darkTheme = ThemeData(
+  colorScheme: const ColorScheme(
+    brightness: Brightness.dark,
+    primary: Color(0xff1F1F1F),
+    onPrimary: Color(0xffFFFFFF),
+    secondary: Color(0xff434343),
+    onSecondary: Color(0xffFFFFFF),
+    surface: Color(0xff332E3C),
+    onSurface: Color(0xFFD8D6F2),
+    error: Color(0xffB00020),
+    onError: Color(0xffFFFFFF),
+  ),
+);
+ThemeData currentTheme = isDark ? darkTheme : lightTheme;
+
 // Define the color scheme
-
-Color surfaceCol = isDark ? const Color(0xFF332E3C) : const Color(0xFFEDF6F9);
-Color primaryCol = isDark ? const Color(0xff1F1F1F) : const Color(0xffefefef);
-Color secondaryCol = isDark ? const Color(0xff434343) : const Color(0xffcccccc);
-
-Color onSurfaceCol = isDark ? const Color(0xFFD8D6F2) : const Color(0xFF006d77);
-Color onPrimaryCol = isDark ? const Color(0xffFFFFFF) : const Color(0xff000000);
-Color onSecondaryCol = isDark ? const Color(0xffFFFFFF) : const Color(0xff000000);
