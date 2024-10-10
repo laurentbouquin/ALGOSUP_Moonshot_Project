@@ -1,7 +1,8 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:vsce_extensions_creator/functionals/constants.dart';
 import '../functionals/functions.dart';
-import '../functionals/constants.dart';
+// import '../functionals/constants.dart';
 import 'dart:convert';
 import 'dart:io';
 // import 'package:flex_color_picker/flex_color_picker.dart';
@@ -24,13 +25,13 @@ class _ThemePageState extends State<ThemePage> {
     Colors.green,
   ];
 
-  int bgColor = 0;
-  int keywordColor = 1;
-  int functionColor = 1;
-  int variableColor = 1;
-  int stringColor = 2;
-  int commentColor = 1;
-  int commonColor = 1;
+  String bgColor = "FFFFFF";
+  String keywordColor = "FFFFFF";
+  String functionColor = "FFFFFF";
+  String variableColor = "FFFFFF";
+  String stringColor = "FFFFFF";
+  String commentColor = "FFFFFF";
+  String commonColor = "FFFFFF";
 
   List<String> categories = [
     "Background",
@@ -39,7 +40,8 @@ class _ThemePageState extends State<ThemePage> {
     "Variables",
     "Strings",
     "Comments",
-    "Base"
+    "Operators",
+    "Others"
   ];
 
   List<String> names = [
@@ -49,7 +51,8 @@ class _ThemePageState extends State<ThemePage> {
     "variableColor",
     "stringColor",
     "commentColor",
-    "commonColor"
+    "commonColor",
+    "otherColor"
   ];
   final dir = Directory.current.path;
 
@@ -73,106 +76,112 @@ class _ThemePageState extends State<ThemePage> {
 
   @override
   Widget build(BuildContext context) {
-    double windowWidth = MediaQuery.of(context).size.width;
-    double windowHeight = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    ColorScheme theme = AdaptiveTheme.of(context).theme.colorScheme;
     return Scaffold(
-      body: SizedBox(
-        height: windowHeight,
+      body: Container(
+        color: theme.surface,
+        height: height - height / 7.5,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'Colors: ',
-                  style: TextStyle(
-                    fontSize: windowWidth * 0.025,
-                    color: Colors.black,
-                  ),
-                ),
-                for (var k = 0; k < categories.length; k++)
+                for (var k = 0; k < categories.length / 2; k++)
                   Row(
                     children: <Widget>[
-                      SizedBox(
-                        width: 230,
-                        child: Text(
-                          '${categories[k]} : ',
-                          style: TextStyle(
-                            fontSize: windowWidth * 0.025,
-                            color: Colors.black,
+                      Container(
+                        width: width / 4,
+                        height: height / 5.4,
+                        decoration: BoxDecoration(
+                          color: theme.surface,
+                          border: Border(
+                            bottom:
+                                BorderSide(color: theme.onSurface, width: 1),
                           ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "   ${categories[k * 2]}",
+                                style: TextStyle(
+                                  fontSize: width * 0.025,
+                                  color: theme.onSurface,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.centerRight,
+                              width: height / 5.4 / 2,
+                              height: height / 5.4 / 2,
+                              margin: EdgeInsets.only(right: width / 96),
+                              decoration: BoxDecoration(
+                                color: jsonDataTemp[names[k * 2 + 1]] != null ? Color(int.parse("0xFF${jsonDataTemp[names[k * 2 + 1]]}")) : Colors.white,
+                                border: Border.all(
+                                  color: theme.onSurface,
+                                  width: 1,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      for (var i = 0; i < colors.length; i++)
-                        Container(
-                          width: 50,
-                          height: 50,
-                          margin: const EdgeInsets.only(right: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: k == 0
-                                  ? bgColor == i
-                                      ? Colors.red
-                                      : Colors.black
-                                  : k == 1
-                                      ? keywordColor == i
-                                          ? Colors.red
-                                          : Colors.black
-                                      : k == 2
-                                          ? functionColor == i
-                                              ? Colors.red
-                                              : Colors.black
-                                          : k == 3
-                                              ? variableColor == i
-                                                  ? Colors.red
-                                                  : Colors.black
-                                              : k == 4
-                                                  ? stringColor == i
-                                                      ? Colors.red
-                                                      : Colors.black
-                                                  : k == 5
-                                                      ? commentColor == i
-                                                          ? Colors.red
-                                                          : Colors.black
-                                                      : commonColor == i
-                                                          ? Colors.red
-                                                          : Colors.black,
-                            ),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: FilledButton(
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  WidgetStateProperty.all(colors[i]),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                k == 0
-                                    ? bgColor = i
-                                    : k == 1
-                                        ? keywordColor = i
-                                        : k == 2
-                                            ? functionColor = i
-                                            : k == 3
-                                                ? variableColor = i
-                                                : k == 4
-                                                    ? stringColor = i
-                                                    : k == 5
-                                                        ? commentColor = i
-                                                        : commonColor = i;
-                              });
-                            },
-                            child: Container(),
+                      Container(
+                        width: width / 4,
+                        height: height / 5.4,
+                        decoration: BoxDecoration(
+                          color: theme.surface,
+                          border: Border(
+                            bottom:
+                                BorderSide(color: theme.onSurface, width: 1),
+                            left: BorderSide(color: theme.onSurface, width: 1),
                           ),
                         ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                textAlign: TextAlign.start,
+                                "   ${categories[k * 2 + 1]}",
+                                style: TextStyle(
+                                  fontSize: width * 0.025,
+                                  color: theme.onSurface,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.centerRight,
+                              width: height / 5.4 / 2,
+                              height: height / 5.4 / 2,
+                              margin: EdgeInsets.only(right: width / 96),
+                              decoration: BoxDecoration(
+                                color: jsonDataTemp[names[k * 2 + 1]] != null ? Color(int.parse("0xFF${jsonDataTemp[names[k * 2 + 1]]}")) : Colors.white,
+                                border: Border.all(
+                                  color: theme.onSurface,
+                                  width: 1,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ],
                   ),
               ],
             ),
+            VerticalDivider(
+              color: theme.onSurface,
+              width: 2,
+              thickness: 2,
+            ),
             visualisation(
-                windowHeight,
-                windowWidth,
+                height,
+                width,
                 colors,
                 bgColor,
                 keywordColor,
@@ -215,10 +224,10 @@ Column visualisation(windowHeight, windowWidth, colors, bgColor, keywordColor,
   return Column(
     children: <Widget>[
       Container(
-        width: windowWidth * 0.5,
-        height: windowHeight * 0.83,
+        width: windowWidth / 2 - 2,
+        height: windowHeight - windowHeight / 7.5,
         decoration: BoxDecoration(
-          color: colors[bgColor],
+          color: Color(int.parse("0xFF$bgColor")),
           border: const Border(left: BorderSide(color: Colors.black, width: 1)),
         ),
         child: Container(
@@ -244,15 +253,15 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('#include '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[functionColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$functionColor")),
           ),
         ),
         Text(
           ('<iostream>'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[stringColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$stringColor")),
           ),
         ),
       ],
@@ -263,15 +272,15 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('using namespace '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[keywordColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$keywordColor")),
           ),
         ),
         Text(
           ('std;'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[variableColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$variableColor")),
           ),
         ),
       ],
@@ -282,8 +291,8 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('\n// Check if a number is even or odd'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commentColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commentColor")),
           ),
         ),
       ],
@@ -294,22 +303,22 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('int '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[keywordColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$keywordColor")),
           ),
         ),
         Text(
           ('main'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[functionColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$functionColor")),
           ),
         ),
         Text(
           ('() {'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
       ],
@@ -320,15 +329,15 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('    int '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[keywordColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$keywordColor")),
           ),
         ),
         Text(
           ('n'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
       ],
@@ -339,29 +348,29 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('\n    cout '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[variableColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$variableColor")),
           ),
         ),
         Text(
           ('\n<< '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
         Text(
           ('\n"Enter an integer: "'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[stringColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$stringColor")),
           ),
         ),
         Text(
           ('\n;'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
       ],
@@ -372,15 +381,15 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('    cin '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[variableColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$variableColor")),
           ),
         ),
         Text(
           ('>> n;'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
       ],
@@ -391,43 +400,43 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('\n    if '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[keywordColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$keywordColor")),
           ),
         ),
         Text(
           ('\n( n % '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
         Text(
           ('\n2 '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[variableColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$variableColor")),
           ),
         ),
         Text(
           ('\n== '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
         Text(
           ('\n0'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[variableColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$variableColor")),
           ),
         ),
         Text(
           ('\n)'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
       ],
@@ -438,29 +447,29 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('        cout '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[variableColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$variableColor")),
           ),
         ),
         Text(
           ('<< n << '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
         Text(
           ('" is even."'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[stringColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$stringColor")),
           ),
         ),
         Text(
           (';'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
       ],
@@ -471,8 +480,8 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('    else'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[keywordColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$keywordColor")),
           ),
         ),
       ],
@@ -483,29 +492,29 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('        cout '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[variableColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$variableColor")),
           ),
         ),
         Text(
           ('<< n << '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
         Text(
           ('" is odd."'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[stringColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$stringColor")),
           ),
         ),
         Text(
           (';'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
       ],
@@ -516,22 +525,22 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('\n    return '),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[keywordColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$keywordColor")),
           ),
         ),
         Text(
           ('\n0'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[variableColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$variableColor")),
           ),
         ),
         Text(
           ('\n;'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
       ],
@@ -542,8 +551,8 @@ List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
         Text(
           ('}'),
           style: TextStyle(
-            fontSize: 25,
-            color: colors[commonColor],
+            fontSize: 22,
+            color: Color(int.parse("0xFF$commonColor")),
           ),
         ),
       ],

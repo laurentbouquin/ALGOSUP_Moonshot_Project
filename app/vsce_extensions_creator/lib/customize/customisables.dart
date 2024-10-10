@@ -21,7 +21,8 @@ class Customisables extends StatefulWidget {
   final int extensionIndex;
 
   @override
-  State<Customisables> createState() => _CustomisablesState(extensionIndex: extensionIndex);
+  State<Customisables> createState() =>
+      _CustomisablesState(extensionIndex: extensionIndex);
 }
 
 class _CustomisablesState extends State<Customisables> {
@@ -47,15 +48,16 @@ class _CustomisablesState extends State<Customisables> {
 
     outputPath = settingsData['outputDirectory'];
 
-    
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
 
     extensionName = extensionsData['extensions'][extensionIndex]['name'];
-    extensionDescription = extensionsData['extensions'][extensionIndex]['description'];
+    extensionDescription =
+        extensionsData['extensions'][extensionIndex]['description'];
     extensionVersion = extensionsData['extensions'][extensionIndex]['version'];
     category = extensionsData['extensions'][extensionIndex]['category'];
     publisherName = extensionsData['extensions'][extensionIndex]['publisher'];
-    extensionFileName = extensionsData['extensions'][extensionIndex]['extensionFileName'];
+    extensionFileName =
+        extensionsData['extensions'][extensionIndex]['extensionFileName'];
   }
 
   @override
@@ -77,23 +79,27 @@ class _CustomisablesState extends State<Customisables> {
                       children: [
                         Container(
                           width: MediaQuery.of(context).size.width * 1 / 3,
-                          height: MediaQuery.of(context).size.height * 0.05,
+                          height: MediaQuery.of(context).size.height / 15,
                           decoration: BoxDecoration(
                             color: indexOfPage == 0
-                                ? theme.surfaceContainer
-                                : theme.surface,
+                                ? theme.secondary
+                                : theme.primary,
                             border: Border(
                               bottom: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                               right: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                               left: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
+                              ),
+                              top: BorderSide(
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                             ),
                           ),
@@ -114,7 +120,7 @@ class _CustomisablesState extends State<Customisables> {
                             child: Text(
                               "Format",
                               style: TextStyle(
-                                color: theme.onSurface,
+                                color: theme.onPrimary,
                                 fontSize:
                                     MediaQuery.of(context).size.width * 0.014,
                               ),
@@ -123,19 +129,23 @@ class _CustomisablesState extends State<Customisables> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width * 1 / 3,
-                          height: MediaQuery.of(context).size.height * 0.05,
+                          height: MediaQuery.of(context).size.height / 15,
                           decoration: BoxDecoration(
                             color: indexOfPage == 1
-                                ? theme.surfaceContainer
-                                : theme.surface,
+                                ? theme.secondary
+                                : theme.primary,
                             border: Border(
                               bottom: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                               right: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
+                              ),
+                              top: BorderSide(
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                             ),
                           ),
@@ -156,7 +166,7 @@ class _CustomisablesState extends State<Customisables> {
                             child: Text(
                               "Theme",
                               style: TextStyle(
-                                color: theme.onSurface,
+                                color: theme.onPrimary,
                                 fontSize:
                                     MediaQuery.of(context).size.width * 0.014,
                               ),
@@ -165,19 +175,23 @@ class _CustomisablesState extends State<Customisables> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width * 1 / 3,
-                          height: MediaQuery.of(context).size.height * 0.05,
+                          height: MediaQuery.of(context).size.height / 15,
                           decoration: BoxDecoration(
                             color: indexOfPage == 2
-                                ? theme.surfaceContainer
-                                : theme.surface,
+                                ? theme.secondary
+                                : theme.primary,
                             border: Border(
                               bottom: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                               right: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
+                              ),
+                              top: BorderSide(
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                             ),
                           ),
@@ -203,7 +217,7 @@ class _CustomisablesState extends State<Customisables> {
                                   "Snippets",
                                   style: TextStyle(
                                     // color: theme.onSurface,
-                                    color: Colors.blueGrey[600],
+                                    color: theme.onPrimary,
                                     fontSize:
                                         MediaQuery.of(context).size.width *
                                             0.014,
@@ -212,7 +226,7 @@ class _CustomisablesState extends State<Customisables> {
                                 Text(
                                   "    (Comming Soon)",
                                   style: TextStyle(
-                                    color: Colors.blueGrey[600],
+                                    color: theme.onPrimary,
                                     fontSize:
                                         MediaQuery.of(context).size.width *
                                             0.014,
@@ -229,19 +243,19 @@ class _CustomisablesState extends State<Customisables> {
                       children: [
                         Container(
                           width: MediaQuery.of(context).size.width * 1 / 2,
-                          height: MediaQuery.of(context).size.height * 0.05,
+                          height: MediaQuery.of(context).size.height / 15,
                           decoration: BoxDecoration(
                             color: indexOfPage == 3
-                                ? theme.surfaceContainer
-                                : theme.surface,
+                                ? theme.secondary
+                                : theme.primary,
                             border: Border(
                               bottom: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                               left: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                             ),
                           ),
@@ -262,7 +276,7 @@ class _CustomisablesState extends State<Customisables> {
                             child: Text(
                               "Comments & Strings",
                               style: TextStyle(
-                                color: theme.onSurface,
+                                color: theme.onPrimary,
                                 fontSize:
                                     MediaQuery.of(context).size.width * 0.014,
                               ),
@@ -271,23 +285,23 @@ class _CustomisablesState extends State<Customisables> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width * 1 / 2,
-                          height: MediaQuery.of(context).size.height * 0.05,
+                          height: MediaQuery.of(context).size.height / 15,
                           decoration: BoxDecoration(
                             color: indexOfPage == 4
-                                ? theme.surfaceContainer
-                                : theme.surface,
+                                ? theme.secondary
+                                : theme.primary,
                             border: Border(
                               bottom: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                               left: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                               right: BorderSide(
-                                color: theme.outline,
-                                width: 1,
+                                color: theme.onSurface,
+                                width: 2,
                               ),
                             ),
                           ),
@@ -314,7 +328,7 @@ class _CustomisablesState extends State<Customisables> {
                                   "Functionalities",
                                   style: TextStyle(
                                     // color: theme.onSurface,
-                                    color: Colors.blueGrey[600],
+                                    color: theme.onPrimary,
                                     fontSize:
                                         MediaQuery.of(context).size.width *
                                             0.014,
@@ -323,7 +337,7 @@ class _CustomisablesState extends State<Customisables> {
                                 Text(
                                   "    (Comming Soon)",
                                   style: TextStyle(
-                                    color: Colors.blueGrey[600],
+                                    color: theme.onPrimary,
                                     fontSize:
                                         MediaQuery.of(context).size.width *
                                             0.014,
@@ -338,9 +352,10 @@ class _CustomisablesState extends State<Customisables> {
                   ],
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.83,
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
+                  height: MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).size.height / 7.5,
+                  decoration: BoxDecoration(
+                    color: theme.surface,
                   ),
                   child: indexOfPage == 0
                       ? const FormatPage(
@@ -362,12 +377,17 @@ class _CustomisablesState extends State<Customisables> {
               alignment: AlignmentDirectional.topEnd,
               children: [
                 Positioned(
-                  top: MediaQuery.of(context).size.height * 0.586,
-                  right: MediaQuery.of(context).size.width * 0.01,
+                  top: MediaQuery.of(context).size.height / 1.73,
+                  right: MediaQuery.of(context).size.width / 80,
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
+                      backgroundColor: theme.surface,
+                      foregroundColor: theme.onSurface,
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(width: 2, color: theme.onSurface),
+                          borderRadius: BorderRadius.circular(10)),
                       heroTag: 'publish',
                       onPressed: isMenuOpen ? null : null,
                       tooltip: isMenuOpen ? 'Publish' : null,
@@ -376,12 +396,17 @@ class _CustomisablesState extends State<Customisables> {
                   ),
                 ),
                 Positioned(
-                  top: MediaQuery.of(context).size.height * 0.668,
-                  right: MediaQuery.of(context).size.width * 0.01,
+                  top: MediaQuery.of(context).size.height / 1.48,
+                  right: MediaQuery.of(context).size.width / 80,
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
+                      backgroundColor: theme.surface,
+                      foregroundColor: theme.onSurface,
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(width: 2, color: theme.onSurface),
+                          borderRadius: BorderRadius.circular(10)),
                       heroTag: 'save',
                       onPressed: isMenuOpen
                           ? () {
@@ -404,12 +429,17 @@ class _CustomisablesState extends State<Customisables> {
                   ),
                 ),
                 Positioned(
-                  top: MediaQuery.of(context).size.height * 0.750,
-                  right: MediaQuery.of(context).size.width * 0.01,
+                  top: MediaQuery.of(context).size.height / 1.29,
+                  right: MediaQuery.of(context).size.width / 80,
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
+                      backgroundColor: theme.surface,
+                      foregroundColor: theme.onSurface,
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(width: 2, color: theme.onSurface),
+                          borderRadius: BorderRadius.circular(10)),
                       heroTag: 'cancel',
                       onPressed: isMenuOpen ? () {} : null,
                       tooltip: isMenuOpen ? "Cancel" : null,
@@ -423,13 +453,18 @@ class _CustomisablesState extends State<Customisables> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: theme.surface,
+        foregroundColor: theme.onSurface,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(width: 2, color: theme.onSurface),
+            borderRadius: BorderRadius.circular(10)),
         heroTag: 'menu',
         onPressed: () {
           setState(() {
             isMenuOpen = !isMenuOpen;
           });
         },
-        tooltip: isMenuOpen ? null : 'Open Menu',
+        tooltip: isMenuOpen ? 'Close Menu' : 'Open Menu',
         child: isMenuOpen
             ? AnimatedContainer(
                 duration: const Duration(seconds: 1),

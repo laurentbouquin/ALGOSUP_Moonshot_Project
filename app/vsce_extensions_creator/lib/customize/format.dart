@@ -27,24 +27,15 @@ class _FormatPageState extends State<FormatPage> {
   List<String> keywords = [];
   List<String> types = [];
 
-  List<String> categories = [
-    "Programming Languages",
-    "Themes",
-    // "Snippets",
-    // "Linters",
-    // "Debuggers",
-    // "Formatters",
-    // "Keymaps",
-    // "SCM Providers",
-    // "Other",
-    // "Extension Packs",
-    // "Language Packs",
-    // "Data Science",
-    // "Machine Learning",
-    // "Visualization",
-    // "Notebooks",
-    // "Education",
-    // "Testing"
+  List<bool> categories = [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
   ];
 
   int selectedCategory = 0;
@@ -82,7 +73,6 @@ class _FormatPageState extends State<FormatPage> {
       currentName = extensionData['name'];
       currentDescription = extensionData['description'];
       currentVersion = extensionData['version'];
-      selectedCategory = categories.indexOf(extensionData['category']);
       publisher = extensionData['publisher'];
       extensionFileName = extensionData['extensionFileName'];
     });
@@ -91,556 +81,907 @@ class _FormatPageState extends State<FormatPage> {
   @override
   Widget build(BuildContext context) {
     ColorScheme theme = AdaptiveTheme.of(context).theme.colorScheme;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.83,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: const Center(
-                      child: Text(
-                        'keywords:',
-                        style: TextStyle(
-                          fontSize: 25,
-                          decoration: TextDecoration.underline,
-                        ),
+      backgroundColor: theme.surface,
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: height / 10.8,
+                width: width / 3,
+                decoration: BoxDecoration(
+                    color: theme.surface,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: theme.onSurface,
+                        width: 2,
+                      ),
+                    )),
+                child: const Center(
+                  child: Text(
+                    'keywords',
+                    style: TextStyle(
+                      fontSize: 25,
+                    ),
+                  ),
+                ),
+              ),
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (int i = 0; i < keywords.length; i++)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            height: height / 10.8,
+                            width: width / 3 - width / 16,
+                            decoration: BoxDecoration(
+                              color: theme.surface,
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: theme.onSurface,
+                                  width: 1,
+                                ),
+                                right: BorderSide(
+                                  color: theme.onSurface,
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            child: TextField(
+                              readOnly: true,
+                              controller:
+                                  TextEditingController(text: keywords[i]),
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                              ),
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: theme.onSurface,
+                              ),
+                              onChanged: (value) {
+                                keywords[i] = value;
+                              },
+                            ),
+                          ),
+                          Container(
+                            width: width / 16,
+                            height: height / 10.8,
+                            decoration: BoxDecoration(
+                              color: theme.surface,
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: theme.onSurface,
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            child: IconButton(
+                              hoverColor: Colors.transparent,
+                              onPressed: () async {
+                                keywords.removeAt(i);
+                                Map<String, dynamic> data = {
+                                  'keywords': keywords,
+                                  'types': types,
+                                  'name': currentName,
+                                  'description': currentDescription,
+                                  'version': currentVersion,
+                                  'category': categories[selectedCategory],
+                                  'lastUpdated': DateTime.now().toString(),
+                                };
+                                String datas = jsonEncode(data);
+                                await writeData(
+                                        datas, storageAddress, 'format.json')
+                                    .then((value) {
+                                  setState(() {});
+                                });
+                              },
+                              icon: Icon(Icons.highlight_remove_sharp,
+                                  color: theme.onSurface),
+                            ),
+                          ),
+                        ],
+                      ),
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: ((height - height / 7.5) -
+                              height / 10.8 -
+                              ((height / 10.8) * keywords.length) -
+                              50)),
+                      child: IconButton(
+                        onPressed: () async {
+                          await showDialog<void>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: Stack(
+                                clipBehavior: Clip.none,
+                                children: <Widget>[
+                                  Positioned(
+                                    right: -40,
+                                    top: -40,
+                                    child: InkResponse(
+                                      onTap: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const CircleAvatar(
+                                        backgroundColor: Colors.red,
+                                        child: Icon(Icons.close),
+                                      ),
+                                    ),
+                                  ),
+                                  Form(
+                                    key: _formKey,
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          const Text('Add Keywords'),
+                                          TextField(
+                                            decoration: const InputDecoration(
+                                              hintText: 'Enter Keyword',
+                                            ),
+                                            onChanged: (value) =>
+                                                currentKeyword = value,
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              keywords.add(currentKeyword);
+                                              if (currentKeyword.isNotEmpty) {
+                                                Map<String, dynamic> data = {
+                                                  'keywords': keywords,
+                                                  'types': types,
+                                                };
+                                                String datas = jsonEncode(data);
+                                                await writeData(
+                                                        datas,
+                                                        storageAddress,
+                                                        'format.json')
+                                                    .then((value) {
+                                                  setState(() {
+                                                    Navigator.of(context).pop();
+                                                  });
+                                                });
+                                              }
+                                            },
+                                            child: const Text('Add'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        icon: Icon(Icons.add, color: theme.onSurface),
                       ),
                     ),
-                  ),
-                  for (int i = 0; i < keywords.length; i++)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 50,
-                          width: keywords[i].length * 10.0,
-                          child: TextField(
-                            readOnly: true,
-                            controller:
-                                TextEditingController(text: keywords[i]),
-                            textAlign: TextAlign.center,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                            ),
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: theme.onSurface,
-                            ),
-                            onChanged: (value) {
-                              keywords[i] = value;
-                            },
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            keywords.removeAt(i);
-                            Map<String, dynamic> data = {
-                              'keywords': keywords,
-                              'types': types,
-                              'name': currentName,
-                              'description': currentDescription,
-                              'version': currentVersion,
-                              'category': categories[selectedCategory],
-                              'lastUpdated': DateTime.now().toString(),
-                            };
-                            String datas = jsonEncode(data);
-                            await writeData(
-                                    datas,
-                                    storageAddress,
-                                    'format.json')
-                                .then((value) {
-                              setState(() {});
-                            });
-                          },
-                          icon: Icon(Icons.highlight_remove_sharp,
-                              color: theme.onSurface),
-                        ),
-                      ],
-                    ),
-                  IconButton(
-                    onPressed: () async {
-                      await showDialog<void>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          content: Stack(
-                            clipBehavior: Clip.none,
-                            children: <Widget>[
-                              Positioned(
-                                right: -40,
-                                top: -40,
-                                child: InkResponse(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const CircleAvatar(
-                                    backgroundColor: Colors.red,
-                                    child: Icon(Icons.close),
-                                  ),
-                                ),
-                              ),
-                              Form(
-                                key: _formKey,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      const Text('Add Keywords'),
-                                      TextField(
-                                        decoration: const InputDecoration(
-                                          hintText: 'Enter Keyword',
-                                        ),
-                                        onChanged: (value) =>
-                                            currentKeyword = value,
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          keywords.add(currentKeyword);
-                                          if (currentKeyword.isNotEmpty) {
-                                            Map<String, dynamic> data = {
-                                              'keywords': keywords,
-                                              'types': types,
-                                            };
-                                            String datas = jsonEncode(data);
-                                            await writeData(
-                                                    datas,
-                                                    storageAddress,
-                                                    'format.json')
-                                                .then((value) {
-                                              setState(() {
-                                                Navigator.of(context).pop();
-                                              });
-                                            });
-                                          }
-                                        },
-                                        child: const Text('Add'),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.add, color: theme.onSurface),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: const Center(
-                      child: Text(
-                        'Types:',
-                        style: TextStyle(
-                          fontSize: 25,
-                          decoration: TextDecoration.underline,
-                        ),
+            ],
+          ),
+          VerticalDivider(
+            color: theme.onSurface,
+            thickness: 2,
+            width: 2,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: height / 10.8,
+                width: width / 3 - 4,
+                decoration: BoxDecoration(
+                    color: theme.surface,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: theme.onSurface,
+                        width: 2,
                       ),
+                    )),
+                child: const Center(
+                  child: Text(
+                    'Types',
+                    style: TextStyle(
+                      fontSize: 25,
+                      // decoration: TextDecoration.underline,
                     ),
                   ),
-                  for (int i = 0; i < types.length; i++)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 50,
-                          width: types[i].length * 10.0,
-                          child: TextField(
-                            readOnly: true,
-                            controller: TextEditingController(text: types[i]),
-                            textAlign: TextAlign.center,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                            ),
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: theme.onSurface,
-                            ),
-                            onChanged: (value) {
-                              types[i] = value;
-                            },
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            types.removeAt(i);
-                            Map<String, dynamic> data = {
-                              'keywords': keywords,
-                              'types': types,
-                            };
-                            String datas = jsonEncode(data);
-                            await writeData(
-                                    datas,
-                                    storageAddress,
-                                    'format.json')
-                                .then((value) {
-                              setState(() {});
-                            });
-                          },
-                          icon: Icon(Icons.highlight_remove_sharp,
-                              color: theme.onSurface),
-                        ),
-                      ],
-                    ),
-                  IconButton(
-                    onPressed: () async {
-                      await showDialog<void>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          content: Stack(
-                            clipBehavior: Clip.none,
-                            children: <Widget>[
-                              Positioned(
-                                right: -40,
-                                top: -40,
-                                child: InkResponse(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const CircleAvatar(
-                                    backgroundColor: Colors.red,
-                                    child: Icon(Icons.close),
-                                  ),
-                                ),
-                              ),
-                              Form(
-                                key: _formKey,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      const Text('Add types'),
-                                      TextField(
-                                        decoration: const InputDecoration(
-                                          hintText: 'Enter Keyword',
-                                        ),
-                                        onChanged: (value) =>
-                                            currentKeyword = value,
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          types.add(currentKeyword);
-                                          if (currentKeyword.isNotEmpty) {
-                                            Map<String, dynamic> data = {
-                                              'keywords': keywords,
-                                              'types': types,
-                                            };
-                                            String datas = jsonEncode(data);
-                                            await writeData(
-                                                    datas,
-                                                    storageAddress,
-                                                    'format.json')
-                                                .then((value) {
-                                              setState(() {
-                                                Navigator.of(context).pop();
-                                              });
-                                            });
-                                          }
-                                        },
-                                        child: const Text('Add'),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.add, color: theme.onSurface),
-                  ),
-                ],
+                ),
               ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height * 0.02),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('       Name: ',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: theme.onSurface,
-                            )),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.12,
-                          margin: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.02),
-                          child: TextField(
-                            controller: nameController..text = currentName,
-                            decoration: InputDecoration(
-                              hintText: 'Enter Extension Name',
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: nameColor),
-                              ),
-                            ),
-                            onChanged: (value) async {
-                              currentName = nameController.text;
-                              var extensionsData = json
-                                  .decode(extensionsFile.readAsStringSync());
-                              Map<String, dynamic> data = {
-                                'name': currentName,
-                                'description': currentDescription,
-                                'version': currentVersion,
-                                'category': categories[selectedCategory],
-                                'lastUpdated': DateTime.now().toString(),
-                                'publisher': publisher,
-                                'extensionFileName': extensionFileName,
-                              };
-                              extensionsData['extensions'][extensionIndex] =
-                                  data;
-                              String datas = jsonEncode(extensionsData);
-                              await writeData(
-                                      datas,
-                                      storageAddress,
-                                      'extensions_list.json')
-                                  .then((value) {});
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height * 0.02),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Description: ',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: theme.onSurface,
-                            )),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.12,
-                          margin: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.02),
-                          child: TextField(
-                            controller: descriptionController
-                              ..text = currentDescription,
-                            maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                            decoration: const InputDecoration(
-                              hintText: 'Enter Extension Description',
-                            ),
-                            onChanged: (value) async {
-                              currentDescription = descriptionController.text;
-
-                              var extensionsData = json
-                                  .decode(extensionsFile.readAsStringSync());
-                              Map<String, dynamic> data = {
-                                'name': currentName,
-                                'description': currentDescription,
-                                'version': currentVersion,
-                                'category': categories[selectedCategory],
-                                'lastUpdated': DateTime.now().toString(),
-                                'publisher': publisher,
-                                'extensionFileName': extensionFileName,
-                              };
-                              extensionsData['extensions'][extensionIndex] =
-                                  data;
-                              String datas = jsonEncode(extensionsData);
-                              await writeData(
-                                      datas,
-                                      storageAddress,
-                                      'extensions_list.json')
-                                  .then((value) {});
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height * 0.02),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('    Version: ',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: theme.onSurface,
-                            )),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.12,
-                          margin: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.02),
-                          child: TextField(
-                            controller: versionController
-                              ..text = currentVersion,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9.]')),
-                            ],
-                            decoration: const InputDecoration(
-                              hintText: 'e.g. 1.0.2',
-                            ),
-                            onChanged: (value) async {
-                              currentVersion = versionController.text;
-
-                              var extensionsData = json
-                                  .decode(extensionsFile.readAsStringSync());
-                              Map<String, dynamic> data = {
-                                'name': currentName,
-                                'description': currentDescription,
-                                'version': currentVersion,
-                                'category': categories[selectedCategory],
-                                'lastUpdated': DateTime.now().toString(),
-                                'publisher': publisher,
-                                'extensionFileName': extensionFileName,
-                              };
-                              extensionsData['extensions'][extensionIndex] =
-                                  data;
-                              String datas = jsonEncode(extensionsData);
-                              await writeData(
-                                      datas,
-                                      storageAddress,
-                                      'extensions_list.json')
-                                  .then((value) {});
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height * 0.02),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('  Extension: ',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: theme.onSurface,
-                            )),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.12,
-                          margin: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.02),
-                          child: TextField(
-                            controller: extensionController
-                              ..text = extensionFileName,
-                            keyboardType: TextInputType.number,
-                            maxLength: 4,
-                            decoration: const InputDecoration(
-                              hintText: 'e.g. dart',
-                            ),
-                            onChanged: (value) async {
-                              extensionFileName = extensionController.text;
-
-                              var extensionsData = json
-                                  .decode(extensionsFile.readAsStringSync());
-                              Map<String, dynamic> data = {
-                                'name': currentName,
-                                'description': currentDescription,
-                                'version': currentVersion,
-                                'category': categories[selectedCategory],
-                                'lastUpdated': DateTime.now().toString(),
-                                'publisher': publisher,
-                                'extensionFileName': extensionFileName,
-                              };
-                              extensionsData['extensions'][extensionIndex] =
-                                  data;
-                              String datas = jsonEncode(extensionsData);
-                              await writeData(
-                                      datas,
-                                      storageAddress,
-                                      'extensions_list.json')
-                                  .then((value) {});
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('   Category: ',
-                          style: TextStyle(
-                            fontSize: 20,
+              for (int i = 0; i < types.length; i++)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      height: height / 10.8,
+                      width: width / 3 - 4 - width / 16,
+                      decoration: BoxDecoration(
+                        color: theme.surface,
+                        border: Border(
+                          bottom: BorderSide(
                             color: theme.onSurface,
-                          )),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.12,
-                        margin: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * 0.02),
-                        child: DropdownButton<String>(
-                          value: categories[selectedCategory],
-                          icon: const Icon(Icons.arrow_downward),
-                          iconSize: 24,
-                          elevation: 16,
-                          style: const TextStyle(color: Colors.deepPurple),
-                          underline: Container(
-                            height: 2,
-                            color: Colors.deepPurpleAccent,
+                            width: 1,
                           ),
-                          onChanged: (String? newValue) async {
-                            selectedCategory = categories.indexOf(newValue!);
-
-                            var extensionsData =
-                                json.decode(extensionsFile.readAsStringSync());
-                            Map<String, dynamic> data = {
-                              'name': currentName,
-                              'description': currentDescription,
-                              'version': currentVersion,
-                              'category': categories[selectedCategory],
-                              'lastUpdated': DateTime.now().toString(),
-                              'publisher': publisher,
-                              'extensionFileName': extensionFileName,
-                            };
-                            extensionsData['extensions'][extensionIndex] = data;
-                            String datas = jsonEncode(extensionsData);
-                            await writeData(
-                                    datas,
-                                    storageAddress,
-                                    'extensions_list.json')
-                                .then((value) {
-                              setState(() {});
-                            });
-                          },
-                          items: categories
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
+                          right: BorderSide(
+                            color: theme.onSurface,
+                            width: 1,
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                      child: TextField(
+                        readOnly: true,
+                        controller: TextEditingController(text: types[i]),
+                        textAlign: TextAlign.center,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: theme.onSurface,
+                        ),
+                        onChanged: (value) {
+                          types[i] = value;
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: width / 16,
+                      height: height / 10.8,
+                      decoration: BoxDecoration(
+                        color: theme.surface,
+                        border: Border(
+                          bottom: BorderSide(
+                            color: theme.onSurface,
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                      child: IconButton(
+                        hoverColor: Colors.transparent,
+                        onPressed: () async {
+                          types.removeAt(i);
+                          Map<String, dynamic> data = {
+                            'keywords': keywords,
+                            'types': types,
+                          };
+                          String datas = jsonEncode(data);
+                          await writeData(datas, storageAddress, 'format.json')
+                              .then((value) {
+                            setState(() {});
+                          });
+                        },
+                        icon: Icon(Icons.highlight_remove_sharp,
+                            color: theme.onSurface),
+                      ),
+                    ),
+                  ],
+                ),
+              Container(
+                margin: EdgeInsets.only(
+                    top: ((height - height / 7.5) -
+                        height / 10.8 -
+                        ((height / 10.8) * types.length) -
+                        50)),
+                child: IconButton(
+                  onPressed: () async {
+                    await showDialog<void>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        content: Stack(
+                          clipBehavior: Clip.none,
+                          children: <Widget>[
+                            Positioned(
+                              right: -40,
+                              top: -40,
+                              child: InkResponse(
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const CircleAvatar(
+                                  backgroundColor: Colors.red,
+                                  child: Icon(Icons.close),
+                                ),
+                              ),
+                            ),
+                            Form(
+                              key: _formKey,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    const Text('Add types'),
+                                    TextField(
+                                      decoration: const InputDecoration(
+                                        hintText: 'Enter Keyword',
+                                      ),
+                                      onChanged: (value) =>
+                                          currentKeyword = value,
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        types.add(currentKeyword);
+                                        if (currentKeyword.isNotEmpty) {
+                                          Map<String, dynamic> data = {
+                                            'keywords': keywords,
+                                            'types': types,
+                                          };
+                                          String datas = jsonEncode(data);
+                                          await writeData(datas, storageAddress,
+                                                  'format.json')
+                                              .then((value) {
+                                            setState(() {
+                                              Navigator.of(context).pop();
+                                            });
+                                          });
+                                        }
+                                      },
+                                      child: const Text('Add'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.add, color: theme.onSurface),
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+          VerticalDivider(
+            color: theme.onSurface,
+            thickness: 2,
+            width: 2,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: height / 10.8,
+                width: width / 3,
+                decoration: BoxDecoration(
+                    color: theme.surface,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: theme.onSurface,
+                        width: 2,
+                      ),
+                    )),
+                child: const Center(
+                  child: Text(
+                    'Extension Options',
+                    style: TextStyle(
+                      fontSize: 25,
+                      // decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                width: width / 3,
+                height: height / 10.8,
+                decoration: BoxDecoration(
+                  color: theme.surface,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: theme.onSurface,
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('       Name: ',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: theme.onSurface,
+                        )),
+                    Container(
+                      width: width * 0.12,
+                      margin: EdgeInsets.only(left: width * 0.02),
+                      child: TextField(
+                        controller: nameController..text = currentName,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Enter Extension Name',
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: nameColor),
+                          ),
+                        ),
+                        onChanged: (value) async {
+                          currentName = nameController.text;
+                          var extensionsData =
+                              json.decode(extensionsFile.readAsStringSync());
+                          Map<String, dynamic> data = {
+                            'name': currentName,
+                            'description': currentDescription,
+                            'version': currentVersion,
+                            'category': categories[selectedCategory],
+                            'lastUpdated': DateTime.now().toString(),
+                            'publisher': publisher,
+                            'extensionFileName': extensionFileName,
+                          };
+                          extensionsData['extensions'][extensionIndex] = data;
+                          String datas = jsonEncode(extensionsData);
+                          await writeData(
+                                  datas, storageAddress, 'extensions_list.json')
+                              .then((value) {});
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: width / 3,
+                height: height / 10.8 * 2,
+                decoration: BoxDecoration(
+                  color: theme.surface,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: theme.onSurface,
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Description: ',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: theme.onSurface,
+                        )),
+                    Container(
+                      width: width * 0.12,
+                      margin: EdgeInsets.only(left: width * 0.02),
+                      child: TextField(
+                        controller: descriptionController
+                          ..text = currentDescription,
+                        // maxLengthEnforcement: MaxLengthEnforcement.none,
+                        maxLines: 3,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Enter Extension Description',
+                        ),
+                        onChanged: (value) async {
+                          currentDescription = descriptionController.text;
+
+                          var extensionsData =
+                              json.decode(extensionsFile.readAsStringSync());
+                          Map<String, dynamic> data = {
+                            'name': currentName,
+                            'description': currentDescription,
+                            'version': currentVersion,
+                            'category': categories[selectedCategory],
+                            'lastUpdated': DateTime.now().toString(),
+                            'publisher': publisher,
+                            'extensionFileName': extensionFileName,
+                          };
+                          extensionsData['extensions'][extensionIndex] = data;
+                          String datas = jsonEncode(extensionsData);
+                          await writeData(
+                                  datas, storageAddress, 'extensions_list.json')
+                              .then((value) {});
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: width / 3,
+                height: height / 10.8,
+                decoration: BoxDecoration(
+                  color: theme.surface,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: theme.onSurface,
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('    Version: ',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: theme.onSurface,
+                        )),
+                    Container(
+                      width: width * 0.12,
+                      margin: EdgeInsets.only(left: width * 0.02),
+                      child: TextField(
+                        controller: versionController..text = currentVersion,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                        ],
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'e.g. 1.0.2',
+                        ),
+                        onChanged: (value) async {
+                          currentVersion = versionController.text;
+
+                          var extensionsData =
+                              json.decode(extensionsFile.readAsStringSync());
+                          Map<String, dynamic> data = {
+                            'name': currentName,
+                            'description': currentDescription,
+                            'version': currentVersion,
+                            'category': categories[selectedCategory],
+                            'lastUpdated': DateTime.now().toString(),
+                            'publisher': publisher,
+                            'extensionFileName': extensionFileName,
+                          };
+                          extensionsData['extensions'][extensionIndex] = data;
+                          String datas = jsonEncode(extensionsData);
+                          await writeData(
+                                  datas, storageAddress, 'extensions_list.json')
+                              .then((value) {});
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: width / 3,
+                height: height / 10.8,
+                decoration: BoxDecoration(
+                  color: theme.surface,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: theme.onSurface,
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('  Extension: ',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: theme.onSurface,
+                        )),
+                    Container(
+                      width: width * 0.12,
+                      margin: EdgeInsets.only(left: width * 0.02),
+                      child: TextField(
+                        controller: extensionController
+                          ..text = extensionFileName,
+                        keyboardType: TextInputType.number,
+                        maxLength: 4,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          counterText: '',
+                          hintText: 'e.g. dart',
+                        ),
+                        onChanged: (value) async {
+                          extensionFileName = extensionController.text;
+
+                          var extensionsData =
+                              json.decode(extensionsFile.readAsStringSync());
+                          Map<String, dynamic> data = {
+                            'name': currentName,
+                            'description': currentDescription,
+                            'version': currentVersion,
+                            'category': categories[selectedCategory],
+                            'lastUpdated': DateTime.now().toString(),
+                            'publisher': publisher,
+                            'extensionFileName': extensionFileName,
+                          };
+                          extensionsData['extensions'][extensionIndex] = data;
+                          String datas = jsonEncode(extensionsData);
+                          await writeData(
+                                  datas, storageAddress, 'extensions_list.json')
+                              .then((value) {});
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: width / 3,
+                margin: EdgeInsets.only(top: height / 108),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: width / 9.6,
+                      child: Text(
+                        '   Categories: ',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: theme.onSurface,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: width / 9.6,
+                      decoration: BoxDecoration(
+                        color: theme.surface,
+                        border: Border.all(
+                          color: theme.onSurface,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              categories[0] ? theme.onSurface : theme.primary),
+                        ),
+                        child: FittedBox(
+                          child: Text(
+                            'Programming Languages',
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: categories[0]
+                                  ? theme.onPrimary
+                                  : theme.onSurface,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            categories[0] = !categories[0];
+                          });
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: width / 9.6,
+                      decoration: BoxDecoration(
+                        color: theme.surface,
+                        border: Border.all(
+                          color: theme.onSurface,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              categories[1] ? theme.onSurface : theme.primary),
+                        ),
+                        child: Text(
+                          'Themes',
+                          style: TextStyle(
+                            color: categories[1]
+                                ? theme.onPrimary
+                                : theme.onSurface,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            categories[1] = !categories[1];
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: width / 3,
+                margin: EdgeInsets.only(top: height / 108),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      width: width / 9.6,
+                      decoration: BoxDecoration(
+                        color: theme.surface,
+                        border: Border.all(
+                          color: theme.onSurface,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              categories[2] ? theme.onSurface : theme.primary),
+                        ),
+                        child: Text(
+                          'Snippets',
+                          style: TextStyle(
+                            color: categories[2]
+                                ? theme.onPrimary
+                                : theme.onSurface,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            categories[2] = !categories[2];
+                          });
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: width / 9.6,
+                      decoration: BoxDecoration(
+                        color: theme.surface,
+                        border: Border.all(
+                          color: theme.onSurface,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              categories[3] ? theme.onSurface : theme.primary),
+                        ),
+                        child: Text(
+                          'Debuggers',
+                          style: TextStyle(
+                            color: categories[3]
+                                ? theme.onPrimary
+                                : theme.onSurface,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            categories[3] = !categories[3];
+                          });
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: width / 9.6,
+                      decoration: BoxDecoration(
+                        color: theme.surface,
+                        border: Border.all(
+                          color: theme.onSurface,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              categories[4] ? theme.onSurface : theme.primary),
+                        ),
+                        child: Text(
+                          'Keymaps',
+                          style: TextStyle(
+                            color: categories[4]
+                                ? theme.onPrimary
+                                : theme.onSurface,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            categories[4] = !categories[4];
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: width / 3,
+                margin: EdgeInsets.only(top: height / 108),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      width: width / 9.6,
+                      decoration: BoxDecoration(
+                        color: theme.surface,
+                        border: Border.all(
+                          color: theme.onSurface,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              categories[5] ? theme.onSurface : theme.primary),
+                        ),
+                        child: Text(
+                          'Testing',
+                          style: TextStyle(
+                            color: categories[5]
+                                ? theme.onPrimary
+                                : theme.onSurface,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            categories[5] = !categories[5];
+                          });
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: width / 9.6,
+                      decoration: BoxDecoration(
+                        color: theme.surface,
+                        border: Border.all(
+                          color: theme.onSurface,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              categories[6] ? theme.onSurface : theme.primary),
+                        ),
+                        child: Text(
+                          'Linters',
+                          style: TextStyle(
+                            color: categories[6]
+                                ? theme.onPrimary
+                                : theme.onSurface,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            categories[6] = !categories[6];
+                          });
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: width / 9.6,
+                      decoration: BoxDecoration(
+                        color: theme.surface,
+                        border: Border.all(
+                          color: theme.onSurface,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              categories[7] ? theme.onSurface : theme.primary),
+                        ),
+                        child: Text(
+                          'Other',
+                          style: TextStyle(
+                            color: categories[7]
+                                ? theme.onPrimary
+                                : theme.onSurface,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            categories[7] = !categories[7];
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

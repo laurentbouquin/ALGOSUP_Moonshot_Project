@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:vsce_extensions_creator/functionals/constants.dart';
 
 import '../functionals/functions.dart';
 import '../functionals/constants.dart';
@@ -23,6 +22,9 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
   ];
   List<int> indexes = [0, 0, 0, 0];
 
+  bool checkbox1 = true;
+  bool checkbox2 = false;
+
   @override
   void initState() {
     super.initState();
@@ -37,166 +39,467 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
   @override
   Widget build(BuildContext context) {
     ColorScheme theme = AdaptiveTheme.of(context).theme.colorScheme;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    double usableHeight = height - height / 7.5;
     return Scaffold(
       body: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.83,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.5,
+            Container(
+              width: MediaQuery.of(context).size.width / 2,
+              decoration: BoxDecoration(
+                color: theme.surface,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'Comments: ',
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.width * 0.025,
-                      color: theme.onSurface,
+                  Container(
+                    height: usableHeight / 2,
+                    decoration: BoxDecoration(
+                      color: theme.surface,
+                      border: Border(
+                          bottom: BorderSide(color: theme.onSurface, width: 2)),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            // SizedBox(
+                            //   width: width / 2.5,
+                            //   height: height / 10.8,
+                            //   child: TextField(
+                            //     controller: TextEditingController(
+                            //         text: values[0][indexes[0]]),
+                            //     textAlign: TextAlign.center,
+                            //     decoration: InputDecoration(
+                            //       enabledBorder: OutlineInputBorder(
+                            //         borderSide: BorderSide(
+                            //             color: theme.onSurface, width: 1),
+                            //       ),
+                            //       focusedBorder: OutlineInputBorder(
+                            //         borderSide: BorderSide(
+                            //             color: theme.onSurface, width: 2),
+                            //       ),
+                            //       labelText: 'Single-line Comments',
+                            //       labelStyle: TextStyle(
+                            //         color: theme.onSurface,
+                            //         fontSize:
+                            //             MediaQuery.of(context).size.width *
+                            //                 0.02,
+                            //       ),
+                            //     ),
+                            //     style: TextStyle(
+                            //       color: theme.onSurface,
+                            //       fontWeight: FontWeight.bold,
+                            //     ),
+                            //     onChanged: (value) async {
+                            //       indexes[0] = values[0].indexOf(value);
+
+                            //       Map<String, dynamic> data = {
+                            //         'slc': indexes[0],
+                            //         'mlc': indexes[1],
+                            //         'quotes': indexes[2],
+                            //       };
+                            //       String datas = jsonEncode(data);
+                            //       await writeData(datas, storageAddress,
+                            //               'commentsandstrings.json')
+                            //           .then((value) {
+                            //         setState(() {});
+                            //       });
+                            //     },
+                            //   ),
+                            // ),
+                            Container(
+                              width: width / 8,
+                              height: height / 10.8,
+                              decoration: BoxDecoration(
+                                color: theme.surface,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: theme.onSurface,
+                                  width: 1,
+                                ),
+                              ),
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  shape: WidgetStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    indexes[0] = 0;
+                                  });
+                                  Map<String, dynamic> data = {
+                                    'slc': indexes[0],
+                                    'mlc': indexes[1],
+                                    'quotes': indexes[2],
+                                  };
+                                  String datas = jsonEncode(data);
+                                  writeData(datas, storageAddress,
+                                          'commentsandstrings.json')
+                                      .then((value) {
+                                    setState(() {});
+                                  });
+                                },
+                                child: Text(
+                                  '//',
+                                  style: TextStyle(
+                                    color: theme.onSurface,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: width / 8,
+                              height: height / 10.8,
+                              decoration: BoxDecoration(
+                                color: theme.surface,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: theme.onSurface,
+                                  width: 1,
+                                ),
+                              ),
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  shape: WidgetStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    indexes[0] = 1;
+                                  });
+                                  Map<String, dynamic> data = {
+                                    'slc': indexes[0],
+                                    'mlc': indexes[1],
+                                    'quotes': indexes[2],
+                                  };
+                                  String datas = jsonEncode(data);
+                                  writeData(datas, storageAddress,
+                                          'commentsandstrings.json')
+                                      .then((value) {
+                                    setState(() {});
+                                  });
+                                },
+                                child: Text(
+                                  '#',
+                                  style: TextStyle(
+                                    color: theme.onSurface,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: width / 8,
+                              height: height / 10.8,
+                              decoration: BoxDecoration(
+                                color: theme.surface,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: theme.onSurface,
+                                  width: 1,
+                                ),
+                              ),
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  shape: WidgetStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    indexes[0] = 2;
+                                  });
+                                  Map<String, dynamic> data = {
+                                    'slc': indexes[0],
+                                    'mlc': indexes[1],
+                                    'quotes': indexes[2],
+                                  };
+                                  String datas = jsonEncode(data);
+                                  writeData(datas, storageAddress,
+                                          'commentsandstrings.json')
+                                      .then((value) {
+                                    setState(() {});
+                                  });
+                                },
+                                child: Text(
+                                  '##',
+                                  style: TextStyle(
+                                    color: theme.onSurface,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              width: width / 8,
+                              height: height / 10.8,
+                              decoration: BoxDecoration(
+                                color: theme.surface,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: theme.onSurface,
+                                  width: 1,
+                                ),
+                              ),
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  shape: WidgetStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    indexes[1] = 0;
+                                  });
+                                  Map<String, dynamic> data = {
+                                    'slc': indexes[0],
+                                    'mlc': indexes[1],
+                                    'quotes': indexes[2],
+                                  };
+                                  String datas = jsonEncode(data);
+                                  writeData(datas, storageAddress,
+                                          'commentsandstrings.json')
+                                      .then((value) {
+                                    setState(() {});
+                                  });
+                                },
+                                child: Text(
+                                  '/* */',
+                                  style: TextStyle(
+                                    color: theme.onSurface,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: width / 8,
+                              height: height / 10.8,
+                              decoration: BoxDecoration(
+                                color: theme.surface,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: theme.onSurface,
+                                  width: 1,
+                                ),
+                              ),
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  shape: WidgetStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    indexes[1] = 1;
+                                  });
+                                  Map<String, dynamic> data = {
+                                    'slc': indexes[0],
+                                    'mlc': indexes[1],
+                                    'quotes': indexes[2],
+                                  };
+                                  String datas = jsonEncode(data);
+                                  writeData(datas, storageAddress,
+                                          'commentsandstrings.json')
+                                      .then((value) {
+                                    setState(() {});
+                                  });
+                                },
+                                child: Text(
+                                  '<!-- -->',
+                                  style: TextStyle(
+                                    color: theme.onSurface,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: width / 8,
+                              height: height / 10.8,
+                              decoration: BoxDecoration(
+                                color: theme.surface,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: theme.onSurface,
+                                  width: 1,
+                                ),
+                              ),
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  shape: WidgetStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    indexes[1] = 2;
+                                  });
+                                  Map<String, dynamic> data = {
+                                    'slc': indexes[0],
+                                    'mlc': indexes[1],
+                                    'quotes': indexes[2],
+                                  };
+                                  String datas = jsonEncode(data);
+                                  writeData(datas, storageAddress,
+                                          'commentsandstrings.json')
+                                      .then((value) {
+                                    setState(() {});
+                                  });
+                                },
+                                child: Text(
+                                  '<!--- --->',
+                                  style: TextStyle(
+                                    color: theme.onSurface,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text("Single line's Comments    ",
-                          style: TextStyle(
-                              color: theme.onSurface,
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.01)),
-                      DropdownButton(
-                        items: values[0].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(color: theme.onSurface),
+                  SizedBox(
+                    height: usableHeight / 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Container(
+                          width: width / 8,
+                          decoration: BoxDecoration(
+                            color: theme.surface,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: checkbox1 ? theme.onSurface : theme.error,
+                              width: 2,
                             ),
-                          );
-                        }).toList(),
-                        dropdownColor: theme.surface,
-                        menuMaxHeight: MediaQuery.of(context).size.height * 0.4,
-                        borderRadius: BorderRadius.circular(10),
-                        value: values[0][indexes[0]],
-                        onChanged: (value) async {
-                          indexes[0] = values[0].indexOf(value!);
-
-                          Map<String, dynamic> data = {
-                            'slc': indexes[0],
-                            'mlc': indexes[1],
-                            'quotes': indexes[2],
-                          };
-                          String datas = jsonEncode(data);
-                          await writeData(
-                                  datas,
-                                  storageAddress,
-                                  'commentsandstrings.json')
-                              .then((value) {
-                            setState(() {});
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text("Multi-line Comments    ",
-                          style: TextStyle(
-                              color: theme.onSurface,
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.01)),
-                      DropdownButton(
-                        items: values[1].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
+                          ),
+                          child: TextButton(
                             child: Text(
-                              value,
-                              style: TextStyle(color: theme.onSurface),
+                              '"',
+                              style: TextStyle(
+                                color:
+                                    checkbox1 ? theme.onSurface : theme.error,
+                                fontSize: width * 0.05,
+                              ),
                             ),
-                          );
-                        }).toList(),
-                        dropdownColor: theme.surface,
-                        menuMaxHeight: MediaQuery.of(context).size.height * 0.4,
-                        borderRadius: BorderRadius.circular(10),
-                        value: values[1][indexes[1]],
-                        onChanged: (value) async {
-                          indexes[1] = values[1].indexOf(value!);
-
-                          Map<String, dynamic> data = {
-                            'slc': indexes[0],
-                            'mlc': indexes[1],
-                            'quotes': indexes[2],
-                          };
-                          String datas = jsonEncode(data);
-                          await writeData(
-                                  datas,
-                                  storageAddress,
-                                  'commentsandstrings.json')
-                              .then((value) {
-                            setState(() {});
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  Text(
-                    'Strings: ',
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.width * 0.025,
-                      color: theme.onSurface,
+                            onPressed: () {
+                              setState(() {
+                                checkbox1 = !checkbox1;
+                                indexes[2] = checkbox2
+                                    ? checkbox1
+                                        ? 2
+                                        : 1
+                                    : checkbox1
+                                        ? 0
+                                        : 3;
+                              });
+                              Map<String, dynamic> data = {
+                                'slc': indexes[0],
+                                'mlc': indexes[1],
+                                'quotes': indexes[2],
+                              };
+                              String datas = jsonEncode(data);
+                              writeData(datas, storageAddress,
+                                      'commentsandstrings.json')
+                                  .then((value) {
+                                setState(() {});
+                              });
+                            },
+                          ),
+                        ),
+                        Container(
+                          width: width / 8,
+                          decoration: BoxDecoration(
+                            color: theme.surface,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: checkbox2 ? theme.onSurface : theme.error,
+                              width: 2,
+                            ),
+                          ),
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all<Color>(
+                                theme.surface,
+                              ),
+                            ),
+                            child: Text(
+                              '\'',
+                              style: TextStyle(
+                                color:
+                                    checkbox2 ? theme.onSurface : theme.error,
+                                fontSize: width * 0.05,
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(
+                                () {
+                                  checkbox2 = !checkbox2;
+                                  indexes[2] = checkbox2
+                                      ? checkbox1
+                                          ? 2
+                                          : 1
+                                      : checkbox1
+                                          ? 0
+                                          : 3;
+                                },
+                              );
+                              Map<String, dynamic> data = {
+                                'slc': indexes[0],
+                                'mlc': indexes[1],
+                                'quotes': indexes[2],
+                              };
+                              String datas = jsonEncode(data);
+                              writeData(datas, storageAddress,
+                                      'commentsandstrings.json')
+                                  .then((value) {
+                                setState(() {});
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text("Quotes for Strings    ",
-                          style: TextStyle(
-                              color: theme.onSurface,
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.01)),
-                      DropdownButton(
-                        items: values[2].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(color: theme.onSurface),
-                            ),
-                          );
-                        }).toList(),
-                        dropdownColor: theme.surface,
-                        menuMaxHeight: MediaQuery.of(context).size.height * 0.4,
-                        borderRadius: BorderRadius.circular(10),
-                        value: values[2][indexes[2]],
-                        onChanged: (value) async {
-                          indexes[2] = values[2].indexOf(value!);
-                          Map<String, dynamic> data = {
-                            'slc': indexes[0],
-                            'mlc': indexes[1],
-                            'quotes': indexes[2],
-                          };
-                          String datas = jsonEncode(data);
-                          await writeData(
-                                  datas,
-                                  storageAddress,
-                                  'commentsandstrings.json')
-                              .then((value) {
-                            setState(() {});
-                          });
-                        },
-                      ),
-                    ],
                   ),
                 ],
               ),
             ),
+            VerticalDivider(
+              color: theme.onSurface,
+              thickness: 2,
+              width: 2,
+            ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.5,
+              width: MediaQuery.of(context).size.width / 2 - 2,
               decoration: const BoxDecoration(
                 color: Colors.black,
                 border: Border(left: BorderSide(color: Colors.black)),
               ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Comments: ',
@@ -251,10 +554,8 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         : indexes[2] == 1
                             ? '\'Strings only with single quotes\''
                             : indexes[2] == 2
-                                ? '`Strings only with backticks`'
-                                : indexes[2] == 3
-                                    ? '"Strings with double quotes" \'and single quotes\''
-                                    : '',
+                                ? '"Strings with double quotes" \'and single quotes\''
+                                : 'No String Style Selected',
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.018,
                       color: Colors.green,
