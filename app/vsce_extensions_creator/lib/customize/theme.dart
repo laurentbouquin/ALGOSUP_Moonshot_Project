@@ -1,8 +1,8 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:vsce_extensions_creator/functionals/constants.dart';
 import '../functionals/functions.dart';
-// import '../functionals/constants.dart';
+import '../functionals/classes.dart';
+import '../functionals/constants.dart';
 import 'dart:convert';
 import 'dart:io';
 // import 'package:flex_color_picker/flex_color_picker.dart';
@@ -25,13 +25,20 @@ class _ThemePageState extends State<ThemePage> {
     Colors.green,
   ];
 
-  String bgColor = "FFFFFF";
-  String keywordColor = "FFFFFF";
-  String functionColor = "FFFFFF";
-  String variableColor = "FFFFFF";
-  String stringColor = "FFFFFF";
-  String commentColor = "FFFFFF";
-  String commonColor = "FFFFFF";
+  final _formKey = GlobalKey<FormState>();
+
+  Theming themeColors = Theming();
+
+  List<String> colorsList = [
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF"
+  ];
 
   List<String> categories = [
     "Background",
@@ -64,13 +71,24 @@ class _ThemePageState extends State<ThemePage> {
     var jsonData = json.decode(themingFile.readAsStringSync());
     jsonDataTemp = jsonData;
     setState(() {
-      bgColor = jsonData['bgColor'];
-      keywordColor = jsonData['keywordColor'];
-      functionColor = jsonData['functionColor'];
-      variableColor = jsonData['variableColor'];
-      stringColor = jsonData['stringColor'];
-      commentColor = jsonData['commentColor'];
-      commonColor = jsonData['commonColor'];
+      themeColors.bgColor = jsonData['bgColor'];
+      themeColors.keywordColor = jsonData['keywordColor'];
+      themeColors.functionColor = jsonData['functionColor'];
+      themeColors.variableColor = jsonData['variableColor'];
+      themeColors.stringColor = jsonData['stringColor'];
+      themeColors.commentColor = jsonData['commentColor'];
+      themeColors.commonColor = jsonData['commonColor'];
+      themeColors.otherColor = jsonData['otherColor'];
+			colorsList = [
+				jsonData['bgColor'],
+				jsonData['keywordColor'],
+				jsonData['functionColor'],
+				jsonData['variableColor'],
+				jsonData['stringColor'],
+				jsonData['commentColor'],
+				jsonData['commonColor'],
+				jsonData['otherColor']
+			];
     });
   }
 
@@ -119,11 +137,53 @@ class _ThemePageState extends State<ThemePage> {
                               height: height / 5.4 / 2,
                               margin: EdgeInsets.only(right: width / 96),
                               decoration: BoxDecoration(
-                                color: jsonDataTemp[names[k * 2 + 1]] != null ? Color(int.parse("0xFF${jsonDataTemp[names[k * 2 + 1]]}")) : Colors.white,
+                                color: Color(
+                                    int.parse("0xFF${colorsList[k * 2]}")),
                                 border: Border.all(
                                   color: theme.onSurface,
                                   width: 1,
                                 ),
+                              ),
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  shape: WidgetStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+                                  ),
+                                  fixedSize: WidgetStateProperty.all<Size>(
+                                    Size(height / 5.4 / 2, height / 5.4 / 2),
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  createDialog(
+                                          context,
+                                          _formKey,
+                                          width,
+                                          height,
+                                          theme,
+                                          jsonDataTemp,
+                                          names,
+                                          k,
+                                          colorsList,
+                                          themeColors,
+                                          0)
+                                      .then((value) {
+                                    setState(() {
+                                      themeColors.bgColor = colorsList[0];
+                                      themeColors.keywordColor = colorsList[1];
+                                      themeColors.functionColor = colorsList[2];
+                                      themeColors.variableColor = colorsList[3];
+                                      themeColors.stringColor = colorsList[4];
+                                      themeColors.commentColor = colorsList[5];
+                                      themeColors.commonColor = colorsList[6];
+                                      themeColors.otherColor = colorsList[7];
+                                      updateColorFile(themeColors);
+                                    });
+                                  });
+                                },
+                                child: const Text(""),
                               ),
                             )
                           ],
@@ -160,11 +220,53 @@ class _ThemePageState extends State<ThemePage> {
                               height: height / 5.4 / 2,
                               margin: EdgeInsets.only(right: width / 96),
                               decoration: BoxDecoration(
-                                color: jsonDataTemp[names[k * 2 + 1]] != null ? Color(int.parse("0xFF${jsonDataTemp[names[k * 2 + 1]]}")) : Colors.white,
+                                color: Color(
+                                    int.parse("0xFF${colorsList[k * 2 + 1]}")),
                                 border: Border.all(
                                   color: theme.onSurface,
                                   width: 1,
                                 ),
+                              ),
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  shape: WidgetStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+                                  ),
+                                  fixedSize: WidgetStateProperty.all<Size>(
+                                    Size(height / 5.4 / 2, height / 5.4 / 2),
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  createDialog(
+                                          context,
+                                          _formKey,
+                                          width,
+                                          height,
+                                          theme,
+                                          jsonDataTemp,
+                                          names,
+                                          k,
+                                          colorsList,
+                                          themeColors,
+                                          1)
+                                      .then((value) {
+                                    setState(() {
+                                      themeColors.bgColor = colorsList[0];
+                                      themeColors.keywordColor = colorsList[1];
+                                      themeColors.functionColor = colorsList[2];
+                                      themeColors.variableColor = colorsList[3];
+                                      themeColors.stringColor = colorsList[4];
+                                      themeColors.commentColor = colorsList[5];
+                                      themeColors.commonColor = colorsList[6];
+                                      themeColors.otherColor = colorsList[7];
+                                      updateColorFile(themeColors);
+                                    });
+                                  });
+                                },
+                                child: const Text(""),
                               ),
                             )
                           ],
@@ -179,383 +281,14 @@ class _ThemePageState extends State<ThemePage> {
               width: 2,
               thickness: 2,
             ),
-            visualisation(
-                height,
-                width,
-                colors,
-                bgColor,
-                keywordColor,
-                functionColor,
-                variableColor,
-                stringColor,
-                commentColor,
-                commonColor),
+            visualization(
+              height,
+              width,
+              themeColors,
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        // backgroundColor: theme.onSurface,
-        onPressed: () async {
-          Map<String, dynamic> data = {
-            "bgColor": bgColor,
-            "keywordColor": keywordColor,
-            "functionColor": functionColor,
-            "variableColor": variableColor,
-            "stringColor": stringColor,
-            "commentColor": commentColor,
-            "commonColor": commonColor
-          };
-          String datas = jsonEncode(data);
-          writeData(
-            datas,
-            storageAddress,
-            'theming.json',
-          );
-          setState(() {});
-        },
-        child: const Icon(Icons.save),
-      ),
     );
   }
-}
-
-Column visualisation(windowHeight, windowWidth, colors, bgColor, keywordColor,
-    functionColor, variableColor, stringColor, commentColor, commonColor) {
-  return Column(
-    children: <Widget>[
-      Container(
-        width: windowWidth / 2 - 2,
-        height: windowHeight - windowHeight / 7.5,
-        decoration: BoxDecoration(
-          color: Color(int.parse("0xFF$bgColor")),
-          border: const Border(left: BorderSide(color: Colors.black, width: 1)),
-        ),
-        child: Container(
-          width: windowWidth * 0.25,
-          margin: EdgeInsets.only(left: windowWidth * 0.125),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: textToVisualize(colors, keywordColor, functionColor,
-                variableColor, stringColor, commentColor, commonColor),
-          ),
-        ),
-      )
-    ],
-  );
-}
-
-List<Widget> textToVisualize(colors, keywordColor, functionColor, variableColor,
-    stringColor, commentColor, commonColor) {
-  return [
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('#include '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$functionColor")),
-          ),
-        ),
-        Text(
-          ('<iostream>'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$stringColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('using namespace '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$keywordColor")),
-          ),
-        ),
-        Text(
-          ('std;'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$variableColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('\n// Check if a number is even or odd'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commentColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('int '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$keywordColor")),
-          ),
-        ),
-        Text(
-          ('main'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$functionColor")),
-          ),
-        ),
-        Text(
-          ('() {'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('    int '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$keywordColor")),
-          ),
-        ),
-        Text(
-          ('n'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('\n    cout '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$variableColor")),
-          ),
-        ),
-        Text(
-          ('\n<< '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-        Text(
-          ('\n"Enter an integer: "'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$stringColor")),
-          ),
-        ),
-        Text(
-          ('\n;'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('    cin '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$variableColor")),
-          ),
-        ),
-        Text(
-          ('>> n;'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('\n    if '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$keywordColor")),
-          ),
-        ),
-        Text(
-          ('\n( n % '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-        Text(
-          ('\n2 '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$variableColor")),
-          ),
-        ),
-        Text(
-          ('\n== '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-        Text(
-          ('\n0'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$variableColor")),
-          ),
-        ),
-        Text(
-          ('\n)'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('        cout '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$variableColor")),
-          ),
-        ),
-        Text(
-          ('<< n << '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-        Text(
-          ('" is even."'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$stringColor")),
-          ),
-        ),
-        Text(
-          (';'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('    else'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$keywordColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('        cout '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$variableColor")),
-          ),
-        ),
-        Text(
-          ('<< n << '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-        Text(
-          ('" is odd."'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$stringColor")),
-          ),
-        ),
-        Text(
-          (';'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('\n    return '),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$keywordColor")),
-          ),
-        ),
-        Text(
-          ('\n0'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$variableColor")),
-          ),
-        ),
-        Text(
-          ('\n;'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-      ],
-    ),
-    Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          ('}'),
-          style: TextStyle(
-            fontSize: 22,
-            color: Color(int.parse("0xFF$commonColor")),
-          ),
-        ),
-      ],
-    ),
-  ];
 }
