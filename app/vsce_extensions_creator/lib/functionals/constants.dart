@@ -9,6 +9,8 @@ bool isDark = false;
 
 int index = 0;
 
+int CATEGORIESNUM = 8;
+
 // === JSON Files ===
 
 // Define the project directory

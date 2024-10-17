@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../functionals/functions.dart';
 import '../functionals/constants.dart';
+import '../functionals/classes.dart';
 import 'dart:convert';
 
 class FormatPage extends StatefulWidget {
@@ -27,16 +28,18 @@ class _FormatPageState extends State<FormatPage> {
   List<String> keywords = [];
   List<String> types = [];
 
-  List<bool> categories = [
-    true,
-    true,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
+  List<String> categoriesList = [
+    "languages",
+    "themes",
+    "snippets",
+    "debuggers",
+    "keymaps",
+    "testing",
+    "linters",
+    "other",
   ];
+
+  Categories categories = Categories();
 
   int selectedCategory = 0;
 
@@ -54,10 +57,6 @@ class _FormatPageState extends State<FormatPage> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController versionController = TextEditingController();
   TextEditingController extensionController = TextEditingController();
-
-  Color nameColor = Colors.green;
-  Color descriptionColor = Colors.green;
-  Color versionColor = Colors.green;
 
   @override
   void initState() {
@@ -173,7 +172,7 @@ class _FormatPageState extends State<FormatPage> {
                                   'name': currentName,
                                   'description': currentDescription,
                                   'version': currentVersion,
-                                  'category': categories[selectedCategory],
+                                  'categories': getCategories(categories),
                                   'lastUpdated': DateTime.now().toString(),
                                 };
                                 String datas = jsonEncode(data);
@@ -485,22 +484,21 @@ class _FormatPageState extends State<FormatPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('       Name: ',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: theme.onSurface,
-                        )),
+                    Text(
+                      '       Name: ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: theme.onSurface,
+                      ),
+                    ),
                     Container(
                       width: width * 0.12,
                       margin: EdgeInsets.only(left: width * 0.02),
                       child: TextField(
                         controller: nameController..text = currentName,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter Extension Name',
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: nameColor),
-                          ),
                         ),
                         onChanged: (value) async {
                           currentName = nameController.text;
@@ -510,7 +508,7 @@ class _FormatPageState extends State<FormatPage> {
                             'name': currentName,
                             'description': currentDescription,
                             'version': currentVersion,
-                            'category': categories[selectedCategory],
+                            'category': getCategories(categories),
                             'lastUpdated': DateTime.now().toString(),
                             'publisher': publisher,
                             'extensionFileName': extensionFileName,
@@ -567,7 +565,7 @@ class _FormatPageState extends State<FormatPage> {
                             'name': currentName,
                             'description': currentDescription,
                             'version': currentVersion,
-                            'category': categories[selectedCategory],
+                            'category': getCategories(categories),
                             'lastUpdated': DateTime.now().toString(),
                             'publisher': publisher,
                             'extensionFileName': extensionFileName,
@@ -625,7 +623,7 @@ class _FormatPageState extends State<FormatPage> {
                             'name': currentName,
                             'description': currentDescription,
                             'version': currentVersion,
-                            'category': categories[selectedCategory],
+                            'category': getCategories(categories),
                             'lastUpdated': DateTime.now().toString(),
                             'publisher': publisher,
                             'extensionFileName': extensionFileName,
@@ -683,7 +681,7 @@ class _FormatPageState extends State<FormatPage> {
                             'name': currentName,
                             'description': currentDescription,
                             'version': currentVersion,
-                            'category': categories[selectedCategory],
+                            'category': getCategories(categories),
                             'lastUpdated': DateTime.now().toString(),
                             'publisher': publisher,
                             'extensionFileName': extensionFileName,
@@ -728,22 +726,41 @@ class _FormatPageState extends State<FormatPage> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
-                              categories[0] ? theme.onSurface : theme.primary),
+                              categories.languages
+                                  ? theme.onSurface
+                                  : theme.primary),
                         ),
                         child: FittedBox(
                           child: Text(
                             'Programming Languages',
                             maxLines: 1,
                             style: TextStyle(
-                              color: categories[0]
+                              color: categories.languages
                                   ? theme.onPrimary
                                   : theme.onSurface,
                             ),
                           ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            categories[0] = !categories[0];
+                        onPressed: () async {
+                          categories.languages = !categories.languages;
+
+                          var extensionsData =
+                              json.decode(extensionsFile.readAsStringSync());
+                          Map<String, dynamic> data = {
+                            'name': currentName,
+                            'description': currentDescription,
+                            'version': currentVersion,
+                            'category': getCategories(categories),
+                            'lastUpdated': DateTime.now().toString(),
+                            'publisher': publisher,
+                            'extensionFileName': extensionFileName,
+                          };
+                          extensionsData['extensions'][extensionIndex] = data;
+                          String datas = jsonEncode(extensionsData);
+                          await writeData(
+                                  datas, storageAddress, 'extensions_list.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),
@@ -761,19 +778,38 @@ class _FormatPageState extends State<FormatPage> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
-                              categories[1] ? theme.onSurface : theme.primary),
+                              categories.themes
+                                  ? theme.onSurface
+                                  : theme.primary),
                         ),
                         child: Text(
                           'Themes',
                           style: TextStyle(
-                            color: categories[1]
+                            color: categories.themes
                                 ? theme.onPrimary
                                 : theme.onSurface,
                           ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            categories[1] = !categories[1];
+                        onPressed: () async {
+                            categories.themes = !categories.themes;
+
+                          var extensionsData =
+                              json.decode(extensionsFile.readAsStringSync());
+                          Map<String, dynamic> data = {
+                            'name': currentName,
+                            'description': currentDescription,
+                            'version': currentVersion,
+                            'category': getCategories(categories),
+                            'lastUpdated': DateTime.now().toString(),
+                            'publisher': publisher,
+                            'extensionFileName': extensionFileName,
+                          };
+                          extensionsData['extensions'][extensionIndex] = data;
+                          String datas = jsonEncode(extensionsData);
+                          await writeData(
+                                  datas, storageAddress, 'extensions_list.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),
@@ -800,19 +836,38 @@ class _FormatPageState extends State<FormatPage> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
-                              categories[2] ? theme.onSurface : theme.primary),
+                              categories.snippets
+                                  ? theme.onSurface
+                                  : theme.primary),
                         ),
                         child: Text(
                           'Snippets',
                           style: TextStyle(
-                            color: categories[2]
+                            color: categories.snippets
                                 ? theme.onPrimary
                                 : theme.onSurface,
                           ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            categories[2] = !categories[2];
+                        onPressed: () async {
+                            categories.snippets = !categories.snippets;
+
+                          var extensionsData =
+                              json.decode(extensionsFile.readAsStringSync());
+                          Map<String, dynamic> data = {
+                            'name': currentName,
+                            'description': currentDescription,
+                            'version': currentVersion,
+                            'category': getCategories(categories),
+                            'lastUpdated': DateTime.now().toString(),
+                            'publisher': publisher,
+                            'extensionFileName': extensionFileName,
+                          };
+                          extensionsData['extensions'][extensionIndex] = data;
+                          String datas = jsonEncode(extensionsData);
+                          await writeData(
+                                  datas, storageAddress, 'extensions_list.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),
@@ -830,19 +885,21 @@ class _FormatPageState extends State<FormatPage> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
-                              categories[3] ? theme.onSurface : theme.primary),
+                              categories.debuggers
+                                  ? theme.onSurface
+                                  : theme.primary),
                         ),
                         child: Text(
                           'Debuggers',
                           style: TextStyle(
-                            color: categories[3]
+                            color: categories.debuggers
                                 ? theme.onPrimary
                                 : theme.onSurface,
                           ),
                         ),
                         onPressed: () {
                           setState(() {
-                            categories[3] = !categories[3];
+                            categories.debuggers = !categories.debuggers;
                           });
                         },
                       ),
@@ -860,19 +917,38 @@ class _FormatPageState extends State<FormatPage> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
-                              categories[4] ? theme.onSurface : theme.primary),
+                              categories.keymaps
+                                  ? theme.onSurface
+                                  : theme.primary),
                         ),
                         child: Text(
                           'Keymaps',
                           style: TextStyle(
-                            color: categories[4]
+                            color: categories.keymaps
                                 ? theme.onPrimary
                                 : theme.onSurface,
                           ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            categories[4] = !categories[4];
+                        onPressed: () async {
+                            categories.keymaps = !categories.keymaps;
+
+                          var extensionsData =
+                              json.decode(extensionsFile.readAsStringSync());
+                          Map<String, dynamic> data = {
+                            'name': currentName,
+                            'description': currentDescription,
+                            'version': currentVersion,
+                            'category': getCategories(categories),
+                            'lastUpdated': DateTime.now().toString(),
+                            'publisher': publisher,
+                            'extensionFileName': extensionFileName,
+                          };
+                          extensionsData['extensions'][extensionIndex] = data;
+                          String datas = jsonEncode(extensionsData);
+                          await writeData(
+                                  datas, storageAddress, 'extensions_list.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),
@@ -899,19 +975,38 @@ class _FormatPageState extends State<FormatPage> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
-                              categories[5] ? theme.onSurface : theme.primary),
+                              categories.testing
+                                  ? theme.onSurface
+                                  : theme.primary),
                         ),
                         child: Text(
                           'Testing',
                           style: TextStyle(
-                            color: categories[5]
+                            color: categories.testing
                                 ? theme.onPrimary
                                 : theme.onSurface,
                           ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            categories[5] = !categories[5];
+                        onPressed: () async{
+                            categories.testing = !categories.testing;
+
+                          var extensionsData =
+                              json.decode(extensionsFile.readAsStringSync());
+                          Map<String, dynamic> data = {
+                            'name': currentName,
+                            'description': currentDescription,
+                            'version': currentVersion,
+                            'category': getCategories(categories),
+                            'lastUpdated': DateTime.now().toString(),
+                            'publisher': publisher,
+                            'extensionFileName': extensionFileName,
+                          };
+                          extensionsData['extensions'][extensionIndex] = data;
+                          String datas = jsonEncode(extensionsData);
+                          await writeData(
+                                  datas, storageAddress, 'extensions_list.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),
@@ -929,19 +1024,38 @@ class _FormatPageState extends State<FormatPage> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
-                              categories[6] ? theme.onSurface : theme.primary),
+                              categories.linters
+                                  ? theme.onSurface
+                                  : theme.primary),
                         ),
                         child: Text(
                           'Linters',
                           style: TextStyle(
-                            color: categories[6]
+                            color: categories.linters
                                 ? theme.onPrimary
                                 : theme.onSurface,
                           ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            categories[6] = !categories[6];
+                        onPressed: () async{
+                            categories.linters = !categories.linters;
+
+                          var extensionsData =
+                              json.decode(extensionsFile.readAsStringSync());
+                          Map<String, dynamic> data = {
+                            'name': currentName,
+                            'description': currentDescription,
+                            'version': currentVersion,
+                            'category': getCategories(categories),
+                            'lastUpdated': DateTime.now().toString(),
+                            'publisher': publisher,
+                            'extensionFileName': extensionFileName,
+                          };
+                          extensionsData['extensions'][extensionIndex] = data;
+                          String datas = jsonEncode(extensionsData);
+                          await writeData(
+                                  datas, storageAddress, 'extensions_list.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),
@@ -959,19 +1073,38 @@ class _FormatPageState extends State<FormatPage> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
-                              categories[7] ? theme.onSurface : theme.primary),
+                              categories.other
+                                  ? theme.onSurface
+                                  : theme.primary),
                         ),
                         child: Text(
                           'Other',
                           style: TextStyle(
-                            color: categories[7]
+                            color: categories.other
                                 ? theme.onPrimary
                                 : theme.onSurface,
                           ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            categories[7] = !categories[7];
+                        onPressed: () async{
+                            categories.other = !categories.other;
+
+                          var extensionsData =
+                              json.decode(extensionsFile.readAsStringSync());
+                          Map<String, dynamic> data = {
+                            'name': currentName,
+                            'description': currentDescription,
+                            'version': currentVersion,
+                            'category': getCategories(categories),
+                            'lastUpdated': DateTime.now().toString(),
+                            'publisher': publisher,
+                            'extensionFileName': extensionFileName,
+                          };
+                          extensionsData['extensions'][extensionIndex] = data;
+                          String datas = jsonEncode(extensionsData);
+                          await writeData(
+                                  datas, storageAddress, 'extensions_list.json')
+                              .then((value) {
+                            setState(() {});
                           });
                         },
                       ),

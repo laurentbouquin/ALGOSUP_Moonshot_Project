@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'functionals/functions.dart';
 import 'functionals/constants.dart';
+import 'functionals/classes.dart';
 
 import 'package:file_picker/file_picker.dart';
 
@@ -30,7 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
   String publisherName = '';
   String extensionFileName = '';
 
-  List<String> categories = [
+  List<String> categoriesList = [
     "Programming Languages",
     "Themes",
     // "Snippets",
@@ -50,6 +51,8 @@ class _SettingsPageState extends State<SettingsPage> {
     // "Testing"
   ];
 
+  Categories categories = Categories();
+
   String settingsPath = '';
 
   @override
@@ -65,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
       currentName = extensionData['name'];
       currentDescription = extensionData['description'];
       currentVersion = extensionData['version'];
-      selectedCategory = categories.indexOf(extensionData['category']);
+      categories = setCategories(categoriesList);
       publisherName = extensionData['publisher'];
       extensionFileName = extensionData['extensionFileName'];
 
@@ -131,7 +134,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           'name': currentName,
                           'description': currentDescription,
                           'version': currentVersion,
-                          'category': categories[selectedCategory],
+                          'category': getCategories(categories),
                           'lastUpdated': DateTime.now().toString(),
                           'publisher': publisherName,
                           'extensionFileName': extensionFileName,

@@ -4,7 +4,6 @@ import '../functionals/functions.dart';
 import '../functionals/classes.dart';
 import '../functionals/constants.dart';
 import 'dart:convert';
-import 'dart:io';
 // import 'package:flex_color_picker/flex_color_picker.dart';
 
 class ThemePage extends StatefulWidget {
@@ -15,15 +14,6 @@ class ThemePage extends StatefulWidget {
 }
 
 class _ThemePageState extends State<ThemePage> {
-  // Color for the picker shown in Card on the screen.
-  List<Color> colors = [
-    Colors.white,
-    Colors.black,
-    Colors.blue,
-    Colors.purple,
-    Colors.orange,
-    Colors.green,
-  ];
 
   final _formKey = GlobalKey<FormState>();
 
@@ -61,7 +51,6 @@ class _ThemePageState extends State<ThemePage> {
     "commonColor",
     "otherColor"
   ];
-  final dir = Directory.current.path;
 
   Map<String, dynamic> jsonDataTemp = {};
 

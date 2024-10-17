@@ -679,3 +679,56 @@ void updateColorFile(Theming themeColors) async {
   String datas = jsonEncode(data);
   await writeData(datas, storageAddress, 'theming.json');
 }
+
+List<String> getCategories(Categories categories) {
+  List<String> categoriesPushed = [];
+  if (categories.languages) {
+    categoriesPushed.add("Programming Languages");
+  }
+  if (categories.themes) {
+    categoriesPushed.add("Themes");
+  }
+  if (categories.snippets) {
+    categoriesPushed.add("Snippets");
+  }
+  if (categories.debuggers) {
+    categoriesPushed.add("Debuggers");
+  }
+  if (categories.keymaps) {
+    categoriesPushed.add("Keymaps");
+  }
+  if (categories.testing) {
+    categoriesPushed.add("Testing");
+  }
+  if (categories.linters) {
+    categoriesPushed.add("Linters");
+  }
+  if (categories.other) {
+    categoriesPushed.add("Other");
+  }
+  return categoriesPushed;
+}
+
+Categories setCategories(List<String> categoriesList){
+  Categories categories = Categories();
+  for (int i = 0; i < categoriesList.length; i++) {
+    if (categoriesList[i] == "Programming Languages") {
+      categories.languages = true;
+    } else if (categoriesList[i] == "Themes") {
+      categories.themes = true;
+    } else if (categoriesList[i] == "Snippets") {
+      categories.snippets = true;
+    } else if (categoriesList[i] == "Debuggers") {
+      categories.debuggers = true;
+    } else if (categoriesList[i] == "Keymaps") {
+      categories.keymaps = true;
+    } else if (categoriesList[i] == "Testing") {
+      categories.testing = true;
+    } else if (categoriesList[i] == "Linters") {
+      categories.linters = true;
+    } else if (categoriesList[i] == "Other") {
+      categories.other = true;
+    }
+  }
+  return categories;
+}
