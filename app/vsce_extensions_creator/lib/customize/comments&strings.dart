@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
-
-import '../functionals/functions.dart';
-import '../functionals/constants.dart';
+import '../functional/functions.dart';
+import '../functional/constants.dart';
 
 import 'dart:convert';
 
@@ -38,7 +36,9 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme theme = AdaptiveTheme.of(context).theme.colorScheme;
+    ColorScheme theme = isDark
+        ? darkTheme.colorScheme
+        : lightTheme.colorScheme;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     double usableHeight = height - height / 7.5;

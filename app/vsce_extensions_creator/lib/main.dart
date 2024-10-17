@@ -10,8 +10,8 @@ import 'customize/customisables.dart';
 
 import 'home.dart';
 import 'settings.dart';
-import './functionals/functions.dart';
-import './functionals/constants.dart';
+import 'functional/functions.dart';
+import 'functional/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,7 +80,7 @@ class _RootPageState extends State<RootPage> {
         body: index == 0
             ? const HomePage()
             : index == 1
-                ? const Customisables(
+                ? const Customizables(
                     extensionIndex: 0,
                   )
                 : const SettingsPage(

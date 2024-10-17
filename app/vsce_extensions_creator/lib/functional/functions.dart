@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import './classes.dart';
+import 'classes.dart';
 
-import './constants.dart';
+import 'constants.dart';
 
 Future<Map<String, dynamic>> loadJsonFromAssets(String filePath) async {
   String jsonString = await rootBundle.loadString(filePath);

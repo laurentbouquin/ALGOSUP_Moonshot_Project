@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:convert';
 
-import 'functionals/functions.dart';
-import 'functionals/constants.dart';
-import 'functionals/classes.dart';
+import 'functional/functions.dart';
+import 'functional/constants.dart';
+import 'functional/classes.dart';
 
 import 'package:file_picker/file_picker.dart';
 
@@ -95,6 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 hoverColor: Colors.transparent,
                 onPressed: () {
                   setState(() {
+                    // Customizables.of(context).toggleTheme();
                     Navigator.pop(context);
                   });
                 },

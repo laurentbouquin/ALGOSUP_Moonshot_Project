@@ -7,7 +7,7 @@ import 'package:vsce_extensions_creator/customize/customisables.dart';
 
 import 'dart:convert';
 
-import 'functionals/constants.dart';
+import 'functional/constants.dart';
 
 import 'package:vsce_extensions_creator/settings.dart';
 
@@ -192,16 +192,20 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute<void>(
-                                    builder: (context) => const Customisables(
-                                      extensionIndex: 0,
-                                    ),
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Customizables(
+                                    extensionIndex: 0,
                                   ),
-                                );
+                                ),
+                              ).then((value) {
+                                setState(() {
+                                  scheme = isDark
+                                      ? darkTheme.colorScheme
+                                      : lightTheme.colorScheme;
+                                });
                               });
                             },
                             child: Text("Select",

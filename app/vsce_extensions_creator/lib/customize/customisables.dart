@@ -2,8 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
-
 import 'dart:convert';
 
 // import pages
@@ -12,21 +10,21 @@ import 'theme.dart';
 import 'miscellaneous.dart';
 import 'comments&strings.dart';
 import 'functionalities.dart';
-import '../functionals/convert.dart';
-import '../functionals/constants.dart';
+import '../functional/convert.dart';
+import '../functional/constants.dart';
 
-class Customisables extends StatefulWidget {
-  const Customisables({super.key, required this.extensionIndex});
+class Customizables extends StatefulWidget {
+  const Customizables({super.key, required this.extensionIndex});
 
   final int extensionIndex;
 
   @override
-  State<Customisables> createState() =>
-      _CustomisablesState(extensionIndex: extensionIndex);
+  State<Customizables> createState() =>
+      _CustomizablesState(extensionIndex: extensionIndex);
 }
 
-class _CustomisablesState extends State<Customisables> {
-  _CustomisablesState({required this.extensionIndex});
+class _CustomizablesState extends State<Customizables> {
+  _CustomizablesState({required this.extensionIndex});
 
   int extensionIndex;
   bool isMenuOpen = false;
@@ -62,7 +60,7 @@ class _CustomisablesState extends State<Customisables> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme theme = AdaptiveTheme.of(context).theme.colorScheme;
+    var theme = isDark ? darkTheme.colorScheme : lightTheme.colorScheme;
 
     return Scaffold(
       backgroundColor: theme.surface,

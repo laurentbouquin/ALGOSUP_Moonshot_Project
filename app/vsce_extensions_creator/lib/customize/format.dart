@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/services.dart';
 
-import '../functionals/functions.dart';
-import '../functionals/constants.dart';
-import '../functionals/classes.dart';
+import '../functional/functions.dart';
+import '../functional/constants.dart';
+import '../functional/classes.dart';
 import 'dart:convert';
 
 class FormatPage extends StatefulWidget {
@@ -40,8 +38,6 @@ class _FormatPageState extends State<FormatPage> {
   ];
 
   Categories categories = Categories();
-
-  int selectedCategory = 0;
 
   String currentVersion = '1.0.0';
 
@@ -79,7 +75,9 @@ class _FormatPageState extends State<FormatPage> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme theme = AdaptiveTheme.of(context).theme.colorScheme;
+    ColorScheme theme = isDark
+        ? darkTheme.colorScheme
+        : lightTheme.colorScheme;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -791,7 +789,7 @@ class _FormatPageState extends State<FormatPage> {
                           ),
                         ),
                         onPressed: () async {
-                            categories.themes = !categories.themes;
+                          categories.themes = !categories.themes;
 
                           var extensionsData =
                               json.decode(extensionsFile.readAsStringSync());
@@ -849,7 +847,7 @@ class _FormatPageState extends State<FormatPage> {
                           ),
                         ),
                         onPressed: () async {
-                            categories.snippets = !categories.snippets;
+                          categories.snippets = !categories.snippets;
 
                           var extensionsData =
                               json.decode(extensionsFile.readAsStringSync());
@@ -930,7 +928,7 @@ class _FormatPageState extends State<FormatPage> {
                           ),
                         ),
                         onPressed: () async {
-                            categories.keymaps = !categories.keymaps;
+                          categories.keymaps = !categories.keymaps;
 
                           var extensionsData =
                               json.decode(extensionsFile.readAsStringSync());
@@ -987,8 +985,8 @@ class _FormatPageState extends State<FormatPage> {
                                 : theme.onSurface,
                           ),
                         ),
-                        onPressed: () async{
-                            categories.testing = !categories.testing;
+                        onPressed: () async {
+                          categories.testing = !categories.testing;
 
                           var extensionsData =
                               json.decode(extensionsFile.readAsStringSync());
@@ -1036,8 +1034,8 @@ class _FormatPageState extends State<FormatPage> {
                                 : theme.onSurface,
                           ),
                         ),
-                        onPressed: () async{
-                            categories.linters = !categories.linters;
+                        onPressed: () async {
+                          categories.linters = !categories.linters;
 
                           var extensionsData =
                               json.decode(extensionsFile.readAsStringSync());
@@ -1085,8 +1083,8 @@ class _FormatPageState extends State<FormatPage> {
                                 : theme.onSurface,
                           ),
                         ),
-                        onPressed: () async{
-                            categories.other = !categories.other;
+                        onPressed: () async {
+                          categories.other = !categories.other;
 
                           var extensionsData =
                               json.decode(extensionsFile.readAsStringSync());

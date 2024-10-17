@@ -1,8 +1,7 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import '../functionals/functions.dart';
-import '../functionals/classes.dart';
-import '../functionals/constants.dart';
+import '../functional/functions.dart';
+import '../functional/classes.dart';
+import '../functional/constants.dart';
 import 'dart:convert';
 // import 'package:flex_color_picker/flex_color_picker.dart';
 
@@ -85,7 +84,9 @@ class _ThemePageState extends State<ThemePage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    ColorScheme theme = AdaptiveTheme.of(context).theme.colorScheme;
+    ColorScheme theme = isDark
+        ? darkTheme.colorScheme
+        : lightTheme.colorScheme;
     return Scaffold(
       body: Container(
         color: theme.surface,
