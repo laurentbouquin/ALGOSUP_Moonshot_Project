@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
-import 'package:vsce_extensions_creator/customize/customisables.dart';
-// import 'package:vsce_extensions_creator/customize/customisables.dart';
+import 'package:vsce_extensions_creator/customize/customizables.dart';
+// import 'package:vsce_extensions_creator/customize/customizables.dart';
 
 import 'dart:convert';
 

@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:window_manager/window_manager.dart';
 
 // Pages imports
-import 'customize/customisables.dart';
+import 'customize/customizables.dart';
 
 import 'home.dart';
 import 'settings.dart';
