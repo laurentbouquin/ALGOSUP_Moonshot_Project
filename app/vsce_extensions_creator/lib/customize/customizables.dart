@@ -305,12 +305,6 @@ class _CustomizablesState extends State<Customizables> {
                           ),
                           child: TextButton(
                             onPressed: null,
-                            // TODO: Uncomment after adding the functionalities page.
-                            // onPressed: () {
-                            // setState(() {
-                            //   indexOfPage = 4;
-                            // });
-                            // },
                             style: ButtonStyle(
                               shape: WidgetStateProperty.all<
                                   RoundedRectangleBorder>(

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
-// Packages imports
-import 'package:adaptive_theme/adaptive_theme.dart';
+// === Packages imports === //
 import 'dart:io';
 import 'package:window_manager/window_manager.dart';
 
-// Pages imports
-import 'customize/customizables.dart';
+// ==== Pages imports ==== //
 
+// Pages for links
+import 'customize/customizables.dart';
 import 'home.dart';
 import 'settings.dart';
+
+// Pages for functions or constants
 import 'functional/functions.dart';
 import 'functional/constants.dart';
 
@@ -29,22 +31,7 @@ class MainApp extends StatelessWidget {
   // Main build function
   Widget build(BuildContext context) {
     // Return the AdaptiveTheme widget
-    return AdaptiveTheme(
-      // Set the light and dark theme options
-      light: lightTheme,
-      dark: darkTheme,
-      initial: AdaptiveThemeMode.light, // Inital theme when app starts
-      builder: (theme, darkTheme) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Vsce Extensions Creator',
-        theme: theme,
-        darkTheme: darkTheme,
-
-        // Home page is the connection page if debug is false, else it is the root page
-        home: const RootPage(),
-      ),
-      debugShowFloatingThemeButton: true,
-    );
+    return const RootPage();
   }
 }
 
@@ -58,10 +45,6 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   // Add your stateful widget implementation here
 
-  List<String> navBarNames = ["Home", "Customize", "Settings"];
-
-  int currentIndex = index;
-
   @override
   void initState() {
     super.initState();
@@ -72,9 +55,9 @@ class _RootPageState extends State<RootPage> {
     await createBaseFilesContent(Directory.current.path);
   }
 
+
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       home: Scaffold(
         body: index == 0

@@ -57,7 +57,6 @@ Column visualization(windowHeight, windowWidth, Theming themeColors) {
         height: windowHeight - windowHeight / 7.5,
         decoration: BoxDecoration(
           color: Color(int.parse("0xFF${themeColors.bgColor}")),
-          border: const Border(left: BorderSide(color: Colors.black, width: 1)),
         ),
         child: Container(
           width: windowWidth * 0.25,

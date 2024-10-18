@@ -36,9 +36,7 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme theme = isDark
-        ? darkTheme.colorScheme
-        : lightTheme.colorScheme;
+    ColorScheme theme = isDark ? darkTheme.colorScheme : lightTheme.colorScheme;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     double usableHeight = height - height / 7.5;
@@ -68,51 +66,6 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            // SizedBox(
-                            //   width: width / 2.5,
-                            //   height: height / 10.8,
-                            //   child: TextField(
-                            //     controller: TextEditingController(
-                            //         text: values[0][indexes[0]]),
-                            //     textAlign: TextAlign.center,
-                            //     decoration: InputDecoration(
-                            //       enabledBorder: OutlineInputBorder(
-                            //         borderSide: BorderSide(
-                            //             color: theme.onSurface, width: 1),
-                            //       ),
-                            //       focusedBorder: OutlineInputBorder(
-                            //         borderSide: BorderSide(
-                            //             color: theme.onSurface, width: 2),
-                            //       ),
-                            //       labelText: 'Single-line Comments',
-                            //       labelStyle: TextStyle(
-                            //         color: theme.onSurface,
-                            //         fontSize:
-                            //             MediaQuery.of(context).size.width *
-                            //                 0.02,
-                            //       ),
-                            //     ),
-                            //     style: TextStyle(
-                            //       color: theme.onSurface,
-                            //       fontWeight: FontWeight.bold,
-                            //     ),
-                            //     onChanged: (value) async {
-                            //       indexes[0] = values[0].indexOf(value);
-
-                            //       Map<String, dynamic> data = {
-                            //         'slc': indexes[0],
-                            //         'mlc': indexes[1],
-                            //         'quotes': indexes[2],
-                            //       };
-                            //       String datas = jsonEncode(data);
-                            //       await writeData(datas, storageAddress,
-                            //               'commentsandstrings.json')
-                            //           .then((value) {
-                            //         setState(() {});
-                            //       });
-                            //     },
-                            //   ),
-                            // ),
                             Container(
                               width: width / 8,
                               height: height / 10.8,
