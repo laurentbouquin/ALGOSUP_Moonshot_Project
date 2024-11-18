@@ -1,39 +1,32 @@
 import 'package:flutter/material.dart';
-
+import 'package:vsce_extensions_creator/functional/functions.dart';
 import 'dart:io';
 import 'dart:convert';
 
-void convertLocalsToFullExtension(
-    String name,
-    String extension,
-    String description,
-    String version,
-    String publisherName,
-    String category,
-    String iconPath,
-    bool isThemeActive,
-    String outputPath) async {
+import '../functional/classes.dart';
+
+void convertLocalsToFullExtension(Extension extension, String iconPath,
+    bool isThemeActive, String outputPath) async {
   // Get the path of the project
   String projectPath = outputPath;
 
   // Create the extension folder
-  Directory('$projectPath\\out\\$name').createSync(recursive: true);
+  Directory('$projectPath\\out\\${extension.name}').createSync(recursive: true);
 
   // Create the package.json file
-  final pkg = File('${'$projectPath\\out\\$name'}\\package.json');
+  final pkg = File('${'$projectPath\\out\\${extension.name}'}\\package.json');
   if (!pkg.existsSync()) {
     pkg.createSync();
   }
 
   // Generate the package.json file's content
-  final pkgData = generatePackageJson(name, extension, description, version,
-      publisherName, category, isThemeActive);
+  final pkgData = generatePackageJson(extension, isThemeActive);
 
   // Write the package.json file
   await pkg.writeAsString(pkgData);
 
   // Create the .vscodeignore file
-  final vscodeIgnore = File('${'$projectPath\\out\\$name'}\\.vscodeignore');
+  final vscodeIgnore = File('${'$projectPath\\out\\${extension.name}'}\\.vscodeignore');
   if (!vscodeIgnore.existsSync()) {
     vscodeIgnore.createSync();
   }
@@ -46,7 +39,7 @@ void convertLocalsToFullExtension(
 
   // Create the launch.json file
   final launchJson =
-      File('${'$projectPath\\out\\$name'}\\.vscode\\launch.json');
+      File('${'$projectPath\\out\\${extension.name}'}\\.vscode\\launch.json');
   if (!launchJson.existsSync()) {
     launchJson.createSync(recursive: true);
   }
@@ -58,7 +51,7 @@ void convertLocalsToFullExtension(
   await launchJson.writeAsString(launchJsonData);
 
   // Create the README.md file
-  final readme = File('${'$projectPath\\out\\$name'}\\README.md');
+  final readme = File('${'$projectPath\\out\\${extension.name}'}\\README.md');
   if (!readme.existsSync()) {
     readme.createSync();
   }
@@ -70,33 +63,33 @@ void convertLocalsToFullExtension(
   await readme.writeAsString(readmeData);
 
   // Create the CHANGELOG.md file
-  final changeLog = File('${'$projectPath\\out\\$name'}\\CHANGELOG.md');
+  final changeLog = File('${'$projectPath\\out\\${extension.name}'}\\CHANGELOG.md');
   if (!changeLog.existsSync()) {
     changeLog.createSync();
   }
 
   // Generate the CHANGELOG.md file's content
-  final changeLogData = generateChangeLog('', extension);
+  final changeLogData = generateChangeLog('', extension.extensionFileName);
 
   // Write the CHANGELOG.md file
   await changeLog.writeAsString(changeLogData);
 
   // Create the vsc-extension-quickstart.md file
   final quickStart =
-      File('${'$projectPath\\out\\$name'}\\vsc-extension-quickstart.md');
+      File('${'$projectPath\\out\\${extension.name}'}\\vsc-extension-quickstart.md');
   if (!quickStart.existsSync()) {
     quickStart.createSync();
   }
 
   // Generate the vsc-extension-quickstart.md file's content
-  final quickStartData = generateQuickStart('', extension);
+  final quickStartData = generateQuickStart('', extension.extensionFileName);
 
   // Write the vsc-extension-quickstart.md file
   await quickStart.writeAsString(quickStartData);
 
   // Create the icon.json file
   if (iconPath != '') {
-    final icon = File('${'$projectPath\\out\\$name'}\\.vscode\\icon.json');
+    final icon = File('${'$projectPath\\out\\${extension.name}'}\\.vscode\\icon.json');
     if (!icon.existsSync()) {
       icon.createSync();
     }
@@ -110,7 +103,7 @@ void convertLocalsToFullExtension(
 
   // Create the language-configuration.json file
   final languageConfiguration =
-      File('${'$projectPath\\out\\$name'}\\language-configuration.json');
+      File('${'$projectPath\\out\\${extension.name}'}\\language-configuration.json');
   if (!languageConfiguration.existsSync()) {
     languageConfiguration.createSync();
   }
@@ -122,17 +115,17 @@ void convertLocalsToFullExtension(
   await languageConfiguration.writeAsString(languageConfigurationData);
 
   // Create the syntaxes folder
-  Directory('${'$projectPath\\out\\$name'}\\syntaxes').createSync();
+  Directory('${'$projectPath\\out\\${extension.name}'}\\syntaxes').createSync();
 
   // Create the syntaxes file
   final syntax = File(
-      '${'$projectPath\\out\\$name'}\\syntaxes\\$extension.tmLanguage.json');
+      '${'$projectPath\\out\\${extension.name}'}\\syntaxes\\${extension.extensionFileName}.tmLanguage.json');
   if (!syntax.existsSync()) {
     syntax.createSync();
   }
 
   // Generate the syntaxes file's content
-  final syntaxData = await generateSyntax(extension);
+  final syntaxData = await generateSyntax(extension.extensionFileName);
 
   // Write the syntaxes file
   await syntax.writeAsString(syntaxData);
@@ -143,7 +136,7 @@ void convertLocalsToFullExtension(
 
 	// Create the themes file
 	final theme = File(
-			'${'$projectPath\\out\\$name'}\\themes\\$extension.thTheme.json');
+			'${'$projectPath\\out\\$name'}\\themes\\${extension.extensionFileName}.thTheme.json');
 	if (!theme.existsSync()) {
 		theme.createSync();
 	}
@@ -156,46 +149,43 @@ void convertLocalsToFullExtension(
 */
 }
 
-String generatePackageJson(String name, String extension, String description,
-    String version, String publisherName, String category, bool isThemeActive) {
+String generatePackageJson(Extension extension, bool isThemeActive) {
   String theme = ''',
 		"themes": [
 			{
-				"label": "$name",
+				"label": "${extension.name}",
 				"uiTheme": "vs-dark",
-				"path": "./themes/$extension.thTheme.json"
+				"path": "./themes/${extension.extensionFileName}.thTheme.json"
 			}
 		],
 		"configurationDefaults": {
-			"[$extension]": {
+			"[${extension.extensionFileName}]": {
 				"editor.semanticHighlighting.enabled": "configuredByTheme"
 			}
 		}''';
 
   return '''
 {
-	"name": "$name",
-	"displayName": "$name",
-	"description": "$description",
-	"version": "$version",
-	"publisher": "$publisherName",
+	"name": "${extension.name}",
+	"displayName": "${extension.name}",
+	"description": "${extension.description}",
+	"version": "${extension.version}",
+	"publisher": "${extension.publisherName}",
 	"engines": {
 		"vscode": "^1.92.0"
 	},
-	"categories": [
-		"$category"
-	],
+	"categories": ${getCategories(extension.categories)},
 	"contributes": {
 		"languages": [{
-			"id": "$extension",
-			"aliases": ["${extension.toLowerCase()}", "${extension.toUpperCase()}"],
-			"extensions": ["$extension"],
+			"id": "${extension.extensionFileName}",
+			"aliases": ["${extension.extensionFileName.toLowerCase()}", "${extension.extensionFileName.toUpperCase()}"],
+			"extensions": ["${extension.extensionFileName}"],
 			"configuration": "./language-configuration.json"
 		}],
 		"grammars": [{
-			"language": "$extension",
-			"scopeName": "source.$extension",
-			"path": "./syntaxes/$extension.tmLanguage.json"
+			"language": "${extension.extensionFileName}",
+			"scopeName": "source.${extension.extensionFileName}",
+			"path": "./syntaxes/${extension.extensionFileName}.tmLanguage.json"
 		}]
 	}${isThemeActive ? theme : ''}
 }''';

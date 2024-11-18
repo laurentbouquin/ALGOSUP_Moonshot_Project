@@ -1,10 +1,12 @@
+// ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
 
+// ==== Pages Imports ==== //
 import '../functional/functions.dart';
 import '../functional/constants.dart';
 import '../functional/classes.dart';
-import 'dart:convert';
 
 class FormatPage extends StatefulWidget {
   const FormatPage({super.key, required this.extensionIndex});
@@ -49,6 +51,8 @@ class _FormatPageState extends State<FormatPage> {
 
   String extensionFileName = '';
 
+  WindowSize windowSize = WindowSize();
+
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController versionController = TextEditingController();
@@ -75,13 +79,11 @@ class _FormatPageState extends State<FormatPage> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme theme = isDark
-        ? darkTheme.colorScheme
-        : lightTheme.colorScheme;
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    ColorScheme scheme = currentTheme.colorScheme;
+    windowSize.width = MediaQuery.of(context).size.width;
+    windowSize.height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: theme.surface,
+      backgroundColor: scheme.surface,
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
@@ -89,16 +91,17 @@ class _FormatPageState extends State<FormatPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                height: height / 10.8,
-                width: width / 3,
+                height: windowSize.height / 10.8,
+                width: windowSize.width / 3,
                 decoration: BoxDecoration(
-                    color: theme.surface,
-                    border: Border(
-                      bottom: BorderSide(
-                        color: theme.onSurface,
-                        width: 2,
-                      ),
-                    )),
+                  color: scheme.surface,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: scheme.onSurface,
+                      width: 2,
+                    ),
+                  ),
+                ),
                 child: const Center(
                   child: Text(
                     'keywords',
@@ -116,17 +119,17 @@ class _FormatPageState extends State<FormatPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Container(
-                            height: height / 10.8,
-                            width: width / 3 - width / 16,
+                            height: windowSize.height / 10.8,
+                            width: windowSize.width / 3 - windowSize.width / 16,
                             decoration: BoxDecoration(
-                              color: theme.surface,
+                              color: scheme.surface,
                               border: Border(
                                 bottom: BorderSide(
-                                  color: theme.onSurface,
+                                  color: scheme.onSurface,
                                   width: 1,
                                 ),
                                 right: BorderSide(
-                                  color: theme.onSurface,
+                                  color: scheme.onSurface,
                                   width: 1,
                                 ),
                               ),
@@ -141,7 +144,7 @@ class _FormatPageState extends State<FormatPage> {
                               ),
                               style: TextStyle(
                                 fontSize: 20,
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                               ),
                               onChanged: (value) {
                                 keywords[i] = value;
@@ -149,13 +152,13 @@ class _FormatPageState extends State<FormatPage> {
                             ),
                           ),
                           Container(
-                            width: width / 16,
-                            height: height / 10.8,
+                            width: windowSize.width / 16,
+                            height: windowSize.height / 10.8,
                             decoration: BoxDecoration(
-                              color: theme.surface,
+                              color: scheme.surface,
                               border: Border(
                                 bottom: BorderSide(
-                                  color: theme.onSurface,
+                                  color: scheme.onSurface,
                                   width: 1,
                                 ),
                               ),
@@ -173,25 +176,29 @@ class _FormatPageState extends State<FormatPage> {
                                   'categories': getCategories(categories),
                                   'lastUpdated': DateTime.now().toString(),
                                 };
-                                String datas = jsonEncode(data);
+                                String dataList = jsonEncode(data);
                                 await writeData(
-                                        datas, storageAddress, 'format.json')
+                                        dataList, storageAddress, 'format.json')
                                     .then((value) {
                                   setState(() {});
                                 });
                               },
                               icon: Icon(Icons.highlight_remove_sharp,
-                                  color: theme.onSurface),
+                                  color: scheme.onSurface),
                             ),
                           ),
                         ],
                       ),
+
+                    // End of the i loop
+
                     Container(
                       margin: EdgeInsets.only(
-                          top: ((height - height / 7.5) -
-                              height / 10.8 -
-                              ((height / 10.8) * keywords.length) -
-                              50)),
+                        top: ((windowSize.height - windowSize.height / 7.5) -
+                            windowSize.height / 10.8 -
+                            ((windowSize.height / 10.8) * keywords.length) -
+                            50),
+                      ),
                       child: IconButton(
                         onPressed: () async {
                           await showDialog<void>(
@@ -235,9 +242,10 @@ class _FormatPageState extends State<FormatPage> {
                                                   'keywords': keywords,
                                                   'types': types,
                                                 };
-                                                String datas = jsonEncode(data);
+                                                String dataList =
+                                                    jsonEncode(data);
                                                 await writeData(
-                                                        datas,
+                                                        dataList,
                                                         storageAddress,
                                                         'format.json')
                                                     .then((value) {
@@ -258,7 +266,7 @@ class _FormatPageState extends State<FormatPage> {
                             ),
                           );
                         },
-                        icon: Icon(Icons.add, color: theme.onSurface),
+                        icon: Icon(Icons.add, color: scheme.onSurface),
                       ),
                     ),
                   ],
@@ -267,7 +275,7 @@ class _FormatPageState extends State<FormatPage> {
             ],
           ),
           VerticalDivider(
-            color: theme.onSurface,
+            color: scheme.onSurface,
             thickness: 2,
             width: 2,
           ),
@@ -275,70 +283,70 @@ class _FormatPageState extends State<FormatPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                height: height / 10.8,
-                width: width / 3 - 4,
+                height: windowSize.height / 10.8,
+                width: windowSize.width / 3 - 4,
                 decoration: BoxDecoration(
-                    color: theme.surface,
-                    border: Border(
-                      bottom: BorderSide(
-                        color: theme.onSurface,
-                        width: 2,
-                      ),
-                    )),
+                  color: scheme.surface,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: scheme.onSurface,
+                      width: 2,
+                    ),
+                  ),
+                ),
                 child: const Center(
                   child: Text(
                     'Types',
                     style: TextStyle(
                       fontSize: 25,
-                      // decoration: TextDecoration.underline,
                     ),
                   ),
                 ),
               ),
-              for (int i = 0; i < types.length; i++)
+              for (int j = 0; j < types.length; j++)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      height: height / 10.8,
-                      width: width / 3 - 4 - width / 16,
+                      height: windowSize.height / 10.8,
+                      width: windowSize.width / 3 - 4 - windowSize.width / 16,
                       decoration: BoxDecoration(
-                        color: theme.surface,
+                        color: scheme.surface,
                         border: Border(
                           bottom: BorderSide(
-                            color: theme.onSurface,
+                            color: scheme.onSurface,
                             width: 1,
                           ),
                           right: BorderSide(
-                            color: theme.onSurface,
+                            color: scheme.onSurface,
                             width: 1,
                           ),
                         ),
                       ),
                       child: TextField(
                         readOnly: true,
-                        controller: TextEditingController(text: types[i]),
+                        controller: TextEditingController(text: types[j]),
                         textAlign: TextAlign.center,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                         ),
                         style: TextStyle(
                           fontSize: 20,
-                          color: theme.onSurface,
+                          color: scheme.onSurface,
                         ),
                         onChanged: (value) {
-                          types[i] = value;
+                          types[j] = value;
                         },
                       ),
                     ),
                     Container(
-                      width: width / 16,
-                      height: height / 10.8,
+                      width: windowSize.width / 16,
+                      height: windowSize.height / 10.8,
                       decoration: BoxDecoration(
-                        color: theme.surface,
+                        color: scheme.surface,
                         border: Border(
                           bottom: BorderSide(
-                            color: theme.onSurface,
+                            color: scheme.onSurface,
                             width: 1,
                           ),
                         ),
@@ -346,29 +354,34 @@ class _FormatPageState extends State<FormatPage> {
                       child: IconButton(
                         hoverColor: Colors.transparent,
                         onPressed: () async {
-                          types.removeAt(i);
+                          types.removeAt(j);
                           Map<String, dynamic> data = {
                             'keywords': keywords,
                             'types': types,
                           };
-                          String datas = jsonEncode(data);
-                          await writeData(datas, storageAddress, 'format.json')
+                          String dataList = jsonEncode(data);
+                          await writeData(
+                                  dataList, storageAddress, 'format.json')
                               .then((value) {
                             setState(() {});
                           });
                         },
                         icon: Icon(Icons.highlight_remove_sharp,
-                            color: theme.onSurface),
+                            color: scheme.onSurface),
                       ),
                     ),
                   ],
                 ),
+
+              // End of the j loop
+
               Container(
                 margin: EdgeInsets.only(
-                    top: ((height - height / 7.5) -
-                        height / 10.8 -
-                        ((height / 10.8) * types.length) -
-                        50)),
+                  top: ((windowSize.height - windowSize.height / 7.5) -
+                      windowSize.height / 10.8 -
+                      ((windowSize.height / 10.8) * types.length) -
+                      50),
+                ),
                 child: IconButton(
                   onPressed: () async {
                     await showDialog<void>(
@@ -412,14 +425,16 @@ class _FormatPageState extends State<FormatPage> {
                                             'keywords': keywords,
                                             'types': types,
                                           };
-                                          String datas = jsonEncode(data);
-                                          await writeData(datas, storageAddress,
-                                                  'format.json')
-                                              .then((value) {
-                                            setState(() {
-                                              Navigator.of(context).pop();
-                                            });
-                                          });
+                                          String dataList = jsonEncode(data);
+                                          await writeData(dataList,
+                                                  storageAddress, 'format.json')
+                                              .then(
+                                            (value) {
+                                              setState(() {
+                                                Navigator.of(context).pop();
+                                              });
+                                            },
+                                          );
                                         }
                                       },
                                       child: const Text('Add'),
@@ -433,13 +448,13 @@ class _FormatPageState extends State<FormatPage> {
                       ),
                     );
                   },
-                  icon: Icon(Icons.add, color: theme.onSurface),
+                  icon: Icon(Icons.add, color: scheme.onSurface),
                 ),
               ),
             ],
           ),
           VerticalDivider(
-            color: theme.onSurface,
+            color: scheme.onSurface,
             thickness: 2,
             width: 2,
           ),
@@ -447,34 +462,34 @@ class _FormatPageState extends State<FormatPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                height: height / 10.8,
-                width: width / 3,
+                height: windowSize.height / 10.8,
+                width: windowSize.width / 3,
                 decoration: BoxDecoration(
-                    color: theme.surface,
-                    border: Border(
-                      bottom: BorderSide(
-                        color: theme.onSurface,
-                        width: 2,
-                      ),
-                    )),
+                  color: scheme.surface,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: scheme.onSurface,
+                      width: 2,
+                    ),
+                  ),
+                ),
                 child: const Center(
                   child: Text(
                     'Extension Options',
                     style: TextStyle(
                       fontSize: 25,
-                      // decoration: TextDecoration.underline,
                     ),
                   ),
                 ),
               ),
               Container(
-                width: width / 3,
-                height: height / 10.8,
+                width: windowSize.width / 3,
+                height: windowSize.height / 10.8,
                 decoration: BoxDecoration(
-                  color: theme.surface,
+                  color: scheme.surface,
                   border: Border(
                     bottom: BorderSide(
-                      color: theme.onSurface,
+                      color: scheme.onSurface,
                       width: 1,
                     ),
                   ),
@@ -486,12 +501,12 @@ class _FormatPageState extends State<FormatPage> {
                       '       Name: ',
                       style: TextStyle(
                         fontSize: 20,
-                        color: theme.onSurface,
+                        color: scheme.onSurface,
                       ),
                     ),
                     Container(
-                      width: width * 0.12,
-                      margin: EdgeInsets.only(left: width * 0.02),
+                      width: windowSize.width * 0.12,
+                      margin: EdgeInsets.only(left: windowSize.width * 0.02),
                       child: TextField(
                         controller: nameController..text = currentName,
                         decoration: const InputDecoration(
@@ -512,9 +527,9 @@ class _FormatPageState extends State<FormatPage> {
                             'extensionFileName': extensionFileName,
                           };
                           extensionsData['extensions'][extensionIndex] = data;
-                          String datas = jsonEncode(extensionsData);
-                          await writeData(
-                                  datas, storageAddress, 'extensions_list.json')
+                          String dataList = jsonEncode(extensionsData);
+                          await writeData(dataList, storageAddress,
+                                  'extensions_list.json')
                               .then((value) {});
                         },
                       ),
@@ -523,13 +538,13 @@ class _FormatPageState extends State<FormatPage> {
                 ),
               ),
               Container(
-                width: width / 3,
-                height: height / 10.8 * 2,
+                width: windowSize.width / 3,
+                height: windowSize.height / 10.8 * 2,
                 decoration: BoxDecoration(
-                  color: theme.surface,
+                  color: scheme.surface,
                   border: Border(
                     bottom: BorderSide(
-                      color: theme.onSurface,
+                      color: scheme.onSurface,
                       width: 1,
                     ),
                   ),
@@ -537,18 +552,19 @@ class _FormatPageState extends State<FormatPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Description: ',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: theme.onSurface,
-                        )),
+                    Text(
+                      'Description: ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: scheme.onSurface,
+                      ),
+                    ),
                     Container(
-                      width: width * 0.12,
-                      margin: EdgeInsets.only(left: width * 0.02),
+                      width: windowSize.width * 0.12,
+                      margin: EdgeInsets.only(left: windowSize.width * 0.02),
                       child: TextField(
                         controller: descriptionController
                           ..text = currentDescription,
-                        // maxLengthEnforcement: MaxLengthEnforcement.none,
                         maxLines: 3,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
@@ -569,9 +585,9 @@ class _FormatPageState extends State<FormatPage> {
                             'extensionFileName': extensionFileName,
                           };
                           extensionsData['extensions'][extensionIndex] = data;
-                          String datas = jsonEncode(extensionsData);
-                          await writeData(
-                                  datas, storageAddress, 'extensions_list.json')
+                          String dataList = jsonEncode(extensionsData);
+                          await writeData(dataList, storageAddress,
+                                  'extensions_list.json')
                               .then((value) {});
                         },
                       ),
@@ -580,13 +596,13 @@ class _FormatPageState extends State<FormatPage> {
                 ),
               ),
               Container(
-                width: width / 3,
-                height: height / 10.8,
+                width: windowSize.width / 3,
+                height: windowSize.height / 10.8,
                 decoration: BoxDecoration(
-                  color: theme.surface,
+                  color: scheme.surface,
                   border: Border(
                     bottom: BorderSide(
-                      color: theme.onSurface,
+                      color: scheme.onSurface,
                       width: 1,
                     ),
                   ),
@@ -594,19 +610,23 @@ class _FormatPageState extends State<FormatPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('    Version: ',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: theme.onSurface,
-                        )),
+                    Text(
+                      '    Version: ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: scheme.onSurface,
+                      ),
+                    ),
                     Container(
-                      width: width * 0.12,
-                      margin: EdgeInsets.only(left: width * 0.02),
+                      width: windowSize.width * 0.12,
+                      margin: EdgeInsets.only(left: windowSize.width * 0.02),
                       child: TextField(
                         controller: versionController..text = currentVersion,
                         keyboardType: TextInputType.number,
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'[0-9.]'),
+                          ),
                         ],
                         decoration: const InputDecoration(
                           border: InputBorder.none,
@@ -627,9 +647,9 @@ class _FormatPageState extends State<FormatPage> {
                             'extensionFileName': extensionFileName,
                           };
                           extensionsData['extensions'][extensionIndex] = data;
-                          String datas = jsonEncode(extensionsData);
-                          await writeData(
-                                  datas, storageAddress, 'extensions_list.json')
+                          String dataList = jsonEncode(extensionsData);
+                          await writeData(dataList, storageAddress,
+                                  'extensions_list.json')
                               .then((value) {});
                         },
                       ),
@@ -638,13 +658,13 @@ class _FormatPageState extends State<FormatPage> {
                 ),
               ),
               Container(
-                width: width / 3,
-                height: height / 10.8,
+                width: windowSize.width / 3,
+                height: windowSize.height / 10.8,
                 decoration: BoxDecoration(
-                  color: theme.surface,
+                  color: scheme.surface,
                   border: Border(
                     bottom: BorderSide(
-                      color: theme.onSurface,
+                      color: scheme.onSurface,
                       width: 1,
                     ),
                   ),
@@ -652,14 +672,16 @@ class _FormatPageState extends State<FormatPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('  Extension: ',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: theme.onSurface,
-                        )),
+                    Text(
+                      '  Extension: ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: scheme.onSurface,
+                      ),
+                    ),
                     Container(
-                      width: width * 0.12,
-                      margin: EdgeInsets.only(left: width * 0.02),
+                      width: windowSize.width * 0.12,
+                      margin: EdgeInsets.only(left: windowSize.width * 0.02),
                       child: TextField(
                         controller: extensionController
                           ..text = extensionFileName,
@@ -685,9 +707,9 @@ class _FormatPageState extends State<FormatPage> {
                             'extensionFileName': extensionFileName,
                           };
                           extensionsData['extensions'][extensionIndex] = data;
-                          String datas = jsonEncode(extensionsData);
-                          await writeData(
-                                  datas, storageAddress, 'extensions_list.json')
+                          String dataList = jsonEncode(extensionsData);
+                          await writeData(dataList, storageAddress,
+                                  'extensions_list.json')
                               .then((value) {});
                         },
                       ),
@@ -696,27 +718,27 @@ class _FormatPageState extends State<FormatPage> {
                 ),
               ),
               Container(
-                width: width / 3,
-                margin: EdgeInsets.only(top: height / 108),
+                width: windowSize.width / 3,
+                margin: EdgeInsets.only(top: windowSize.height / 108),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(
-                      width: width / 9.6,
+                      width: windowSize.width / 9.6,
                       child: Text(
                         '   Categories: ',
                         style: TextStyle(
                           fontSize: 20,
-                          color: theme.onSurface,
+                          color: scheme.onSurface,
                         ),
                       ),
                     ),
                     Container(
-                      width: width / 9.6,
+                      width: windowSize.width / 9.6,
                       decoration: BoxDecoration(
-                        color: theme.surface,
+                        color: scheme.surface,
                         border: Border.all(
-                          color: theme.onSurface,
+                          color: scheme.onSurface,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(25),
@@ -725,8 +747,8 @@ class _FormatPageState extends State<FormatPage> {
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
                               categories.languages
-                                  ? theme.onSurface
-                                  : theme.primary),
+                                  ? scheme.onSurface
+                                  : scheme.primary),
                         ),
                         child: FittedBox(
                           child: Text(
@@ -734,8 +756,8 @@ class _FormatPageState extends State<FormatPage> {
                             maxLines: 1,
                             style: TextStyle(
                               color: categories.languages
-                                  ? theme.onPrimary
-                                  : theme.onSurface,
+                                  ? scheme.onPrimary
+                                  : scheme.onSurface,
                             ),
                           ),
                         ),
@@ -754,9 +776,9 @@ class _FormatPageState extends State<FormatPage> {
                             'extensionFileName': extensionFileName,
                           };
                           extensionsData['extensions'][extensionIndex] = data;
-                          String datas = jsonEncode(extensionsData);
-                          await writeData(
-                                  datas, storageAddress, 'extensions_list.json')
+                          String dataList = jsonEncode(extensionsData);
+                          await writeData(dataList, storageAddress,
+                                  'extensions_list.json')
                               .then((value) {
                             setState(() {});
                           });
@@ -764,11 +786,11 @@ class _FormatPageState extends State<FormatPage> {
                       ),
                     ),
                     Container(
-                      width: width / 9.6,
+                      width: windowSize.width / 9.6,
                       decoration: BoxDecoration(
-                        color: theme.surface,
+                        color: scheme.surface,
                         border: Border.all(
-                          color: theme.onSurface,
+                          color: scheme.onSurface,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(25),
@@ -777,15 +799,15 @@ class _FormatPageState extends State<FormatPage> {
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
                               categories.themes
-                                  ? theme.onSurface
-                                  : theme.primary),
+                                  ? scheme.onSurface
+                                  : scheme.primary),
                         ),
                         child: Text(
                           'Themes',
                           style: TextStyle(
                             color: categories.themes
-                                ? theme.onPrimary
-                                : theme.onSurface,
+                                ? scheme.onPrimary
+                                : scheme.onSurface,
                           ),
                         ),
                         onPressed: () async {
@@ -803,9 +825,9 @@ class _FormatPageState extends State<FormatPage> {
                             'extensionFileName': extensionFileName,
                           };
                           extensionsData['extensions'][extensionIndex] = data;
-                          String datas = jsonEncode(extensionsData);
-                          await writeData(
-                                  datas, storageAddress, 'extensions_list.json')
+                          String dataList = jsonEncode(extensionsData);
+                          await writeData(dataList, storageAddress,
+                                  'extensions_list.json')
                               .then((value) {
                             setState(() {});
                           });
@@ -816,17 +838,17 @@ class _FormatPageState extends State<FormatPage> {
                 ),
               ),
               Container(
-                width: width / 3,
-                margin: EdgeInsets.only(top: height / 108),
+                width: windowSize.width / 3,
+                margin: EdgeInsets.only(top: windowSize.height / 108),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                      width: width / 9.6,
+                      width: windowSize.width / 9.6,
                       decoration: BoxDecoration(
-                        color: theme.surface,
+                        color: scheme.surface,
                         border: Border.all(
-                          color: theme.onSurface,
+                          color: scheme.onSurface,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(25),
@@ -835,15 +857,15 @@ class _FormatPageState extends State<FormatPage> {
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
                               categories.snippets
-                                  ? theme.onSurface
-                                  : theme.primary),
+                                  ? scheme.onSurface
+                                  : scheme.primary),
                         ),
                         child: Text(
                           'Snippets',
                           style: TextStyle(
                             color: categories.snippets
-                                ? theme.onPrimary
-                                : theme.onSurface,
+                                ? scheme.onPrimary
+                                : scheme.onSurface,
                           ),
                         ),
                         onPressed: () async {
@@ -861,9 +883,9 @@ class _FormatPageState extends State<FormatPage> {
                             'extensionFileName': extensionFileName,
                           };
                           extensionsData['extensions'][extensionIndex] = data;
-                          String datas = jsonEncode(extensionsData);
-                          await writeData(
-                                  datas, storageAddress, 'extensions_list.json')
+                          String dataList = jsonEncode(extensionsData);
+                          await writeData(dataList, storageAddress,
+                                  'extensions_list.json')
                               .then((value) {
                             setState(() {});
                           });
@@ -871,11 +893,11 @@ class _FormatPageState extends State<FormatPage> {
                       ),
                     ),
                     Container(
-                      width: width / 9.6,
+                      width: windowSize.width / 9.6,
                       decoration: BoxDecoration(
-                        color: theme.surface,
+                        color: scheme.surface,
                         border: Border.all(
-                          color: theme.onSurface,
+                          color: scheme.onSurface,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(25),
@@ -884,15 +906,15 @@ class _FormatPageState extends State<FormatPage> {
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
                               categories.debuggers
-                                  ? theme.onSurface
-                                  : theme.primary),
+                                  ? scheme.onSurface
+                                  : scheme.primary),
                         ),
                         child: Text(
                           'Debuggers',
                           style: TextStyle(
                             color: categories.debuggers
-                                ? theme.onPrimary
-                                : theme.onSurface,
+                                ? scheme.onPrimary
+                                : scheme.onSurface,
                           ),
                         ),
                         onPressed: () {
@@ -903,11 +925,11 @@ class _FormatPageState extends State<FormatPage> {
                       ),
                     ),
                     Container(
-                      width: width / 9.6,
+                      width: windowSize.width / 9.6,
                       decoration: BoxDecoration(
-                        color: theme.surface,
+                        color: scheme.surface,
                         border: Border.all(
-                          color: theme.onSurface,
+                          color: scheme.onSurface,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(25),
@@ -916,15 +938,15 @@ class _FormatPageState extends State<FormatPage> {
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
                               categories.keymaps
-                                  ? theme.onSurface
-                                  : theme.primary),
+                                  ? scheme.onSurface
+                                  : scheme.primary),
                         ),
                         child: Text(
                           'Keymaps',
                           style: TextStyle(
                             color: categories.keymaps
-                                ? theme.onPrimary
-                                : theme.onSurface,
+                                ? scheme.onPrimary
+                                : scheme.onSurface,
                           ),
                         ),
                         onPressed: () async {
@@ -942,9 +964,9 @@ class _FormatPageState extends State<FormatPage> {
                             'extensionFileName': extensionFileName,
                           };
                           extensionsData['extensions'][extensionIndex] = data;
-                          String datas = jsonEncode(extensionsData);
-                          await writeData(
-                                  datas, storageAddress, 'extensions_list.json')
+                          String dataList = jsonEncode(extensionsData);
+                          await writeData(dataList, storageAddress,
+                                  'extensions_list.json')
                               .then((value) {
                             setState(() {});
                           });
@@ -955,17 +977,17 @@ class _FormatPageState extends State<FormatPage> {
                 ),
               ),
               Container(
-                width: width / 3,
-                margin: EdgeInsets.only(top: height / 108),
+                width: windowSize.width / 3,
+                margin: EdgeInsets.only(top: windowSize.height / 108),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                      width: width / 9.6,
+                      width: windowSize.width / 9.6,
                       decoration: BoxDecoration(
-                        color: theme.surface,
+                        color: scheme.surface,
                         border: Border.all(
-                          color: theme.onSurface,
+                          color: scheme.onSurface,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(25),
@@ -974,15 +996,15 @@ class _FormatPageState extends State<FormatPage> {
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
                               categories.testing
-                                  ? theme.onSurface
-                                  : theme.primary),
+                                  ? scheme.onSurface
+                                  : scheme.primary),
                         ),
                         child: Text(
                           'Testing',
                           style: TextStyle(
                             color: categories.testing
-                                ? theme.onPrimary
-                                : theme.onSurface,
+                                ? scheme.onPrimary
+                                : scheme.onSurface,
                           ),
                         ),
                         onPressed: () async {
@@ -1000,9 +1022,9 @@ class _FormatPageState extends State<FormatPage> {
                             'extensionFileName': extensionFileName,
                           };
                           extensionsData['extensions'][extensionIndex] = data;
-                          String datas = jsonEncode(extensionsData);
-                          await writeData(
-                                  datas, storageAddress, 'extensions_list.json')
+                          String dataList = jsonEncode(extensionsData);
+                          await writeData(dataList, storageAddress,
+                                  'extensions_list.json')
                               .then((value) {
                             setState(() {});
                           });
@@ -1010,11 +1032,11 @@ class _FormatPageState extends State<FormatPage> {
                       ),
                     ),
                     Container(
-                      width: width / 9.6,
+                      width: windowSize.width / 9.6,
                       decoration: BoxDecoration(
-                        color: theme.surface,
+                        color: scheme.surface,
                         border: Border.all(
-                          color: theme.onSurface,
+                          color: scheme.onSurface,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(25),
@@ -1023,15 +1045,15 @@ class _FormatPageState extends State<FormatPage> {
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
                               categories.linters
-                                  ? theme.onSurface
-                                  : theme.primary),
+                                  ? scheme.onSurface
+                                  : scheme.primary),
                         ),
                         child: Text(
                           'Linters',
                           style: TextStyle(
                             color: categories.linters
-                                ? theme.onPrimary
-                                : theme.onSurface,
+                                ? scheme.onPrimary
+                                : scheme.onSurface,
                           ),
                         ),
                         onPressed: () async {
@@ -1049,9 +1071,9 @@ class _FormatPageState extends State<FormatPage> {
                             'extensionFileName': extensionFileName,
                           };
                           extensionsData['extensions'][extensionIndex] = data;
-                          String datas = jsonEncode(extensionsData);
-                          await writeData(
-                                  datas, storageAddress, 'extensions_list.json')
+                          String dataList = jsonEncode(extensionsData);
+                          await writeData(dataList, storageAddress,
+                                  'extensions_list.json')
                               .then((value) {
                             setState(() {});
                           });
@@ -1059,11 +1081,11 @@ class _FormatPageState extends State<FormatPage> {
                       ),
                     ),
                     Container(
-                      width: width / 9.6,
+                      width: windowSize.width / 9.6,
                       decoration: BoxDecoration(
-                        color: theme.surface,
+                        color: scheme.surface,
                         border: Border.all(
-                          color: theme.onSurface,
+                          color: scheme.onSurface,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(25),
@@ -1072,15 +1094,15 @@ class _FormatPageState extends State<FormatPage> {
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
                               categories.other
-                                  ? theme.onSurface
-                                  : theme.primary),
+                                  ? scheme.onSurface
+                                  : scheme.primary),
                         ),
                         child: Text(
                           'Other',
                           style: TextStyle(
                             color: categories.other
-                                ? theme.onPrimary
-                                : theme.onSurface,
+                                ? scheme.onPrimary
+                                : scheme.onSurface,
                           ),
                         ),
                         onPressed: () async {
@@ -1098,9 +1120,9 @@ class _FormatPageState extends State<FormatPage> {
                             'extensionFileName': extensionFileName,
                           };
                           extensionsData['extensions'][extensionIndex] = data;
-                          String datas = jsonEncode(extensionsData);
-                          await writeData(
-                                  datas, storageAddress, 'extensions_list.json')
+                          String dataList = jsonEncode(extensionsData);
+                          await writeData(dataList, storageAddress,
+                                  'extensions_list.json')
                               .then((value) {
                             setState(() {});
                           });

@@ -1,20 +1,21 @@
+// ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
-
-// === Packages imports === //
 import 'dart:io';
 import 'package:window_manager/window_manager.dart';
 
-// ==== Pages imports ==== //
 
-// Pages for links
+// ==== Pages Imports ==== //
+
+// Call displayable files
 import 'customize/customizables.dart';
 import 'home.dart';
 import 'settings.dart';
 
-// Pages for functions or constants
+// Call data files
 import 'functional/functions.dart';
 import 'functional/constants.dart';
 
+// ==== Main Function ==== //
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
@@ -30,7 +31,6 @@ class MainApp extends StatelessWidget {
   @override
   // Main build function
   Widget build(BuildContext context) {
-    // Return the AdaptiveTheme widget
     return const RootPage();
   }
 }
@@ -43,7 +43,6 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  // Add your stateful widget implementation here
 
   @override
   void initState() {
@@ -60,6 +59,7 @@ class _RootPageState extends State<RootPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        // Change the body of the app depending on the index
         body: index == 0
             ? const HomePage()
             : index == 1

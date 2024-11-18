@@ -1,16 +1,21 @@
-import 'dart:convert';
-import 'dart:io';
+// ==== Built-in Imports ==== //
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'classes.dart';
+import 'dart:convert';
+import 'dart:io';
 
+
+// ==== Pages Imports ==== //
+import 'classes.dart';
 import 'constants.dart';
 
+/// Returns a dynamic map from the specified file path
 Future<Map<String, dynamic>> loadJsonFromAssets(String filePath) async {
   String jsonString = await rootBundle.loadString(filePath);
   return jsonDecode(jsonString);
 }
 
+/// Writes the specified data to the specified file path and file name. If the file does not exist, it will be created.
 Future<File> writeData(data, String path, String fileName) async {
   final file = File('$path/$fileName');
   if (file.existsSync()) {
@@ -22,6 +27,7 @@ Future<File> writeData(data, String path, String fileName) async {
   return file.writeAsString(data);
 }
 
+/// Creates files with the specified names in the specified path and some default content for the files
 Future<void> createBaseFilesContent(String path) async {
   List<String> files = [
     "commentsandstrings",
@@ -49,18 +55,19 @@ Future<void> createBaseFilesContent(String path) async {
       '{"bgColor":"FFFFFF","keywordColor":"FFFFFF","functionColor":"FFFFFF","variableColor":"FFFFFF","stringColor":"FFFFFF","commentColor":"FFFFFF","commonColor":"FFFFFF","otherColor":"FFFFFF"}');
 }
 
-Column visualization(windowHeight, windowWidth, Theming themeColors) {
+/// Returns a Column widget with the data called from the textToVisualize function
+Column visualization(WindowSize windowSize, Theming themeColors) {
   return Column(
     children: <Widget>[
       Container(
-        width: windowWidth / 2 - 2,
-        height: windowHeight - windowHeight / 7.5,
+        width: windowSize.width / 2 - 2,
+        height: windowSize.height - windowSize.height / 7.5,
         decoration: BoxDecoration(
           color: Color(int.parse("0xFF${themeColors.bgColor}")),
         ),
         child: Container(
-          width: windowWidth * 0.25,
-          margin: EdgeInsets.only(left: windowWidth * 0.125),
+          width: windowSize.width * 0.25,
+          margin: EdgeInsets.only(left: windowSize.width * 0.125),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: textToVisualize(themeColors),
@@ -71,6 +78,7 @@ Column visualization(windowHeight, windowWidth, Theming themeColors) {
   );
 }
 
+/// Returns a list of widgets with a code example to visualize with the specified theme colors
 List<Widget> textToVisualize(Theming themeColors) {
   return [
     Row(
@@ -386,12 +394,14 @@ List<Widget> textToVisualize(Theming themeColors) {
   ];
 }
 
+/// Inverts the input color and returns the inverted color
 Color invertColor(String color) {
   int colorInt = int.parse("0xFF$color");
   int invertedColorInt = 0xFFFFFF ^ colorInt;
   return Color(invertedColorInt);
 }
 
+/// Returns a string with the hexadecimal value of the input integer
 String getHexFromInt(int value) {
   if (value < 16) {
     return "0${value.toRadixString(16)}";
@@ -402,24 +412,29 @@ String getHexFromInt(int value) {
   }
 }
 
+/// Converts the input hexadecimal value to an integer and returns the integer
 int getIntFromHex(String value) {
   return int.parse(value, radix: 16);
 }
 
+/// Changes the red value of the input color and returns the new color
 String changeRedHexColor(int value, String color) {
   return getHexFromInt(value.toInt()).toUpperCase() + color.substring(2);
 }
 
+/// Changes the green value of the input color and returns the new color
 String changeGreenHexColor(int value, String color) {
   return color.substring(0, 2) +
       getHexFromInt(value.toInt()).toUpperCase() +
       color.substring(4);
 }
 
+/// Changes the blue value of the input color and returns the new color
 String changeBlueHexColor(int value, String color) {
   return color.substring(0, 4) + getHexFromInt(value.toInt()).toUpperCase();
 }
 
+/// Compare the input color name with the list of color names and change the color value accordingly for the red value
 Theming checkRedCondition(String name, int value, List<String> colorsList) {
   if (name == "bgColor") {
     colorsList[0] = changeRedHexColor(value, colorsList[0]);
@@ -443,6 +458,7 @@ Theming checkRedCondition(String name, int value, List<String> colorsList) {
   return updateThemingClass(colorsList);
 }
 
+/// Compare the input color name with the list of color names and change the color value accordingly for the green value
 Theming checkGreenCondition(String name, int value, List<String> colorsList) {
   if (name == "bgColor") {
     colorsList[0] = changeGreenHexColor(value, colorsList[0]);
@@ -466,6 +482,7 @@ Theming checkGreenCondition(String name, int value, List<String> colorsList) {
   return updateThemingClass(colorsList);
 }
 
+/// Compare the input color name with the list of color names and change the color value accordingly for the blue value
 Theming checkBlueCondition(String name, int value, List<String> colorsList) {
   if (name == "bgColor") {
     colorsList[0] = changeBlueHexColor(value, colorsList[0]);
@@ -489,6 +506,7 @@ Theming checkBlueCondition(String name, int value, List<String> colorsList) {
   return updateThemingClass(colorsList);
 }
 
+/// Updates the theming class with the new color values
 Theming updateThemingClass(List<String> colorList) {
   return Theming(
     bgColor: colorList[0],
@@ -502,7 +520,8 @@ Theming updateThemingClass(List<String> colorList) {
   );
 }
 
-Future<Form> createDialog(BuildContext context, formKey, width, height, theme,
+/// Creates a dialog with sliders to change the color values of the theme that is being edited
+Future<Form> createDialog(BuildContext context, formKey, WindowSize windowSize, theme,
     jsonDataTemp, names, k, colorsList, themeColors, condition) async {
   Form form =
       Form(key: formKey, child: Container()); // Initialize with a default value
@@ -515,8 +534,8 @@ Future<Form> createDialog(BuildContext context, formKey, width, height, theme,
               form = Form(
                 key: formKey,
                 child: Container(
-                  height: height / 1.5,
-                  width: width / 7.3,
+                  height: windowSize.height / 1.5,
+                  width: windowSize.width / 7.3,
                   decoration: BoxDecoration(
                     color: theme.primary,
                     border: Border.all(
@@ -531,8 +550,8 @@ Future<Form> createDialog(BuildContext context, formKey, width, height, theme,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Container(
-                            width: width / 7.3 / 5 * 4,
-                            height: height / 21.6,
+                            width: windowSize.width / 7.3 / 5 * 4,
+                            height: windowSize.height / 21.6,
                             decoration: BoxDecoration(
                               color: Color(int.parse(
                                   "0xFF${colorsList[k * 2 + condition]}")),
@@ -552,8 +571,8 @@ Future<Form> createDialog(BuildContext context, formKey, width, height, theme,
                             ),
                           ),
                           Container(
-                            width: width / 7.3 / 5,
-                            height: height / 1.5 / 10,
+                            width: windowSize.width / 7.3 / 5,
+                            height: windowSize.height / 1.5 / 10,
                             decoration: BoxDecoration(
                               color: theme.primary,
                             ),
@@ -589,8 +608,8 @@ Future<Form> createDialog(BuildContext context, formKey, width, height, theme,
                             },
                           ),
                           Container(
-                            width: width / 40,
-                            height: height / 37.2,
+                            width: windowSize.width / 40,
+                            height: windowSize.height / 37.2,
                             decoration: BoxDecoration(
                               color: theme.surface,
                               border: Border.all(
@@ -618,7 +637,7 @@ Future<Form> createDialog(BuildContext context, formKey, width, height, theme,
                               },
                               style: TextStyle(
                                 color: theme.onSurface,
-                                fontSize: width * 0.005,
+                                fontSize: windowSize.width * 0.005,
                               ),
                             ),
                           ),
@@ -664,6 +683,7 @@ Future<Form> createDialog(BuildContext context, formKey, width, height, theme,
   return form;
 }
 
+/// Updates the color file with the new color values
 void updateColorFile(Theming themeColors) async {
   Map<String, dynamic> data = {
     "bgColor": themeColors.bgColor,
@@ -679,6 +699,7 @@ void updateColorFile(Theming themeColors) async {
   await writeData(datas, storageAddress, 'theming.json');
 }
 
+/// Returns a list of strings with the categories selected
 List<String> getCategories(Categories categories) {
   List<String> categoriesPushed = [];
   if (categories.languages) {
@@ -708,7 +729,8 @@ List<String> getCategories(Categories categories) {
   return categoriesPushed;
 }
 
-Categories setCategories(List<String> categoriesList){
+/// Returns a Categories class with the categories selected
+Categories setCategories(List<String> categoriesList) {
   Categories categories = Categories();
   for (int i = 0; i < categoriesList.length; i++) {
     if (categoriesList[i] == "Programming Languages") {

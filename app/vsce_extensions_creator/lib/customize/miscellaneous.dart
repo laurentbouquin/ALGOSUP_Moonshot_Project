@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 
-class MisceleanousPage extends StatefulWidget {
-  const MisceleanousPage({super.key});
+class MiscellaneousPage extends StatefulWidget {
+  const MiscellaneousPage({super.key});
 
   @override
-  State<MisceleanousPage> createState() => _MisceleanousPageState();
+  State<MiscellaneousPage> createState() => _MiscellaneousPageState();
 }
 
-class _MisceleanousPageState extends State<MisceleanousPage> {
+class _MiscellaneousPageState extends State<MiscellaneousPage> {
   @override
   Widget build(BuildContext context) {
     ColorScheme theme = AdaptiveTheme.of(context).theme.colorScheme;

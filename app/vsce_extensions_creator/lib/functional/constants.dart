@@ -9,7 +9,7 @@ bool isDark = false;
 
 int index = 0;
 
-int CATEGORIESNUM = 8;
+const int CATEGORIES_NUM = 8;
 
 // === JSON Files ===
 
@@ -63,6 +63,7 @@ ThemeData lightTheme = ThemeData(
     onError: Color(0xffFFFFFF),
   ),
 );
+
 ThemeData darkTheme = ThemeData(
   colorScheme: const ColorScheme(
     brightness: Brightness.dark,
@@ -76,6 +77,7 @@ ThemeData darkTheme = ThemeData(
     onError: Color(0xffFFFFFF),
   ),
 );
+
 ThemeData currentTheme = isDark ? darkTheme : lightTheme;
 
 // Define the color scheme

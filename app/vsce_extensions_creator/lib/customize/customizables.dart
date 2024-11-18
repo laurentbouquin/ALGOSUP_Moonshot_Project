@@ -1,17 +1,21 @@
+// ==== Built-in Imports ==== //
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-
 import 'dart:convert';
 
-// import pages
+// ==== Pages Imports ==== //
+
+// Call displayable files
 import 'format.dart';
 import 'theme.dart';
 import 'miscellaneous.dart';
 import 'comments&strings.dart';
 import 'functionalities.dart';
+
+// Call data files
 import '../functional/convert.dart';
 import '../functional/constants.dart';
+import '../functional/classes.dart';
 
 class Customizables extends StatefulWidget {
   const Customizables({super.key, required this.extensionIndex});
@@ -32,12 +36,10 @@ class _CustomizablesState extends State<Customizables> {
   int indexOfPage = 0;
 
   String outputPath = "";
-  String extensionName = "";
-  String extensionFileName = "";
-  String extensionDescription = "";
-  String extensionVersion = "";
-  String publisherName = "";
-  String category = "";
+
+  Extension extension = Extension();
+
+  WindowSize windowSize = WindowSize();
 
   @override
   void initState() {
@@ -48,55 +50,65 @@ class _CustomizablesState extends State<Customizables> {
 
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
 
-    extensionName = extensionsData['extensions'][extensionIndex]['name'];
-    extensionDescription =
+    extension.name = extensionsData['extensions'][extensionIndex]['name'];
+    extension.description =
         extensionsData['extensions'][extensionIndex]['description'];
-    extensionVersion = extensionsData['extensions'][extensionIndex]['version'];
-    category = extensionsData['extensions'][extensionIndex]['category'];
-    publisherName = extensionsData['extensions'][extensionIndex]['publisher'];
-    extensionFileName =
+    extension.version = extensionsData['extensions'][extensionIndex]['version'];
+    extension.categories =
+        extensionsData['extensions'][extensionIndex]['category'];
+    extension.publisherName =
+        extensionsData['extensions'][extensionIndex]['publisher'];
+    extension.extensionFileName =
         extensionsData['extensions'][extensionIndex]['extensionFileName'];
   }
 
   @override
   Widget build(BuildContext context) {
-    var theme = isDark ? darkTheme.colorScheme : lightTheme.colorScheme;
+    ColorScheme scheme = currentTheme.colorScheme;
+
+    windowSize.width = MediaQuery.of(context).size.width;
+    windowSize.height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: theme.surface,
+      backgroundColor: scheme.surface,
+      // Create a SizedBox to make the Stack widget inherit the size of the screen
       body: SizedBox(
-        height: MediaQuery.of(context).size.height,
+        height: windowSize.height,
         child: Stack(
           children: [
             Column(
               children: [
+
+                // This Column widget contains the navigation bar buttons
                 Column(
                   children: [
+
+                    // Contains the 3 first buttons of the navigation bar
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * 1 / 3,
-                          height: MediaQuery.of(context).size.height / 15,
+                          width: windowSize.width * 1 / 3,
+                          height: windowSize.height / 15,
                           decoration: BoxDecoration(
                             color: indexOfPage == 0
-                                ? theme.secondary
-                                : theme.primary,
+                                ? scheme.secondary
+                                : scheme.primary,
                             border: Border(
                               bottom: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                               right: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                               left: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                               top: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                             ),
@@ -118,31 +130,31 @@ class _CustomizablesState extends State<Customizables> {
                             child: Text(
                               "Format",
                               style: TextStyle(
-                                color: theme.onPrimary,
+                                color: scheme.onPrimary,
                                 fontSize:
-                                    MediaQuery.of(context).size.width * 0.014,
+                                    windowSize.width * 0.014,
                               ),
                             ),
                           ),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 1 / 3,
-                          height: MediaQuery.of(context).size.height / 15,
+                          width: windowSize.width * 1 / 3,
+                          height: windowSize.height / 15,
                           decoration: BoxDecoration(
                             color: indexOfPage == 1
-                                ? theme.secondary
-                                : theme.primary,
+                                ? scheme.secondary
+                                : scheme.primary,
                             border: Border(
                               bottom: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                               right: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                               top: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                             ),
@@ -164,31 +176,31 @@ class _CustomizablesState extends State<Customizables> {
                             child: Text(
                               "Theme",
                               style: TextStyle(
-                                color: theme.onPrimary,
+                                color: scheme.onPrimary,
                                 fontSize:
-                                    MediaQuery.of(context).size.width * 0.014,
+                                    windowSize.width * 0.014,
                               ),
                             ),
                           ),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 1 / 3,
-                          height: MediaQuery.of(context).size.height / 15,
+                          width: windowSize.width * 1 / 3,
+                          height: windowSize.height / 15,
                           decoration: BoxDecoration(
                             color: indexOfPage == 2
-                                ? theme.secondary
-                                : theme.primary,
+                                ? scheme.secondary
+                                : scheme.primary,
                             border: Border(
                               bottom: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                               right: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                               top: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                             ),
@@ -214,19 +226,19 @@ class _CustomizablesState extends State<Customizables> {
                                 Text(
                                   "Snippets",
                                   style: TextStyle(
-                                    // color: theme.onSurface,
-                                    color: theme.onPrimary,
+                                    // color: scheme.onSurface,
+                                    color: scheme.onPrimary,
                                     fontSize:
-                                        MediaQuery.of(context).size.width *
+                                        windowSize.width *
                                             0.014,
                                   ),
                                 ),
                                 Text(
-                                  "    (Comming Soon)",
+                                  "    (Coming Soon)",
                                   style: TextStyle(
-                                    color: theme.onPrimary,
+                                    color: scheme.onPrimary,
                                     fontSize:
-                                        MediaQuery.of(context).size.width *
+                                        windowSize.width *
                                             0.014,
                                   ),
                                 ),
@@ -236,23 +248,25 @@ class _CustomizablesState extends State<Customizables> {
                         ),
                       ],
                     ),
+
+                    // Contains the 2 last buttons of the navigation bar
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * 1 / 2,
-                          height: MediaQuery.of(context).size.height / 15,
+                          width: windowSize.width * 1 / 2,
+                          height: windowSize.height / 15,
                           decoration: BoxDecoration(
                             color: indexOfPage == 3
-                                ? theme.secondary
-                                : theme.primary,
+                                ? scheme.secondary
+                                : scheme.primary,
                             border: Border(
                               bottom: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                               left: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                             ),
@@ -274,31 +288,31 @@ class _CustomizablesState extends State<Customizables> {
                             child: Text(
                               "Comments & Strings",
                               style: TextStyle(
-                                color: theme.onPrimary,
+                                color: scheme.onPrimary,
                                 fontSize:
-                                    MediaQuery.of(context).size.width * 0.014,
+                                    windowSize.width * 0.014,
                               ),
                             ),
                           ),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 1 / 2,
-                          height: MediaQuery.of(context).size.height / 15,
+                          width: windowSize.width * 1 / 2,
+                          height: windowSize.height / 15,
                           decoration: BoxDecoration(
                             color: indexOfPage == 4
-                                ? theme.secondary
-                                : theme.primary,
+                                ? scheme.secondary
+                                : scheme.primary,
                             border: Border(
                               bottom: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                               left: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                               right: BorderSide(
-                                color: theme.onSurface,
+                                color: scheme.onSurface,
                                 width: 2,
                               ),
                             ),
@@ -319,19 +333,19 @@ class _CustomizablesState extends State<Customizables> {
                                 Text(
                                   "Functionalities",
                                   style: TextStyle(
-                                    // color: theme.onSurface,
-                                    color: theme.onPrimary,
+                                    // color: scheme.onSurface,
+                                    color: scheme.onPrimary,
                                     fontSize:
-                                        MediaQuery.of(context).size.width *
+                                        windowSize.width *
                                             0.014,
                                   ),
                                 ),
                                 Text(
-                                  "    (Comming Soon)",
+                                  "    (Coming Soon)",
                                   style: TextStyle(
-                                    color: theme.onPrimary,
+                                    color: scheme.onPrimary,
                                     fontSize:
-                                        MediaQuery.of(context).size.width *
+                                        windowSize.width *
                                             0.014,
                                   ),
                                 ),
@@ -343,11 +357,13 @@ class _CustomizablesState extends State<Customizables> {
                     ),
                   ],
                 ),
+
+                // Determines which page has to be displayed depending on the index
                 Container(
-                  height: MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).size.height / 7.5,
+                  height: windowSize.height -
+                      windowSize.height / 7.5,
                   decoration: BoxDecoration(
-                    color: theme.surface,
+                    color: scheme.surface,
                   ),
                   child: indexOfPage == 0
                       ? const FormatPage(
@@ -356,7 +372,7 @@ class _CustomizablesState extends State<Customizables> {
                       : indexOfPage == 1
                           ? const ThemePage()
                           : indexOfPage == 2
-                              ? const MisceleanousPage()
+                              ? const MiscellaneousPage()
                               : indexOfPage == 3
                                   ? const CommentsAndStringsPage()
                                   : indexOfPage == 4
@@ -365,20 +381,22 @@ class _CustomizablesState extends State<Customizables> {
                 ),
               ],
             ),
+
+            // Contains the 3 buttons to save, publish and cancel
             Stack(
               alignment: AlignmentDirectional.topEnd,
               children: [
                 Positioned(
-                  top: MediaQuery.of(context).size.height / 1.73,
-                  right: MediaQuery.of(context).size.width / 80,
+                  top: windowSize.height / 1.73,
+                  right: windowSize.width / 80,
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
-                      backgroundColor: theme.surface,
-                      foregroundColor: theme.onSurface,
+                      backgroundColor: scheme.surface,
+                      foregroundColor: scheme.onSurface,
                       shape: RoundedRectangleBorder(
-                          side: BorderSide(width: 2, color: theme.onSurface),
+                          side: BorderSide(width: 2, color: scheme.onSurface),
                           borderRadius: BorderRadius.circular(10)),
                       heroTag: 'publish',
                       onPressed: isMenuOpen ? null : null,
@@ -388,27 +406,22 @@ class _CustomizablesState extends State<Customizables> {
                   ),
                 ),
                 Positioned(
-                  top: MediaQuery.of(context).size.height / 1.48,
-                  right: MediaQuery.of(context).size.width / 80,
+                  top: windowSize.height / 1.48,
+                  right: windowSize.width / 80,
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
-                      backgroundColor: theme.surface,
-                      foregroundColor: theme.onSurface,
+                      backgroundColor: scheme.surface,
+                      foregroundColor: scheme.onSurface,
                       shape: RoundedRectangleBorder(
-                          side: BorderSide(width: 2, color: theme.onSurface),
+                          side: BorderSide(width: 2, color: scheme.onSurface),
                           borderRadius: BorderRadius.circular(10)),
                       heroTag: 'save',
                       onPressed: isMenuOpen
                           ? () {
                               convertLocalsToFullExtension(
-                                  extensionName,
-                                  extensionFileName,
-                                  extensionDescription,
-                                  extensionVersion,
-                                  publisherName,
-                                  category,
+                                  extension,
                                   "",
                                   false,
                                   outputPath);
@@ -421,16 +434,16 @@ class _CustomizablesState extends State<Customizables> {
                   ),
                 ),
                 Positioned(
-                  top: MediaQuery.of(context).size.height / 1.29,
-                  right: MediaQuery.of(context).size.width / 80,
+                  top: windowSize.height / 1.29,
+                  right: windowSize.width / 80,
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 500),
                     opacity: isMenuOpen ? 1 : 0,
                     child: FloatingActionButton(
-                      backgroundColor: theme.surface,
-                      foregroundColor: theme.onSurface,
+                      backgroundColor: scheme.surface,
+                      foregroundColor: scheme.onSurface,
                       shape: RoundedRectangleBorder(
-                          side: BorderSide(width: 2, color: theme.onSurface),
+                          side: BorderSide(width: 2, color: scheme.onSurface),
                           borderRadius: BorderRadius.circular(10)),
                       heroTag: 'cancel',
                       onPressed: isMenuOpen ? () {} : null,
@@ -444,11 +457,13 @@ class _CustomizablesState extends State<Customizables> {
           ],
         ),
       ),
+
+      // Floating action button to open the menu to save, publish and cancel
       floatingActionButton: FloatingActionButton(
-        backgroundColor: theme.surface,
-        foregroundColor: theme.onSurface,
+        backgroundColor: scheme.surface,
+        foregroundColor: scheme.onSurface,
         shape: RoundedRectangleBorder(
-            side: BorderSide(width: 2, color: theme.onSurface),
+            side: BorderSide(width: 2, color: scheme.onSurface),
             borderRadius: BorderRadius.circular(10)),
         heroTag: 'menu',
         onPressed: () {

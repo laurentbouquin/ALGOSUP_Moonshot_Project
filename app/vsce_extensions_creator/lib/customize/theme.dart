@@ -1,9 +1,11 @@
+// ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
-import '../functional/functions.dart';
-import '../functional/classes.dart';
-import '../functional/constants.dart';
 import 'dart:convert';
-// import 'package:flex_color_picker/flex_color_picker.dart';
+
+// ==== Pages Imports ==== //
+import '../functional/functions.dart';
+import '../functional/constants.dart';
+import '../functional/classes.dart';
 
 class ThemePage extends StatefulWidget {
   const ThemePage({super.key});
@@ -13,10 +15,12 @@ class ThemePage extends StatefulWidget {
 }
 
 class _ThemePageState extends State<ThemePage> {
-
+  // The form key is used to validate the form fields in the dialog
   final _formKey = GlobalKey<FormState>();
 
   Theming themeColors = Theming();
+
+  WindowSize windowSize = WindowSize();
 
   List<String> colorsList = [
     "FFFFFF",
@@ -67,45 +71,45 @@ class _ThemePageState extends State<ThemePage> {
       themeColors.commentColor = jsonData['commentColor'];
       themeColors.commonColor = jsonData['commonColor'];
       themeColors.otherColor = jsonData['otherColor'];
-			colorsList = [
-				jsonData['bgColor'],
-				jsonData['keywordColor'],
-				jsonData['functionColor'],
-				jsonData['variableColor'],
-				jsonData['stringColor'],
-				jsonData['commentColor'],
-				jsonData['commonColor'],
-				jsonData['otherColor']
-			];
+      colorsList = [
+        jsonData['bgColor'],
+        jsonData['keywordColor'],
+        jsonData['functionColor'],
+        jsonData['variableColor'],
+        jsonData['stringColor'],
+        jsonData['commentColor'],
+        jsonData['commonColor'],
+        jsonData['otherColor']
+      ];
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    ColorScheme theme = isDark
-        ? darkTheme.colorScheme
-        : lightTheme.colorScheme;
+    windowSize.width = MediaQuery.of(context).size.width;
+    windowSize.height = MediaQuery.of(context).size.height;
+    ColorScheme scheme = currentTheme.colorScheme;
     return Scaffold(
       body: Container(
-        color: theme.surface,
-        height: height - height / 7.5,
+        color: scheme.surface,
+        height: windowSize.height - windowSize.height / 7.5,
         child: Row(
           children: [
             Column(
               children: <Widget>[
-                for (var k = 0; k < categories.length / 2; k++)
+                for (var k = 0; k < CATEGORIES_NUM / 2; k++)
                   Row(
                     children: <Widget>[
                       Container(
-                        width: width / 4,
-                        height: height / 5.4,
+                        width: windowSize.width / 4,
+                        height: windowSize.height / 5.4,
                         decoration: BoxDecoration(
-                          color: theme.surface,
+                          color: scheme.surface,
                           border: Border(
-                            bottom:
-                                BorderSide(color: theme.onSurface, width: 1),
+                            bottom: BorderSide(
+                              color: scheme.onSurface,
+                              width: 1,
+                            ),
                           ),
                         ),
                         child: Row(
@@ -116,21 +120,22 @@ class _ThemePageState extends State<ThemePage> {
                               child: Text(
                                 "   ${categories[k * 2]}",
                                 style: TextStyle(
-                                  fontSize: width * 0.025,
-                                  color: theme.onSurface,
+                                  fontSize: windowSize.width * 0.025,
+                                  color: scheme.onSurface,
                                 ),
                               ),
                             ),
                             Container(
                               alignment: Alignment.centerRight,
-                              width: height / 5.4 / 2,
-                              height: height / 5.4 / 2,
-                              margin: EdgeInsets.only(right: width / 96),
+                              width: windowSize.height / 5.4 / 2,
+                              height: windowSize.height / 5.4 / 2,
+                              margin:
+                                  EdgeInsets.only(right: windowSize.width / 96),
                               decoration: BoxDecoration(
                                 color: Color(
                                     int.parse("0xFF${colorsList[k * 2]}")),
                                 border: Border.all(
-                                  color: theme.onSurface,
+                                  color: scheme.onSurface,
                                   width: 1,
                                 ),
                               ),
@@ -143,16 +148,16 @@ class _ThemePageState extends State<ThemePage> {
                                     ),
                                   ),
                                   fixedSize: WidgetStateProperty.all<Size>(
-                                    Size(height / 5.4 / 2, height / 5.4 / 2),
+                                    Size(windowSize.height / 5.4 / 2,
+                                        windowSize.height / 5.4 / 2),
                                   ),
                                 ),
                                 onPressed: () async {
                                   createDialog(
                                           context,
                                           _formKey,
-                                          width,
-                                          height,
-                                          theme,
+                                          windowSize,
+                                          scheme,
                                           jsonDataTemp,
                                           names,
                                           k,
@@ -180,14 +185,19 @@ class _ThemePageState extends State<ThemePage> {
                         ),
                       ),
                       Container(
-                        width: width / 4,
-                        height: height / 5.4,
+                        width: windowSize.width / 4,
+                        height: windowSize.height / 5.4,
                         decoration: BoxDecoration(
-                          color: theme.surface,
+                          color: scheme.surface,
                           border: Border(
-                            bottom:
-                                BorderSide(color: theme.onSurface, width: 1),
-                            left: BorderSide(color: theme.onSurface, width: 1),
+                            bottom: BorderSide(
+                              color: scheme.onSurface,
+                              width: 1,
+                            ),
+                            left: BorderSide(
+                              color: scheme.onSurface,
+                              width: 1,
+                            ),
                           ),
                         ),
                         child: Row(
@@ -199,21 +209,22 @@ class _ThemePageState extends State<ThemePage> {
                                 textAlign: TextAlign.start,
                                 "   ${categories[k * 2 + 1]}",
                                 style: TextStyle(
-                                  fontSize: width * 0.025,
-                                  color: theme.onSurface,
+                                  fontSize: windowSize.width * 0.025,
+                                  color: scheme.onSurface,
                                 ),
                               ),
                             ),
                             Container(
                               alignment: Alignment.centerRight,
-                              width: height / 5.4 / 2,
-                              height: height / 5.4 / 2,
-                              margin: EdgeInsets.only(right: width / 96),
+                              width: windowSize.height / 5.4 / 2,
+                              height: windowSize.height / 5.4 / 2,
+                              margin:
+                                  EdgeInsets.only(right: windowSize.width / 96),
                               decoration: BoxDecoration(
                                 color: Color(
                                     int.parse("0xFF${colorsList[k * 2 + 1]}")),
                                 border: Border.all(
-                                  color: theme.onSurface,
+                                  color: scheme.onSurface,
                                   width: 1,
                                 ),
                               ),
@@ -226,16 +237,16 @@ class _ThemePageState extends State<ThemePage> {
                                     ),
                                   ),
                                   fixedSize: WidgetStateProperty.all<Size>(
-                                    Size(height / 5.4 / 2, height / 5.4 / 2),
+                                    Size(windowSize.height / 5.4 / 2,
+                                        windowSize.height / 5.4 / 2),
                                   ),
                                 ),
                                 onPressed: () async {
                                   createDialog(
                                           context,
                                           _formKey,
-                                          width,
-                                          height,
-                                          theme,
+                                          windowSize,
+                                          scheme,
                                           jsonDataTemp,
                                           names,
                                           k,
@@ -264,16 +275,16 @@ class _ThemePageState extends State<ThemePage> {
                       ),
                     ],
                   ),
+                // End of the k loop
               ],
             ),
             VerticalDivider(
-              color: theme.onSurface,
+              color: scheme.onSurface,
               width: 2,
               thickness: 2,
             ),
             visualization(
-              height,
-              width,
+              windowSize,
               themeColors,
             ),
           ],

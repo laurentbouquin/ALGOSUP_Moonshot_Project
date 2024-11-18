@@ -1,13 +1,20 @@
+// ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
-
 import 'dart:io';
 import 'dart:convert';
 
+
+// ==== Pages Imports ==== //
+
+// Call data files
 import 'functional/functions.dart';
 import 'functional/constants.dart';
 import 'functional/classes.dart';
 
+
+// ==== External Imports ==== //
 import 'package:file_picker/file_picker.dart';
+
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key, required this.extensionIndex});
@@ -24,23 +31,21 @@ class _SettingsPageState extends State<SettingsPage> {
 
   int extensionIndex;
 
-  String currentName = '';
-  String currentDescription = '';
-  String currentVersion = '';
-  int selectedCategory = 0;
-  String publisherName = '';
-  String extensionFileName = '';
+  Extension currentExtension = Extension();
 
   List<String> categoriesList = [
     "Programming Languages",
     "Themes",
-    // "Snippets",
-    // "Linters",
-    // "Debuggers",
+    "Snippets",
+    "Debuggers",
+    "Keymaps",
+    "Testing",
+    "Linters",
+    "Other",
+
+    // Not yet implemented categories
     // "Formatters",
-    // "Keymaps",
     // "SCM Providers",
-    // "Other",
     // "Extension Packs",
     // "Language Packs",
     // "Data Science",
@@ -48,10 +53,9 @@ class _SettingsPageState extends State<SettingsPage> {
     // "Visualization",
     // "Notebooks",
     // "Education",
-    // "Testing"
   ];
 
-  Categories categories = Categories();
+  WindowSize windowSize = WindowSize();
 
   String settingsPath = '';
 
@@ -65,12 +69,12 @@ class _SettingsPageState extends State<SettingsPage> {
     var settingsData = json.decode(settingsFile.readAsStringSync());
 
     setState(() {
-      currentName = extensionData['name'];
-      currentDescription = extensionData['description'];
-      currentVersion = extensionData['version'];
-      categories = setCategories(categoriesList);
-      publisherName = extensionData['publisher'];
-      extensionFileName = extensionData['extensionFileName'];
+      currentExtension.name = extensionData['name'];
+      currentExtension.description = extensionData['description'];
+      currentExtension.version = extensionData['version'];
+      currentExtension.categories = setCategories(categoriesList);
+      currentExtension.publisherName = extensionData['publisher'];
+      currentExtension.extensionFileName = extensionData['extensionFileName'];
 
       settingsPath = settingsData['outputDirectory'];
     });
@@ -78,8 +82,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    windowSize.width = MediaQuery.of(context).size.width;
+    windowSize.height = MediaQuery.of(context).size.height;
 
     ColorScheme scheme = currentTheme.colorScheme;
 
@@ -87,15 +91,16 @@ class _SettingsPageState extends State<SettingsPage> {
       backgroundColor: scheme.surface,
       body: Stack(
         children: [
+
+          // Back Button
           Container(
-            margin: EdgeInsets.only(top: height / 20, left: width / 20),
+            margin: EdgeInsets.only(top: windowSize.height / 20, left: windowSize.width / 20),
             child: Transform.scale(
               scale: 1.5,
               child: IconButton(
                 hoverColor: Colors.transparent,
                 onPressed: () {
                   setState(() {
-                    // Customizables.of(context).toggleTheme();
                     Navigator.pop(context);
                   });
                 },
@@ -103,17 +108,21 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ),
+
+          // Main Column
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+
+              // Change Publisher Name
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: height / 8,
-                    width: width / 2.25,
+                    height: windowSize.height / 8,
+                    width: windowSize.width / 2.25,
                     child: TextField(
-                      controller: TextEditingController(text: publisherName),
+                      controller: TextEditingController(text: currentExtension.publisherName),
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -127,18 +136,18 @@ class _SettingsPageState extends State<SettingsPage> {
                         fontWeight: FontWeight.bold,
                       ),
                       onChanged: (text) async {
-                        publisherName = text;
+                        currentExtension.publisherName = text;
 
                         var extensionsData =
                             json.decode(extensionsFile.readAsStringSync());
                         Map<String, dynamic> data = {
-                          'name': currentName,
-                          'description': currentDescription,
-                          'version': currentVersion,
-                          'category': getCategories(categories),
+                          'name': currentExtension.name,
+                          'description': currentExtension.description,
+                          'version': currentExtension.version,
+                          'category': getCategories(currentExtension.categories),
                           'lastUpdated': DateTime.now().toString(),
-                          'publisher': publisherName,
-                          'extensionFileName': extensionFileName,
+                          'publisher': currentExtension.publisherName,
+                          'extensionFileName': currentExtension.extensionFileName,
                         };
                         extensionsData['extensions'][extensionIndex] = data;
                         String datas = jsonEncode(extensionsData);
@@ -152,12 +161,16 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ],
               ),
+
+              // Manage Output Directory
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+
+                  // Select The Output Directory
                   Container(
-                    height: height / 8,
-                    width: width / 4.8,
+                    height: windowSize.height / 8,
+                    width: windowSize.width / 4.8,
                     margin: const EdgeInsets.only(top: 50),
                     decoration: BoxDecoration(
                       color: scheme.surface,
@@ -197,9 +210,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                   ),
+
+                  // Go To The Output Directory
                   Container(
-                    height: height / 8,
-                    width: width / 4.8,
+                    height: windowSize.height / 8,
+                    width: windowSize.width / 4.8,
                     margin: const EdgeInsets.only(top: 50, left: 10),
                     decoration: BoxDecoration(
                       color: scheme.surface,
@@ -235,8 +250,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
               Container(
-                height: height / 8,
-                width: width / 2.25,
+                height: windowSize.height / 8,
+                width: windowSize.width / 2.25,
                 margin: const EdgeInsets.only(top: 50, left: 10),
                 decoration: BoxDecoration(
                   color: scheme.surface,
@@ -258,8 +273,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
+
+              // Change Theme
               Container(
-                margin: EdgeInsets.only(top: height / 8),
+                margin: EdgeInsets.only(top: windowSize.height / 8),
                 child: Transform.scale(
                   scale: 1.5,
                   child: Switch(
