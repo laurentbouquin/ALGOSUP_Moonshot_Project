@@ -143,11 +143,16 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       )
                                     : i == 2
-                                        ? Text(
-                                            data[j]["category"],
-                                            style: TextStyle(
-                                              color: scheme.onSurface,
-                                              fontWeight: FontWeight.bold,
+                                        ? Column(
+                                            children: List<Widget>.generate(
+                                              data[j]["categories"].length,
+                                              (k) => Text(
+                                                data[j]["categories"][k],
+                                                style: TextStyle(
+                                                  color: scheme.onSurface,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           )
                                         : i == 3

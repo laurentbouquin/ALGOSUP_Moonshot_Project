@@ -16,6 +16,7 @@ import 'functionalities.dart';
 import '../functional/convert.dart';
 import '../functional/constants.dart';
 import '../functional/classes.dart';
+import '../functional/functions.dart';
 
 class Customizables extends StatefulWidget {
   const Customizables({super.key, required this.extensionIndex});
@@ -55,7 +56,7 @@ class _CustomizablesState extends State<Customizables> {
         extensionsData['extensions'][extensionIndex]['description'];
     extension.version = extensionsData['extensions'][extensionIndex]['version'];
     extension.categories =
-        extensionsData['extensions'][extensionIndex]['category'];
+        setCategories(extensionsData['extensions'][extensionIndex]['categories'].cast<String>());
     extension.publisherName =
         extensionsData['extensions'][extensionIndex]['publisher'];
     extension.extensionFileName =
@@ -78,11 +79,9 @@ class _CustomizablesState extends State<Customizables> {
           children: [
             Column(
               children: [
-
                 // This Column widget contains the navigation bar buttons
                 Column(
                   children: [
-
                     // Contains the 3 first buttons of the navigation bar
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -131,8 +130,7 @@ class _CustomizablesState extends State<Customizables> {
                               "Format",
                               style: TextStyle(
                                 color: scheme.onPrimary,
-                                fontSize:
-                                    windowSize.width * 0.014,
+                                fontSize: windowSize.width * 0.014,
                               ),
                             ),
                           ),
@@ -177,8 +175,7 @@ class _CustomizablesState extends State<Customizables> {
                               "Theme",
                               style: TextStyle(
                                 color: scheme.onPrimary,
-                                fontSize:
-                                    windowSize.width * 0.014,
+                                fontSize: windowSize.width * 0.014,
                               ),
                             ),
                           ),
@@ -228,18 +225,14 @@ class _CustomizablesState extends State<Customizables> {
                                   style: TextStyle(
                                     // color: scheme.onSurface,
                                     color: scheme.onPrimary,
-                                    fontSize:
-                                        windowSize.width *
-                                            0.014,
+                                    fontSize: windowSize.width * 0.014,
                                   ),
                                 ),
                                 Text(
                                   "    (Coming Soon)",
                                   style: TextStyle(
                                     color: scheme.onPrimary,
-                                    fontSize:
-                                        windowSize.width *
-                                            0.014,
+                                    fontSize: windowSize.width * 0.014,
                                   ),
                                 ),
                               ],
@@ -289,8 +282,7 @@ class _CustomizablesState extends State<Customizables> {
                               "Comments & Strings",
                               style: TextStyle(
                                 color: scheme.onPrimary,
-                                fontSize:
-                                    windowSize.width * 0.014,
+                                fontSize: windowSize.width * 0.014,
                               ),
                             ),
                           ),
@@ -335,18 +327,14 @@ class _CustomizablesState extends State<Customizables> {
                                   style: TextStyle(
                                     // color: scheme.onSurface,
                                     color: scheme.onPrimary,
-                                    fontSize:
-                                        windowSize.width *
-                                            0.014,
+                                    fontSize: windowSize.width * 0.014,
                                   ),
                                 ),
                                 Text(
                                   "    (Coming Soon)",
                                   style: TextStyle(
                                     color: scheme.onPrimary,
-                                    fontSize:
-                                        windowSize.width *
-                                            0.014,
+                                    fontSize: windowSize.width * 0.014,
                                   ),
                                 ),
                               ],
@@ -360,8 +348,7 @@ class _CustomizablesState extends State<Customizables> {
 
                 // Determines which page has to be displayed depending on the index
                 Container(
-                  height: windowSize.height -
-                      windowSize.height / 7.5,
+                  height: windowSize.height - windowSize.height / 7.5,
                   decoration: BoxDecoration(
                     color: scheme.surface,
                   ),
@@ -421,10 +408,7 @@ class _CustomizablesState extends State<Customizables> {
                       onPressed: isMenuOpen
                           ? () {
                               convertLocalsToFullExtension(
-                                  extension,
-                                  "",
-                                  false,
-                                  outputPath);
+                                  extension, "", false, outputPath);
                               Navigator.pop(context);
                             }
                           : null,

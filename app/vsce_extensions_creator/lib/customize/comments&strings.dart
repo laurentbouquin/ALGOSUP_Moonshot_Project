@@ -45,8 +45,8 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
   @override
   Widget build(BuildContext context) {
     ColorScheme scheme = currentTheme.colorScheme;
-    windowSize.width = windowSize.width;
-    windowSize.height = windowSize.height;
+    windowSize.width = MediaQuery.of(context).size.width;
+    windowSize.height = MediaQuery.of(context).size.height;
     double usableHeight = windowSize.height - windowSize.height / 7.5;
     return Scaffold(
       body: Row(

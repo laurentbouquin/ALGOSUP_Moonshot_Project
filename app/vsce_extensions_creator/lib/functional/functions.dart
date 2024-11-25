@@ -46,7 +46,7 @@ Future<void> createBaseFilesContent(String path) async {
   }
 
   extensionsFile.writeAsStringSync(
-      '{"extensions":[{"name":"Template","description":"This extension is a simple template","version":"1.0.0","category":"Programming Languages","lastUpdated":"2024-08-27 13:12:09.776771","publisher":"temp","extensionFileName":"tmp"}]}');
+      '{"extensions":[{"name":"Template","description":"This extension is a simple template","version":"1.0.0","categories":["Programming Languages"],"lastUpdated":"2024-08-27 13:12:09.776771","publisher":"temp","extensionFileName":"tmp"}]}');
   commentsAndStringsFile.writeAsStringSync('{"slc":0,"mlc":0,"quotes":2}');
   formatFile
       .writeAsStringSync('{"keywords":["if","else"],"types":["int","string"]}');
