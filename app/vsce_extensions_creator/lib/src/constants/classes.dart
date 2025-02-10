@@ -24,7 +24,6 @@ class Theming {
       this.otherColor = "FFFFFF"});
 }
 
-
 /// Class to store the categories of the extension and if they are selected or not
 class Categories {
   bool languages;

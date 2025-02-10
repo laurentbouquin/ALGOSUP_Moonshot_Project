@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vsce_extensions_creator/functional/functions.dart';
+import 'package:vsce_extensions_creator/src/constants/functions.dart';
 import 'dart:io';
 import 'dart:convert';
 
-import '../functional/classes.dart';
+import '../../constants/classes.dart';
 
 void convertLocalsToFullExtension(Extension extension, String iconPath,
     bool isThemeActive, String outputPath) async {

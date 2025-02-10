@@ -6,12 +6,13 @@ import 'package:intl/intl.dart';
 // ==== Pages Imports ==== //
 
 // Call displayable files
-import 'package:vsce_extensions_creator/customize/customizables.dart';
-import 'package:vsce_extensions_creator/settings.dart';
+import 'package:vsce_extensions_creator/src/features/customize/customizables.dart';
+import 'package:vsce_extensions_creator/src/features/settings/settings.dart';
 
 // Call data files
-import 'functional/constants.dart';
-import 'functional/classes.dart';
+import '../constants/variables.dart';
+import '../constants/links.dart';
+import '../constants/classes.dart';
 
 // ==== MainApp Class ==== //
 class HomePage extends StatefulWidget {

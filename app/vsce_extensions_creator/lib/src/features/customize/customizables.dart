@@ -13,10 +13,11 @@ import 'comments&strings.dart';
 import 'functionalities.dart';
 
 // Call data files
-import '../functional/convert.dart';
-import '../functional/constants.dart';
-import '../functional/classes.dart';
-import '../functional/functions.dart';
+import '../convert/convert.dart';
+import '../../constants/variables.dart';
+import '../../constants/links.dart';
+import '../../constants/classes.dart';
+import '../../constants/functions.dart';
 
 class Customizables extends StatefulWidget {
   const Customizables({super.key, required this.extensionIndex});

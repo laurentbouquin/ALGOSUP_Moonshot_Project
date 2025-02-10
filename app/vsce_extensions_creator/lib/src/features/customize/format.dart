@@ -4,9 +4,10 @@ import 'package:flutter/services.dart';
 import 'dart:convert';
 
 // ==== Pages Imports ==== //
-import '../functional/functions.dart';
-import '../functional/constants.dart';
-import '../functional/classes.dart';
+import '../../constants/functions.dart';
+import '../../constants/variables.dart';
+import '../../constants/links.dart';
+import '../../constants/classes.dart';
 
 class FormatPage extends StatefulWidget {
   const FormatPage({super.key, required this.extensionIndex});

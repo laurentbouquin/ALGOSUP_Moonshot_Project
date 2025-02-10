@@ -1,11 +1,12 @@
 // ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
-import 'package:vsce_extensions_creator/functional/classes.dart';
+import 'package:vsce_extensions_creator/src/constants/classes.dart';
 import 'dart:convert';
 
 // ==== Pages imports ==== //
-import '../functional/functions.dart';
-import '../functional/constants.dart';
+import '../../constants/functions.dart';
+import '../../constants/variables.dart';
+import '../../constants/links.dart';
 
 class CommentsAndStringsPage extends StatefulWidget {
   const CommentsAndStringsPage({super.key});

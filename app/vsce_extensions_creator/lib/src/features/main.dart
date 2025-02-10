@@ -9,11 +9,11 @@ import 'package:window_manager/window_manager.dart';
 // Call displayable files
 import 'customize/customizables.dart';
 import 'home.dart';
-import 'settings.dart';
+import 'settings/settings.dart';
 
 // Call data files
-import 'functional/functions.dart';
-import 'functional/constants.dart';
+import '../constants/functions.dart';
+import '../constants/variables.dart';
 
 // ==== Main Function ==== //
 void main() async {
