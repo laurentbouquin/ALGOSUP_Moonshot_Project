@@ -7,10 +7,10 @@ import 'dart:convert';
 // ==== Pages Imports ==== //
 
 // Call data files
-import '../../constants/functions.dart';
-import '../../constants/variables.dart';
-import '../../constants/links.dart';
-import '../../constants/classes.dart';
+import '../constants/functions.dart';
+import '../constants/variables.dart';
+import '../constants/links.dart';
+import '../constants/classes.dart';
 
 
 // ==== External Imports ==== //

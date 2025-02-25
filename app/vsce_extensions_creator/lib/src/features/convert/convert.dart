@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vsce_extensions_creator/src/constants/functions.dart';
+import 'package:vsce_extensions_creator/src/constants/links.dart';
 import 'dart:io';
 import 'dart:convert';
 
@@ -26,7 +27,8 @@ void convertLocalsToFullExtension(Extension extension, String iconPath,
   await pkg.writeAsString(pkgData);
 
   // Create the .vscodeignore file
-  final vscodeIgnore = File('${'$projectPath\\out\\${extension.name}'}\\.vscodeignore');
+  final vscodeIgnore =
+      File('${'$projectPath\\out\\${extension.name}'}\\.vscodeignore');
   if (!vscodeIgnore.existsSync()) {
     vscodeIgnore.createSync();
   }
@@ -63,7 +65,8 @@ void convertLocalsToFullExtension(Extension extension, String iconPath,
   await readme.writeAsString(readmeData);
 
   // Create the CHANGELOG.md file
-  final changeLog = File('${'$projectPath\\out\\${extension.name}'}\\CHANGELOG.md');
+  final changeLog =
+      File('${'$projectPath\\out\\${extension.name}'}\\CHANGELOG.md');
   if (!changeLog.existsSync()) {
     changeLog.createSync();
   }
@@ -75,8 +78,8 @@ void convertLocalsToFullExtension(Extension extension, String iconPath,
   await changeLog.writeAsString(changeLogData);
 
   // Create the vsc-extension-quickstart.md file
-  final quickStart =
-      File('${'$projectPath\\out\\${extension.name}'}\\vsc-extension-quickstart.md');
+  final quickStart = File(
+      '${'$projectPath\\out\\${extension.name}'}\\vsc-extension-quickstart.md');
   if (!quickStart.existsSync()) {
     quickStart.createSync();
   }
@@ -89,7 +92,8 @@ void convertLocalsToFullExtension(Extension extension, String iconPath,
 
   // Create the icon.json file
   if (iconPath != '') {
-    final icon = File('${'$projectPath\\out\\${extension.name}'}\\.vscode\\icon.json');
+    final icon =
+        File('${'$projectPath\\out\\${extension.name}'}\\.vscode\\icon.json');
     if (!icon.existsSync()) {
       icon.createSync();
     }
@@ -102,8 +106,8 @@ void convertLocalsToFullExtension(Extension extension, String iconPath,
   }
 
   // Create the language-configuration.json file
-  final languageConfiguration =
-      File('${'$projectPath\\out\\${extension.name}'}\\language-configuration.json');
+  final languageConfiguration = File(
+      '${'$projectPath\\out\\${extension.name}'}\\language-configuration.json');
   if (!languageConfiguration.existsSync()) {
     languageConfiguration.createSync();
   }
@@ -311,8 +315,7 @@ Future<String> generateLanguageConfigurationJSON() async {
   List<String> singleLineComments = ['"//"', '"#"', '"##"', "add your own"];
   List<String> multiLineComments = ['"/* */"', '"<!-- -->"', '"<!--- --->"'];
 
-  final dir = Directory.current.path;
-  File jsonFile = File("$dir/lib/storage/commentsandstrings.json");
+  File jsonFile = commentsAndStringsFile;
   var jsonData = json.decode(jsonFile.readAsStringSync());
   String slc = singleLineComments[jsonData['slc']];
   String mlc = multiLineComments[jsonData['mlc']];
@@ -357,13 +360,12 @@ Future<String> generateLanguageConfigurationJSON() async {
 }
 
 Future<String> generateSyntax(String extension) async {
-  final dir = Directory.current.path;
-  File jsonFile = File("$dir/lib/storage/format.json");
+  File jsonFile = formatFile;
   var jsonData = json.decode(jsonFile.readAsStringSync());
   List<String> keywords = jsonData['keywords'].cast<String>();
   List<String> types = jsonData['types'].cast<String>();
 
-  File jsonFile2 = File("$dir/lib/storage/commentsandstrings.json");
+  File jsonFile2 = commentsAndStringsFile;
   var jsonData2 = json.decode(jsonFile2.readAsStringSync());
   int stringType = jsonData2['quotes'];
   int multiCommentType = jsonData2['mlc'];
@@ -505,7 +507,6 @@ Future<String> generateSyntax(String extension) async {
 }
 
 Future<String> generateTheme(String name) async {
-  final dir = Directory.current.path;
 
   List<String> colorsIds = [
     "#ffffff",
@@ -516,7 +517,7 @@ Future<String> generateTheme(String name) async {
     "#4caf50"
   ];
 
-  File jsonFile = File("$dir/lib/storage/theming.json");
+  File jsonFile = themingFile;
   var jsonData = json.decode(jsonFile.readAsStringSync());
 
   String background = colorsIds[jsonData['bgColor']];

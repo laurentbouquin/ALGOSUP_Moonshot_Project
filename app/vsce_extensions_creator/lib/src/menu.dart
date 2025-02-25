@@ -7,22 +7,24 @@ import 'package:intl/intl.dart';
 
 // Call displayable files
 import 'package:vsce_extensions_creator/src/features/customize/customizables.dart';
-import 'package:vsce_extensions_creator/src/features/settings/settings.dart';
+import 'package:vsce_extensions_creator/src/settings/settings.dart';
 
 // Call data files
-import '../constants/variables.dart';
-import '../constants/links.dart';
-import '../constants/classes.dart';
+import 'constants/variables.dart';
+import 'constants/links.dart';
+import 'constants/classes.dart';
 
 // ==== MainApp Class ==== //
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class MenuPage extends StatefulWidget {
+  const MenuPage({super.key});
+
+  static const routeName = '/menu';
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MenuPage> createState() => _MenuPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MenuPageState extends State<MenuPage> {
   // Variables that need to be declared beforehand
   var data = [];
   WindowSize windowSize = WindowSize();
