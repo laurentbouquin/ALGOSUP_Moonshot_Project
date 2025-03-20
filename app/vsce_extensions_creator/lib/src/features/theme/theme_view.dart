@@ -8,7 +8,7 @@ import '../../constants/variables.dart';
 import '../../constants/links.dart';
 import '../../constants/classes.dart';
 
-import '../../common_widgets/form.dart';
+import 'theme_widgets.dart';
 
 class ThemePage extends StatefulWidget {
   const ThemePage({super.key});
@@ -25,64 +25,31 @@ class _ThemePageState extends State<ThemePage> {
 
   WindowSize windowSize = WindowSize();
 
-  List<String> colorsList = [
-    "FFFFFF",
-    "FFFFFF",
-    "FFFFFF",
-    "FFFFFF",
-    "FFFFFF",
-    "FFFFFF",
-    "FFFFFF",
-    "FFFFFF"
-  ];
-
-  List<String> categories = [
-    "Background",
-    "Keywords",
-    "Functions",
-    "Variables",
-    "Strings",
-    "Comments",
-    "Operators",
-    "Others"
-  ];
-
-  List<String> names = [
-    "bgColor",
-    "keywordColor",
-    "functionColor",
-    "variableColor",
-    "stringColor",
-    "commentColor",
-    "commonColor",
-    "otherColor"
-  ];
-
   Map<String, dynamic> jsonDataTemp = {};
 
   @override
   void initState() {
     super.initState();
-    var jsonData = json.decode(themingFile.readAsStringSync());
-    jsonDataTemp = jsonData;
+    var themeData = json.decode(themingFile.readAsStringSync());
+    jsonDataTemp = themeData;
     setState(() {
-      themeColors.bgColor = jsonData['bgColor'];
-      themeColors.keywordColor = jsonData['keywordColor'];
-      themeColors.functionColor = jsonData['functionColor'];
-      themeColors.variableColor = jsonData['variableColor'];
-      themeColors.stringColor = jsonData['stringColor'];
-      themeColors.commentColor = jsonData['commentColor'];
-      themeColors.commonColor = jsonData['commonColor'];
-      themeColors.otherColor = jsonData['otherColor'];
+      themeColors.bgColor = themeData['bgColor'];
+      themeColors.keywordColor = themeData['keywordColor'];
+      themeColors.functionColor = themeData['functionColor'];
+      themeColors.variableColor = themeData['variableColor'];
+      themeColors.stringColor = themeData['stringColor'];
+      themeColors.commentColor = themeData['commentColor'];
+      themeColors.commonColor = themeData['commonColor'];
+      themeColors.otherColor = themeData['otherColor'];
       colorsList = [
-        jsonData['bgColor'],
-        jsonData['keywordColor'],
-        jsonData['functionColor'],
-        jsonData['variableColor'],
-        jsonData['stringColor'],
-        jsonData['commentColor'],
-        jsonData['commonColor'],
-        jsonData['otherColor']
+        themeData['bgColor'],
+        themeData['keywordColor'],
+        themeData['functionColor'],
+        themeData['variableColor'],
+        themeData['stringColor'],
+        themeData['commentColor'],
+        themeData['commonColor'],
+        themeData['otherColor']
       ];
     });
   }
@@ -100,7 +67,9 @@ class _ThemePageState extends State<ThemePage> {
           children: [
             Column(
               children: <Widget>[
-                for (var k = 0; k < CATEGORIES_NUM / 2; k++)
+                ...List.generate(
+                  CATEGORIES_NUM ~/ 2,
+                  (k) =>
                   Row(
                     children: <Widget>[
                       Container(
@@ -278,7 +247,7 @@ class _ThemePageState extends State<ThemePage> {
                       ),
                     ],
                   ),
-                // End of the k loop
+                ),
               ],
             ),
             VerticalDivider(

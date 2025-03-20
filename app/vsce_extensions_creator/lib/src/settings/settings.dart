@@ -1,8 +1,8 @@
 // ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
+import 'package:vsce_extensions_creator/src/features/convert/convert_widgets_to_json.dart';
 import 'dart:io';
 import 'dart:convert';
-
 
 // ==== Pages Imports ==== //
 
@@ -12,15 +12,15 @@ import '../constants/variables.dart';
 import '../constants/links.dart';
 import '../constants/classes.dart';
 
-
 // ==== External Imports ==== //
 import 'package:file_picker/file_picker.dart';
-
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key, required this.extensionIndex});
 
   final int extensionIndex;
+
+  static const routeName = '/settings';
 
   @override
   State<SettingsPage> createState() =>
@@ -33,28 +33,6 @@ class _SettingsPageState extends State<SettingsPage> {
   int extensionIndex;
 
   Extension currentExtension = Extension();
-
-  List<String> categoriesList = [
-    "Programming Languages",
-    "Themes",
-    "Snippets",
-    "Debuggers",
-    "Keymaps",
-    "Testing",
-    "Linters",
-    "Other",
-
-    // Not yet implemented categories
-    // "Formatters",
-    // "SCM Providers",
-    // "Extension Packs",
-    // "Language Packs",
-    // "Data Science",
-    // "Machine Learning",
-    // "Visualization",
-    // "Notebooks",
-    // "Education",
-  ];
 
   WindowSize windowSize = WindowSize();
 
@@ -77,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
       currentExtension.publisherName = extensionData['publisher'];
       currentExtension.extensionFileName = extensionData['extensionFileName'];
 
-      settingsPath = settingsData['outputDirectory'];
+      settingsPath = settingsData["extensions"][extensionIndex]['outputDirectory'];
     });
   }
 
@@ -92,10 +70,10 @@ class _SettingsPageState extends State<SettingsPage> {
       backgroundColor: scheme.surface,
       body: Stack(
         children: [
-
           // Back Button
           Container(
-            margin: EdgeInsets.only(top: windowSize.height / 20, left: windowSize.width / 20),
+            margin: EdgeInsets.only(
+                top: windowSize.height / 20, left: windowSize.width / 20),
             child: Transform.scale(
               scale: 1.5,
               child: IconButton(
@@ -114,7 +92,6 @@ class _SettingsPageState extends State<SettingsPage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               // Change Publisher Name
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +100,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     height: windowSize.height / 8,
                     width: windowSize.width / 2.25,
                     child: TextField(
-                      controller: TextEditingController(text: currentExtension.publisherName),
+                      controller: TextEditingController(
+                          text: currentExtension.publisherName),
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -137,26 +115,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         fontWeight: FontWeight.bold,
                       ),
                       onChanged: (text) async {
-                        currentExtension.publisherName = text;
-
-                        var extensionsData =
-                            json.decode(extensionsFile.readAsStringSync());
-                        Map<String, dynamic> data = {
-                          'name': currentExtension.name,
-                          'description': currentExtension.description,
-                          'version': currentExtension.version,
-                          'category': getCategories(currentExtension.categories),
-                          'lastUpdated': DateTime.now().toString(),
-                          'publisher': currentExtension.publisherName,
-                          'extensionFileName': currentExtension.extensionFileName,
-                        };
-                        extensionsData['extensions'][extensionIndex] = data;
-                        String datas = jsonEncode(extensionsData);
-                        await writeData(
-                          datas,
-                          storageAddress,
-                          'extensions_list.json',
-                        ).then((value) {});
+                        await updateData("extensions", extensionIndex, 
+                            publisher: text).then((value) {});
                       },
                     ),
                   ),
@@ -167,7 +127,6 @@ class _SettingsPageState extends State<SettingsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
                   // Select The Output Directory
                   Container(
                     height: windowSize.height / 8,
@@ -190,15 +149,9 @@ class _SettingsPageState extends State<SettingsPage> {
                             await FilePicker.platform.getDirectoryPath();
 
                         if (result != null) {
-                          Map<String, dynamic> dataRaw = {
-                            "outputDirectory": result,
-                          };
-                          var data = jsonEncode(dataRaw);
-                          writeData(
-                            data,
-                            storageAddress,
-                            'settings.json',
-                          ).then((value) {});
+                          updateData("settings", extensionIndex, outputDirectory: result).then((value) {});
+                          setState(()
+                          {settingsPath = result;});
                         } else {
                           // User canceled the picker
                         }

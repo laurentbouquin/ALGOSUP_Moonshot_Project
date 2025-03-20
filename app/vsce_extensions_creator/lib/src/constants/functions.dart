@@ -8,7 +8,7 @@ import 'dart:io';
 // ==== Pages Imports ==== //
 import 'classes.dart';
 import 'links.dart';
-import '../common_widgets/visualization.dart';
+// import '../common_widgets/visualization.dart';
 
 /// Returns a dynamic map from the specified file path
 Future<Map<String, dynamic>> loadJsonFromAssets(String filePath) async {
@@ -69,9 +69,9 @@ Column visualization(WindowSize windowSize, Theming themeColors) {
         child: Container(
           width: windowSize.width * 0.25,
           margin: EdgeInsets.only(left: windowSize.width * 0.125),
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: textToVisualize(themeColors),
+            // children: textToVisualize(themeColors),
           ),
         ),
       )

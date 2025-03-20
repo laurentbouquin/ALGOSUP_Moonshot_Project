@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'settings/settings_controller.dart';
+import 'settings/settings.dart';
+import 'features/customize/customizables.dart';
 
-import 'menu.dart';
+import 'home/home_view.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -15,7 +18,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // Glue the SettingsController to the MaterialApp.
     //
     // The ListenableBuilder Widget listens to the SettingsController for changes.
@@ -30,10 +32,19 @@ class MyApp extends StatelessWidget {
           // background.
           restorationScopeId: 'app',
 
+          // Provide the generated AppLocalizations to the MaterialApp. This
+          // Provide the generated AppLocalizations to the MaterialApp. This
+          // allows descendant Widgets to display the correct translations
+          // depending on the user's locale.
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+
           supportedLocales: const [
             Locale('en', ''), // English, no country code
           ],
-
           // Use AppLocalizations to configure the correct application title
           // depending on the user's locale.
           //
@@ -54,9 +65,13 @@ class MyApp extends StatelessWidget {
               settings: routeSettings,
               builder: (BuildContext context) {
                 switch (routeSettings.name) {
-                  case MenuPage.routeName:
+                  case Customizables.routeName:
+                    return const Customizables(extensionIndex: 0); // Providing a default extensionIndex value
+                  case SettingsPage.routeName:
+                    return const SettingsPage(extensionIndex: 0); // Providing a default extensionIndex value
+                  case HomePage.routeName:
                   default:
-                    return const MenuPage();
+                    return const HomePage();
                 }
               },
             );

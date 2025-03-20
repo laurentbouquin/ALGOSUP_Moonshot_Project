@@ -1,19 +1,19 @@
 // ==== Built-in Imports ==== //
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:vsce_extensions_creator/src/common_widgets/redirect_widgets.dart';
 import 'dart:convert';
 
 // ==== Pages Imports ==== //
 
 // Call displayable files
-import 'format.dart';
-import 'theme.dart';
-import 'miscellaneous.dart';
-import 'comments&strings.dart';
-import 'functionalities.dart';
+import '../format/format_view.dart';
+import '../theme/theme_view.dart';
+import '../snippets/snippets_view.dart';
+import '../comments&strings/comments&strings_view.dart';
+import '../functionalities/functionalities_view.dart';
 
 // Call data files
-import '../convert/convert.dart';
 import '../../constants/variables.dart';
 import '../../constants/links.dart';
 import '../../constants/classes.dart';
@@ -24,6 +24,8 @@ class Customizables extends StatefulWidget {
 
   final int extensionIndex;
 
+  static const routeName = '/customizables';
+
   @override
   State<Customizables> createState() =>
       _CustomizablesState(extensionIndex: extensionIndex);
@@ -32,7 +34,7 @@ class Customizables extends StatefulWidget {
 class _CustomizablesState extends State<Customizables> {
   _CustomizablesState({required this.extensionIndex});
 
-  int extensionIndex;
+  final int extensionIndex;
   bool isMenuOpen = false;
 
   int indexOfPage = 0;
@@ -48,7 +50,7 @@ class _CustomizablesState extends State<Customizables> {
     super.initState();
     var settingsData = json.decode(settingsFile.readAsStringSync());
 
-    outputPath = settingsData['outputDirectory'];
+    outputPath = settingsData["extensions"][extensionIndex]['outputDirectory'];
 
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
 
@@ -56,8 +58,9 @@ class _CustomizablesState extends State<Customizables> {
     extension.description =
         extensionsData['extensions'][extensionIndex]['description'];
     extension.version = extensionsData['extensions'][extensionIndex]['version'];
-    extension.categories =
-        setCategories(extensionsData['extensions'][extensionIndex]['categories'].cast<String>());
+    extension.categories = setCategories(extensionsData['extensions']
+            [extensionIndex]['categories']
+        .cast<String>());
     extension.publisherName =
         extensionsData['extensions'][extensionIndex]['publisher'];
     extension.extensionFileName =
@@ -354,15 +357,15 @@ class _CustomizablesState extends State<Customizables> {
                     color: scheme.surface,
                   ),
                   child: indexOfPage == 0
-                      ? const FormatPage(
-                          extensionIndex: 0,
+                      ? FormatPage(
+                          extensionIndex: extensionIndex,
                         )
                       : indexOfPage == 1
                           ? const ThemePage()
                           : indexOfPage == 2
                               ? const MiscellaneousPage()
                               : indexOfPage == 3
-                                  ? const CommentsAndStringsPage()
+                                  ? CommentsAndStringsPage(extensionIndex: extensionIndex,)
                                   : indexOfPage == 4
                                       ? const FunctionalitiesPage()
                                       : Container(),
@@ -408,9 +411,9 @@ class _CustomizablesState extends State<Customizables> {
                       heroTag: 'save',
                       onPressed: isMenuOpen
                           ? () {
-                              convertLocalsToFullExtension(
-                                  extension, "", false, outputPath);
-                              Navigator.pop(context);
+                              // convertLocalsToFullExtension(
+                              //     extension, "", false, outputPath);
+                              // Navigator.pop(context);
                             }
                           : null,
                       tooltip: isMenuOpen ? 'Save' : null,
@@ -430,9 +433,13 @@ class _CustomizablesState extends State<Customizables> {
                       shape: RoundedRectangleBorder(
                           side: BorderSide(width: 2, color: scheme.onSurface),
                           borderRadius: BorderRadius.circular(10)),
-                      heroTag: 'cancel',
-                      onPressed: isMenuOpen ? () {} : null,
-                      tooltip: isMenuOpen ? "Cancel" : null,
+                      heroTag: 'close',
+                      onPressed: isMenuOpen
+                          ? () {
+                              redirectToStateless(context, '/home');
+                            }
+                          : null,
+                      tooltip: isMenuOpen ? "close" : null,
                       child: const Icon(Icons.cancel),
                     ),
                   ),

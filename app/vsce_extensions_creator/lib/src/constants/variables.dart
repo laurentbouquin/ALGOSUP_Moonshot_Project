@@ -11,6 +11,90 @@ int index = 0;
 
 const int CATEGORIES_NUM = 8;
 
+
+  const List<String> categoriesList = [
+    "Programming Languages",
+    "Themes",
+    "Snippets",
+    "Debuggers",
+    "Keymaps",
+    "Testing",
+    "Linters",
+    "Other",
+
+    // Not yet implemented categories
+    // "Formatters",
+    // "SCM Providers",
+    // "Extension Packs",
+    // "Language Packs",
+    // "Data Science",
+    // "Machine Learning",
+    // "Visualization",
+    // "Notebooks",
+    // "Education",
+  ];
+
+
+
+  // === Theme Colors ===
+
+  List<String> colorsList = [
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF",
+    "FFFFFF"
+  ];
+
+  List<String> categories = [
+    "Background",
+    "Keywords",
+    "Functions",
+    "Variables",
+    "Strings",
+    "Comments",
+    "Operators",
+    "Others"
+  ];
+
+  List<String> names = [
+    "bgColor",
+    "keywordColor",
+    "functionColor",
+    "variableColor",
+    "stringColor",
+    "commentColor",
+    "commonColor",
+    "otherColor"
+  ];
+
+
+// === Comments & Strings ===
+
+
+  List<List<String>> values = [
+    ['"//"', '"#"', '"##"'],
+    ['"/* */"', '"<!-- -->"', '"<!--- --->"'],
+    ['only "" accepted', 'only \'\' accepted', '"" and \'\' accepted'],
+  ];
+  List<int> valuesIndex = [
+    0,
+    0,
+    0,
+  ];
+
+  
+
+  bool checkbox1 = true;
+  bool checkbox2 = false;
+
+// === end Constants ===
+
+
+
 // === Colors ===
 
 bool colorUpdated = false;
