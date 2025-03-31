@@ -11,13 +11,20 @@ import '../../constants/classes.dart';
 import 'theme_widgets.dart';
 
 class ThemePage extends StatefulWidget {
-  const ThemePage({super.key});
+  const ThemePage({super.key, required this.extensionIndex});
+
+  final int extensionIndex;
 
   @override
-  State<ThemePage> createState() => _ThemePageState();
+  State<ThemePage> createState() =>
+      _ThemePageState(extensionIndex: extensionIndex);
 }
 
 class _ThemePageState extends State<ThemePage> {
+  _ThemePageState({required this.extensionIndex});
+
+  final int extensionIndex;
+
   // The form key is used to validate the form fields in the dialog
   final _formKey = GlobalKey<FormState>();
 
@@ -32,24 +39,25 @@ class _ThemePageState extends State<ThemePage> {
     super.initState();
     var themeData = json.decode(themingFile.readAsStringSync());
     jsonDataTemp = themeData;
+    var themeColorsList = themeData["extensions"][extensionIndex];
     setState(() {
-      themeColors.bgColor = themeData['bgColor'];
-      themeColors.keywordColor = themeData['keywordColor'];
-      themeColors.functionColor = themeData['functionColor'];
-      themeColors.variableColor = themeData['variableColor'];
-      themeColors.stringColor = themeData['stringColor'];
-      themeColors.commentColor = themeData['commentColor'];
-      themeColors.commonColor = themeData['commonColor'];
-      themeColors.otherColor = themeData['otherColor'];
+      themeColors.bgColor = themeColorsList['bgColor'];
+      themeColors.keywordColor = themeColorsList['keywordColor'];
+      themeColors.functionColor = themeColorsList['functionColor'];
+      themeColors.variableColor = themeColorsList['variableColor'];
+      themeColors.stringColor = themeColorsList['stringColor'];
+      themeColors.commentColor = themeColorsList['commentColor'];
+      themeColors.commonColor = themeColorsList['commonColor'];
+      themeColors.otherColor = themeColorsList['otherColor'];
       colorsList = [
-        themeData['bgColor'],
-        themeData['keywordColor'],
-        themeData['functionColor'],
-        themeData['variableColor'],
-        themeData['stringColor'],
-        themeData['commentColor'],
-        themeData['commonColor'],
-        themeData['otherColor']
+        themeColorsList['bgColor'],
+        themeColorsList['keywordColor'],
+        themeColorsList['functionColor'],
+        themeColorsList['variableColor'],
+        themeColorsList['stringColor'],
+        themeColorsList['commentColor'],
+        themeColorsList['commonColor'],
+        themeColorsList['otherColor']
       ];
     });
   }
@@ -69,8 +77,7 @@ class _ThemePageState extends State<ThemePage> {
               children: <Widget>[
                 ...List.generate(
                   CATEGORIES_NUM ~/ 2,
-                  (k) =>
-                  Row(
+                  (k) => Row(
                     children: <Widget>[
                       Container(
                         width: windowSize.width / 4,
@@ -146,7 +153,7 @@ class _ThemePageState extends State<ThemePage> {
                                       themeColors.commentColor = colorsList[5];
                                       themeColors.commonColor = colorsList[6];
                                       themeColors.otherColor = colorsList[7];
-                                      updateColorFile(themeColors);
+                                      updateColorFile(themeColors, extensionIndex);
                                     });
                                   });
                                 },
@@ -235,7 +242,7 @@ class _ThemePageState extends State<ThemePage> {
                                       themeColors.commentColor = colorsList[5];
                                       themeColors.commonColor = colorsList[6];
                                       themeColors.otherColor = colorsList[7];
-                                      updateColorFile(themeColors);
+                                      updateColorFile(themeColors, extensionIndex);
                                     });
                                   });
                                 },

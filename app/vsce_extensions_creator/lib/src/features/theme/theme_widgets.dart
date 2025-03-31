@@ -1,12 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:vsce_extensions_creator/src/constants/classes.dart';
 import 'package:vsce_extensions_creator/src/constants/functions.dart';
-
+import 'package:vsce_extensions_creator/src/constants/links.dart';
 
 /// Creates a dialog with sliders to change the color values of the theme that is being edited
-Future<Form> createDialog(BuildContext context, formKey, WindowSize windowSize, theme,
-    jsonDataTemp, names, k, colorsList, themeColors, condition) async {
+Future<Form> createDialog(BuildContext context, formKey, WindowSize windowSize,
+    theme, jsonDataTemp, names, k, colorsList, themeColors, condition) async {
   Form form =
       Form(key: formKey, child: Container()); // Initialize with a default value
   await showDialog<void>(
@@ -165,4 +167,27 @@ Future<Form> createDialog(BuildContext context, formKey, WindowSize windowSize, 
             }),
           ));
   return form;
+}
+
+/// Updates the color file with the new color values
+void updateColorFile(Theming themeColors, int extensionIndex) async {
+  var themeData = json.decode(themingFile.readAsStringSync());
+  var extensionData = json.decode(extensionsFile.readAsStringSync());
+  Map<String, dynamic> data = {
+    "bgColor": themeColors.bgColor,
+    "keywordColor": themeColors.keywordColor,
+    "functionColor": themeColors.functionColor,
+    "variableColor": themeColors.variableColor,
+    "stringColor": themeColors.stringColor,
+    "commentColor": themeColors.commentColor,
+    "commonColor": themeColors.commonColor,
+    "otherColor": themeColors.otherColor
+  };
+  themeData["extensions"][extensionIndex] = data;
+  extensionData["extensions"][extensionIndex]["lastUpdated"] =
+      DateTime.now().toString();
+  String datas = jsonEncode(themeData);
+  String datas2 = jsonEncode(extensionData);
+  await writeData(datas, storageAddress, 'theming.json');
+  await writeData(datas2, storageAddress, 'extensionsList.json');
 }

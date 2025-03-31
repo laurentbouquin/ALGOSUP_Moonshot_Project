@@ -60,7 +60,7 @@ Container headRowPart(WindowSize windowSize, String text, String bordersRadius,
 
 Container tableElement(WindowSize windowSize, String text, String bordersRadius,
     double inWidth, String margins, ColorScheme scheme,
-    {void Function()? redirect}) {
+    {bool isSelected = false}) {
   return Container(
     alignment: Alignment.center,
     margin: EdgeInsets.only(
@@ -72,22 +72,22 @@ Container tableElement(WindowSize windowSize, String text, String bordersRadius,
     width: inWidth,
     height: windowSize.height * 0.1,
     decoration: BoxDecoration(
-      color: scheme.primary,
+      color: isSelected ? scheme.onSurface : scheme.primary,
       border: Border(
         left: BorderSide(
-          color: scheme.onSurface,
+          color: isSelected ? scheme.primary : scheme.onSurface,
           width: 2,
         ),
         bottom: BorderSide(
-          color: scheme.onSurface,
+          color: isSelected ? scheme.primary : scheme.onSurface,
           width: 2,
         ),
         top: BorderSide(
-          color: scheme.onSurface,
+          color: isSelected ? scheme.primary : scheme.onSurface,
           width: 2,
         ),
         right: BorderSide(
-          color: scheme.onSurface,
+          color: isSelected ? scheme.primary : scheme.onSurface,
           width: text == "Select" ? 2 : 0.1,
         ),
       ),
@@ -106,22 +106,11 @@ Container tableElement(WindowSize windowSize, String text, String bordersRadius,
             : const Radius.circular(0),
       ),
     ),
-    child: redirect == null
-        ? Text(
+    child: Text(
             text,
             style: TextStyle(
-              color: scheme.onSecondary,
+              color: isSelected ? scheme.primary : scheme.onSecondary,
               fontWeight: FontWeight.bold,
-            ),
-          )
-        : TextButton(
-            onPressed: redirect,
-            child: Text(
-              text,
-              style: TextStyle(
-                color: scheme.onSecondary,
-                fontWeight: FontWeight.bold,
-              ),
             ),
           ),
   );

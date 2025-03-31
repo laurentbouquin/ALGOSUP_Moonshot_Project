@@ -76,13 +76,11 @@ class _HomePageState extends State<HomePage> {
                       headRowPart(windowSize, "Name", "TL,BL",
                           windowSize.width * 0.2, "TL", scheme),
                       headRowPart(windowSize, "Description", "",
-                          windowSize.width * 0.39, "T", scheme),
+                          windowSize.width * 0.45, "T", scheme),
                       headRowPart(windowSize, "Last Updated", "",
                           windowSize.width * 0.2, "T", scheme),
-                      headRowPart(windowSize, "Version", "",
-                          windowSize.width * 0.05, "T", scheme),
-                      headRowPart(windowSize, "Select", "TR,BR",
-                          windowSize.width * 0.06, "T", scheme)
+                      headRowPart(windowSize, "Version", "TR,BR",
+                          windowSize.width * 0.05, "T", scheme)
                     ],
                   ),
                   ListView.builder(
@@ -90,39 +88,35 @@ class _HomePageState extends State<HomePage> {
                     shrinkWrap: true,
                     itemCount: data.length,
                     itemBuilder: (context, index) {
-                      return Row(
-                        children: <Widget>[
-                          tableElement(windowSize, data[index]["name"], "TL,BL",
-                              windowSize.width * 0.2, "LT", scheme),
-                          tableElement(windowSize, data[index]["description"],
-                              "", windowSize.width * 0.39, "T", scheme),
-                          tableElement(
-                              windowSize,
-                              DateFormat('yyyy-MM-dd - kk:mm:ss').format(
-                                  DateTime.parse(data[index]["lastUpdated"])),
-                              "",
-                              windowSize.width * 0.2,
-                              "T",
-                              scheme),
-                          tableElement(windowSize, data[index]["version"], "",
-                              windowSize.width * 0.05, "T", scheme),
-                          tableElement(
-                            windowSize,
-                            "Select",
-                            "TR,BR",
-                            windowSize.width * 0.06,
-                            "T",
-                            scheme,
-                            redirect: () async {
-                              await redirectToStateless(
-                                      context, "/customizables", arguments: {"extensionIndex": index})
-                                  .then((_) {
-                                // Update the color scheme when getting back from the settings page
-                                onGoBack();
-                              });
-                            },
-                          ),
-                        ],
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selected = index;
+                            debugPrint(selected.toString());
+                          });
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            tableElement(windowSize, data[index]["name"],
+                                "TL,BL", windowSize.width * 0.2, "LT", scheme,
+                                isSelected: index == selected ? true : false),
+                            tableElement(windowSize, data[index]["description"],
+                                "", windowSize.width * 0.45, "T", scheme,
+                                isSelected: index == selected ? true : false),
+                            tableElement(
+                                windowSize,
+                                DateFormat('yyyy-MM-dd - kk:mm:ss').format(
+                                    DateTime.parse(data[index]["lastUpdated"])),
+                                "",
+                                windowSize.width * 0.2,
+                                "T",
+                                scheme,
+                                isSelected: index == selected ? true : false),
+                            tableElement(windowSize, data[index]["version"],
+                                "TR,BR", windowSize.width * 0.05, "T", scheme,
+                                isSelected: index == selected ? true : false),
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -150,6 +144,22 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      ), // Floating action button to open the menu to save, publish and cancel
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: scheme.primary,
+        foregroundColor: scheme.onSurface,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(width: 2, color: scheme.onSurface),
+            borderRadius: BorderRadius.circular(10)),
+        heroTag: 'menu',
+        onPressed: () {
+          setState(() {
+            Navigator.pushNamed(context, '/customizables',
+                arguments: {"extensionIndex": selected});
+          });
+        },
+        // tooltip: isMenuOpen ? 'Close Menu' : 'Open Menu',
+        child: const Icon(Icons.arrow_circle_right_outlined),
       ),
     );
   }

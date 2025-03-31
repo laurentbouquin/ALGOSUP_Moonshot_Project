@@ -69,6 +69,7 @@ class _CustomizablesState extends State<Customizables> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Customizables page opened $extensionIndex");
     ColorScheme scheme = currentTheme.colorScheme;
 
     windowSize.width = MediaQuery.of(context).size.width;
@@ -361,11 +362,13 @@ class _CustomizablesState extends State<Customizables> {
                           extensionIndex: extensionIndex,
                         )
                       : indexOfPage == 1
-                          ? const ThemePage()
+                          ? ThemePage(extensionIndex: extensionIndex,)
                           : indexOfPage == 2
                               ? const MiscellaneousPage()
                               : indexOfPage == 3
-                                  ? CommentsAndStringsPage(extensionIndex: extensionIndex,)
+                                  ? CommentsAndStringsPage(
+                                      extensionIndex: extensionIndex,
+                                    )
                                   : indexOfPage == 4
                                       ? const FunctionalitiesPage()
                                       : Container(),

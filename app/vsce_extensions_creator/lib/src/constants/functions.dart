@@ -205,22 +205,6 @@ Theming updateThemingClass(List<String> colorList) {
   );
 }
 
-/// Updates the color file with the new color values
-void updateColorFile(Theming themeColors) async {
-  Map<String, dynamic> data = {
-    "bgColor": themeColors.bgColor,
-    "keywordColor": themeColors.keywordColor,
-    "functionColor": themeColors.functionColor,
-    "variableColor": themeColors.variableColor,
-    "stringColor": themeColors.stringColor,
-    "commentColor": themeColors.commentColor,
-    "commonColor": themeColors.commonColor,
-    "otherColor": themeColors.otherColor
-  };
-  String datas = jsonEncode(data);
-  await writeData(datas, storageAddress, 'theming.json');
-}
-
 /// Returns a list of strings with the categories selected
 List<String> getCategories(Categories categories) {
   List<String> categoriesPushed = [];

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'settings/settings_controller.dart';
-import 'settings/settings.dart';
+import 'settings/settings_view.dart';
 import 'features/customize/customizables.dart';
 
 import 'home/home_view.dart';
@@ -66,9 +66,14 @@ class MyApp extends StatelessWidget {
               builder: (BuildContext context) {
                 switch (routeSettings.name) {
                   case Customizables.routeName:
-                    return const Customizables(extensionIndex: 0); // Providing a default extensionIndex value
+                    final mapArguments =
+                        routeSettings.arguments as Map<String, int>;
+                    final entriesList = mapArguments.entries.toList();
+                    return Customizables(extensionIndex: entriesList[0].value);
                   case SettingsPage.routeName:
-                    return const SettingsPage(extensionIndex: 0); // Providing a default extensionIndex value
+                    return const SettingsPage(
+                        extensionIndex:
+                            0); // Providing a default extensionIndex value
                   case HomePage.routeName:
                   default:
                     return const HomePage();
