@@ -1,5 +1,6 @@
 // ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
+import 'package:vsce_extensions_creator/src/features/nav_bar/nav_bar_view.dart';
 import 'package:vsce_extensions_creator/src/features/format/format_widgets.dart';
 import 'package:vsce_extensions_creator/src/features/convert/convert_widgets_to_json.dart';
 import 'dart:convert';
@@ -11,21 +12,18 @@ import '../../constants/links.dart';
 import '../../constants/classes.dart';
 
 class FormatPage extends StatefulWidget {
-  const FormatPage({super.key, required this.extensionIndex});
-
-  final int extensionIndex;
+  const FormatPage({super.key});
 
   static const String routeName = '/formatPage';
 
   @override
-  State<FormatPage> createState() => _FormatPageState(extensionIndex);
+  State<FormatPage> createState() => _FormatPageState();
 }
 
 class _FormatPageState extends State<FormatPage> {
-  _FormatPageState(this.extensionIndex);
+  _FormatPageState();
   final _formKey = GlobalKey<FormState>();
 
-  int extensionIndex;
 
   String currentKeyword = '';
 
@@ -55,10 +53,10 @@ class _FormatPageState extends State<FormatPage> {
   void initState() {
     super.initState();
     var formatsData = json.decode(formatFile.readAsStringSync());
-    var formatData = formatsData['extensions'][extensionIndex];
+    var formatData = formatsData['extensions'][currentExtensionIndex];
 
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
-    var extensionData = extensionsData['extensions'][extensionIndex];
+    var extensionData = extensionsData['extensions'][currentExtensionIndex];
 
     setState(() {
       keywords = formatData['keywords'].cast<String>();
@@ -87,7 +85,7 @@ class _FormatPageState extends State<FormatPage> {
             children: [
               Container(
                 height: windowSize.height / 10.8,
-                width: windowSize.width / 3,
+                width: windowSize.width / 3.5,
                 decoration: BoxDecoration(
                   color: scheme.surface,
                   border: Border(
@@ -116,7 +114,8 @@ class _FormatPageState extends State<FormatPage> {
                         children: <Widget>[
                           Container(
                             height: windowSize.height / 10.8,
-                            width: windowSize.width / 3 - windowSize.width / 16,
+                            width:
+                                windowSize.width / 3.5 - windowSize.width / 16,
                             decoration: BoxDecoration(
                               color: scheme.surface,
                               border: Border(
@@ -163,7 +162,7 @@ class _FormatPageState extends State<FormatPage> {
                               hoverColor: Colors.transparent,
                               onPressed: () async {
                                 keywords.removeAt(i);
-                                updateData("format", extensionIndex,
+                                updateData("format", currentExtensionIndex,
                                         keywords: keywords)
                                     .then((value) {
                                   setState(() {});
@@ -223,7 +222,7 @@ class _FormatPageState extends State<FormatPage> {
                                               keywords.add(currentKeyword);
                                               if (currentKeyword.isNotEmpty) {
                                                 updateData("format",
-                                                        extensionIndex,
+                                                        currentExtensionIndex,
                                                         keywords: keywords)
                                                     .then((value) {
                                                   setState(() {
@@ -261,7 +260,7 @@ class _FormatPageState extends State<FormatPage> {
             children: [
               Container(
                 height: windowSize.height / 10.8,
-                width: windowSize.width / 3 - 4,
+                width: windowSize.width / 3.5 - 4,
                 decoration: BoxDecoration(
                   color: scheme.surface,
                   border: Border(
@@ -288,7 +287,7 @@ class _FormatPageState extends State<FormatPage> {
                   children: <Widget>[
                     Container(
                       height: windowSize.height / 10.8,
-                      width: windowSize.width / 3 - 4 - windowSize.width / 16,
+                      width: windowSize.width / 3.5 - 4 - windowSize.width / 16,
                       decoration: BoxDecoration(
                         color: scheme.surface,
                         border: Border(
@@ -334,7 +333,7 @@ class _FormatPageState extends State<FormatPage> {
                         hoverColor: Colors.transparent,
                         onPressed: () async {
                           types.removeAt(j);
-                          updateData("format", extensionIndex, types: types)
+                          updateData("format", currentExtensionIndex, types: types)
                               .then((value) {
                             setState(() {});
                           });
@@ -392,7 +391,7 @@ class _FormatPageState extends State<FormatPage> {
                                       onPressed: () async {
                                         types.add(currentKeyword);
                                         if (currentKeyword.isNotEmpty) {
-                                          updateData("format", extensionIndex,
+                                          updateData("format", currentExtensionIndex,
                                                   types: types)
                                               .then(
                                             (value) {
@@ -429,7 +428,7 @@ class _FormatPageState extends State<FormatPage> {
             children: [
               Container(
                 height: windowSize.height / 10.8,
-                width: windowSize.width / 3,
+                width: windowSize.width / 3.5,
                 decoration: BoxDecoration(
                   color: scheme.surface,
                   border: Border(
@@ -451,47 +450,47 @@ class _FormatPageState extends State<FormatPage> {
               extensionOptionsPart(
                 windowSize,
                 scheme,
-                extensionIndex,
+                currentExtensionIndex,
                 'Name:',
                 'Enter Extension Name',
-                windowSize.width / 3,
+                windowSize.width / 3.5,
                 windowSize.height / 10.8,
               ),
               extensionOptionsPart(
                 windowSize,
                 scheme,
-                extensionIndex,
+                currentExtensionIndex,
                 'Description:',
                 'Enter Extensions Description',
-                windowSize.width / 3,
+                windowSize.width / 3.5,
                 windowSize.height / 10.8,
               ),
               extensionOptionsPart(
                 windowSize,
                 scheme,
-                extensionIndex,
+                currentExtensionIndex,
                 'Version:',
                 'e.g. 1.0.2',
-                windowSize.width / 3,
+                windowSize.width / 3.5,
                 windowSize.height / 10.8,
               ),
               extensionOptionsPart(
                 windowSize,
                 scheme,
-                extensionIndex,
+                currentExtensionIndex,
                 'Extension:',
                 'e.g. dart, txt',
-                windowSize.width / 3,
+                windowSize.width / 3.5,
                 windowSize.height / 10.8,
               ),
               Container(
-                width: windowSize.width / 3,
+                width: windowSize.width / 3.5,
                 margin: EdgeInsets.only(top: windowSize.height / 108),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(
-                      width: windowSize.width / 9.6,
+                      width: windowSize.width / 13,
                       child: Text(
                         '   Categories: ',
                         style: TextStyle(
@@ -500,45 +499,46 @@ class _FormatPageState extends State<FormatPage> {
                         ),
                       ),
                     ),
-                    categoriesButton(windowSize, scheme, extensionIndex,
+                    categoriesButton(windowSize, scheme, currentExtensionIndex,
                         categories, "Programming Languages", this),
-                    categoriesButton(windowSize, scheme, extensionIndex,
+                    categoriesButton(windowSize, scheme, currentExtensionIndex,
                         categories, "Themes", this),
                   ],
                 ),
               ),
               Container(
-                width: windowSize.width / 3,
+                width: windowSize.width / 3.5,
                 margin: EdgeInsets.only(top: windowSize.height / 108),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    categoriesButton(windowSize, scheme, extensionIndex,
+                    categoriesButton(windowSize, scheme, currentExtensionIndex,
                         categories, "Snippets", this),
-                    categoriesButton(windowSize, scheme, extensionIndex,
+                    categoriesButton(windowSize, scheme, currentExtensionIndex,
                         categories, "Debuggers", this),
-                    categoriesButton(windowSize, scheme, extensionIndex,
+                    categoriesButton(windowSize, scheme, currentExtensionIndex,
                         categories, "Keymaps", this),
                   ],
                 ),
               ),
               Container(
-                width: windowSize.width / 3,
+                width: windowSize.width / 3.5,
                 margin: EdgeInsets.only(top: windowSize.height / 108),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    categoriesButton(windowSize, scheme, extensionIndex,
+                    categoriesButton(windowSize, scheme, currentExtensionIndex,
                         categories, "Testing", this),
-                    categoriesButton(windowSize, scheme, extensionIndex,
+                    categoriesButton(windowSize, scheme, currentExtensionIndex,
                         categories, "Linters", this),
-                    categoriesButton(windowSize, scheme, extensionIndex,
+                    categoriesButton(windowSize, scheme, currentExtensionIndex,
                         categories, "Other", this),
                   ],
                 ),
               ),
             ],
           ),
+          NavBar()
         ],
       ),
     );

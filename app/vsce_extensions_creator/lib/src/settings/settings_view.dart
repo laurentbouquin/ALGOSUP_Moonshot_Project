@@ -16,21 +16,19 @@ import '../constants/classes.dart';
 import 'package:file_picker/file_picker.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key, required this.extensionIndex});
+  const SettingsPage({super.key});
 
-  final int extensionIndex;
 
   static const routeName = '/settings';
 
   @override
   State<SettingsPage> createState() =>
-      _SettingsPageState(extensionIndex: extensionIndex);
+      _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  _SettingsPageState({required this.extensionIndex});
+  _SettingsPageState();
 
-  int extensionIndex;
 
   Extension currentExtension = Extension();
 
@@ -43,7 +41,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
 
     var extensionsData = json.decode(extensionsFile.readAsStringSync());
-    var extensionData = extensionsData['extensions'][extensionIndex];
+    var extensionData = extensionsData['extensions'][currentExtensionIndex];
 
     var settingsData = json.decode(settingsFile.readAsStringSync());
 
@@ -55,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
       currentExtension.publisherName = extensionData['publisher'];
       currentExtension.extensionFileName = extensionData['extensionFileName'];
 
-      settingsPath = settingsData["extensions"][extensionIndex]['outputDirectory'];
+      settingsPath = settingsData["extensions"][currentExtensionIndex]['outputDirectory'];
     });
   }
 
@@ -115,7 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         fontWeight: FontWeight.bold,
                       ),
                       onChanged: (text) async {
-                        await updateData("extensions", extensionIndex, 
+                        await updateData("extensions", currentExtensionIndex, 
                             publisher: text).then((value) {});
                       },
                     ),
@@ -149,7 +147,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             await FilePicker.platform.getDirectoryPath();
 
                         if (result != null) {
-                          updateData("settings", extensionIndex, outputDirectory: result).then((value) {});
+                          updateData("settings", currentExtensionIndex, outputDirectory: result).then((value) {});
                           setState(()
                           {settingsPath = result;});
                         } else {

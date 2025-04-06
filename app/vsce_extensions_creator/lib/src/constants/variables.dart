@@ -9,6 +9,8 @@ bool isDark = false;
 
 int index = 0;
 
+int currentExtensionIndex = 0;
+
 const int CATEGORIES_NUM = 8;
 
 

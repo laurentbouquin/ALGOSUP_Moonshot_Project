@@ -1,6 +1,7 @@
 // ==== Built-in Imports ==== //
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:vsce_extensions_creator/src/common_widgets/visualization.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -57,21 +58,22 @@ Future<void> createBaseFilesContent(String path) async {
 }
 
 /// Returns a Column widget with the data called from the textToVisualize function
-Column visualization(WindowSize windowSize, Theming themeColors) {
+Column visualization(WindowSize windowSize, Theming themeColors, usableWidth) {
   return Column(
     children: <Widget>[
       Container(
-        width: windowSize.width / 2 - 2,
-        height: windowSize.height - windowSize.height / 7.5,
+        width: usableWidth / 2 - 2,
+        height: windowSize.height,
         decoration: BoxDecoration(
           color: Color(int.parse("0xFF${themeColors.bgColor}")),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Container(
-          width: windowSize.width * 0.25,
-          margin: EdgeInsets.only(left: windowSize.width * 0.125),
-          child: const Column(
+          width: usableWidth / 2 - 2 * 0.25,
+          margin: EdgeInsets.only(left: usableWidth / 2 - 2 * 0.125),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            // children: textToVisualize(themeColors),
+            children: textToVisualize(themeColors),
           ),
         ),
       )

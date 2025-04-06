@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:vsce_extensions_creator/src/features/comments&strings/comments&strings_widgets.dart';
 import 'package:vsce_extensions_creator/src/constants/classes.dart';
+import 'package:vsce_extensions_creator/src/features/nav_bar/nav_bar_view.dart';
 import 'dart:convert';
 
 // ==== Pages imports ==== //
@@ -9,18 +10,16 @@ import '../../constants/variables.dart';
 import '../../constants/links.dart';
 
 class CommentsAndStringsPage extends StatefulWidget {
-  const CommentsAndStringsPage({super.key, required this.extensionIndex});
-  final int extensionIndex;
+  const CommentsAndStringsPage({super.key});
 
   static const String routeName = '/commentsAndStringsPage';
 
   @override
-  State<CommentsAndStringsPage> createState() => _CommentsAndStringsPageState(extensionIndex);
+  State<CommentsAndStringsPage> createState() => _CommentsAndStringsPageState();
 }
 
 class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
-  _CommentsAndStringsPageState(this.extensionIndex);
-  final int extensionIndex;
+  _CommentsAndStringsPageState();
 
   
 
@@ -31,9 +30,9 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
     super.initState();
     var commentsandstringsData = json.decode(commentsAndStringsFile.readAsStringSync());
     setState(() {
-      valuesIndex[0] = commentsandstringsData["extensions"][extensionIndex]['slc'];
-      valuesIndex[1] = commentsandstringsData["extensions"][extensionIndex]['mlc'];
-      valuesIndex[2] = commentsandstringsData["extensions"][extensionIndex]['quotes'];
+      valuesIndex[0] = commentsandstringsData["extensions"][currentExtensionIndex]['slc'];
+      valuesIndex[1] = commentsandstringsData["extensions"][currentExtensionIndex]['mlc'];
+      valuesIndex[2] = commentsandstringsData["extensions"][currentExtensionIndex]['quotes'];
     });
   }
 
@@ -42,13 +41,14 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
     ColorScheme scheme = currentTheme.colorScheme;
     windowSize.width = MediaQuery.of(context).size.width;
     windowSize.height = MediaQuery.of(context).size.height;
+    double usableWidth = windowSize.width - windowSize.width / 7;
     double usableHeight = windowSize.height - windowSize.height / 7.5;
     return Scaffold(
       body: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            width: windowSize.width / 2,
+            width: usableWidth / 2,
             decoration: BoxDecoration(
               color: scheme.surface,
             ),
@@ -73,17 +73,17 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           
-                          commentsOptionsPart(windowSize, scheme, extensionIndex, '//', "Single Line Comment", windowSize.width / 8, windowSize.height / 10.8, this),
-                          commentsOptionsPart(windowSize, scheme, extensionIndex, '#', "Single Line Comment", windowSize.width / 8, windowSize.height / 10.8, this),
-                          commentsOptionsPart(windowSize, scheme, extensionIndex, '##', "Single Line Comment", windowSize.width / 8, windowSize.height / 10.8, this),
+                          commentsOptionsPart(windowSize, scheme, currentExtensionIndex, '//', "Single Line Comment", windowSize.width / 8, windowSize.height / 10.8, this),
+                          commentsOptionsPart(windowSize, scheme, currentExtensionIndex, '#', "Single Line Comment", windowSize.width / 8, windowSize.height / 10.8, this),
+                          commentsOptionsPart(windowSize, scheme, currentExtensionIndex, '##', "Single Line Comment", windowSize.width / 8, windowSize.height / 10.8, this),
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          commentsOptionsPart(windowSize, scheme, extensionIndex, '/* */', "Multi Lines Comment", windowSize.width / 8, windowSize.height / 10.8, this),
-                          commentsOptionsPart(windowSize, scheme, extensionIndex, '<!-- -->', "Multi Lines Comment", windowSize.width / 8, windowSize.height / 10.8, this),
-                          commentsOptionsPart(windowSize, scheme, extensionIndex, '<!--- --->', "Multi Lines Comment", windowSize.width / 8, windowSize.height / 10.8, this),
+                          commentsOptionsPart(windowSize, scheme, currentExtensionIndex, '/* */', "Multi Lines Comment", windowSize.width / 8, windowSize.height / 10.8, this),
+                          commentsOptionsPart(windowSize, scheme, currentExtensionIndex, '<!-- -->', "Multi Lines Comment", windowSize.width / 8, windowSize.height / 10.8, this),
+                          commentsOptionsPart(windowSize, scheme, currentExtensionIndex, '<!--- --->', "Multi Lines Comment", windowSize.width / 8, windowSize.height / 10.8, this),
                         ],
                       ),
                     ],
@@ -94,8 +94,8 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      quotesOptionsPart(windowSize, scheme, extensionIndex, "\"", "quotes", windowSize.width / 8, this),
-                      quotesOptionsPart(windowSize, scheme, extensionIndex, "'", "quotes", windowSize.width / 8, this),
+                      quotesOptionsPart(windowSize, scheme, currentExtensionIndex, "\"", "quotes", windowSize.width / 8, this),
+                      quotesOptionsPart(windowSize, scheme, currentExtensionIndex, "'", "quotes", windowSize.width / 8, this),
                     ],
                   ),
                 ),
@@ -112,7 +112,7 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
 
           // This part of the code is the right side of the screen and displays the selected parameters of the comments and strings customization
           Container(
-            width: windowSize.width / 2 - 2,
+            width: usableWidth / 2 - 2,
             decoration: const BoxDecoration(
               color: Colors.black,
               border: Border(
@@ -187,6 +187,7 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
               ],
             ),
           ),
+          NavBar(),
         ],
       ),
     );

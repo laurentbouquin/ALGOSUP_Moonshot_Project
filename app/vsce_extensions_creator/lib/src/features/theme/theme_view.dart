@@ -1,5 +1,6 @@
 // ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
+import 'package:vsce_extensions_creator/src/features/nav_bar/nav_bar_view.dart';
 import 'dart:convert';
 
 // ==== Pages Imports ==== //
@@ -11,19 +12,18 @@ import '../../constants/classes.dart';
 import 'theme_widgets.dart';
 
 class ThemePage extends StatefulWidget {
-  const ThemePage({super.key, required this.extensionIndex});
+  const ThemePage({super.key});
 
-  final int extensionIndex;
+
+  static const String routeName = '/themePage';
 
   @override
   State<ThemePage> createState() =>
-      _ThemePageState(extensionIndex: extensionIndex);
+      _ThemePageState();
 }
 
 class _ThemePageState extends State<ThemePage> {
-  _ThemePageState({required this.extensionIndex});
-
-  final int extensionIndex;
+  _ThemePageState();
 
   // The form key is used to validate the form fields in the dialog
   final _formKey = GlobalKey<FormState>();
@@ -39,7 +39,7 @@ class _ThemePageState extends State<ThemePage> {
     super.initState();
     var themeData = json.decode(themingFile.readAsStringSync());
     jsonDataTemp = themeData;
-    var themeColorsList = themeData["extensions"][extensionIndex];
+    var themeColorsList = themeData["extensions"][currentExtensionIndex];
     setState(() {
       themeColors.bgColor = themeColorsList['bgColor'];
       themeColors.keywordColor = themeColorsList['keywordColor'];
@@ -66,11 +66,13 @@ class _ThemePageState extends State<ThemePage> {
   Widget build(BuildContext context) {
     windowSize.width = MediaQuery.of(context).size.width;
     windowSize.height = MediaQuery.of(context).size.height;
+    var usableWidth = windowSize.width - windowSize.width / 7;
     ColorScheme scheme = currentTheme.colorScheme;
     return Scaffold(
       body: Container(
         color: scheme.surface,
-        height: windowSize.height - windowSize.height / 7.5,
+        width: windowSize.width,
+        height: windowSize.height,
         child: Row(
           children: [
             Column(
@@ -80,8 +82,8 @@ class _ThemePageState extends State<ThemePage> {
                   (k) => Row(
                     children: <Widget>[
                       Container(
-                        width: windowSize.width / 4,
-                        height: windowSize.height / 5.4,
+                        width: usableWidth / 4,
+                        height: windowSize.height / 4,
                         decoration: BoxDecoration(
                           color: scheme.surface,
                           border: Border(
@@ -153,7 +155,7 @@ class _ThemePageState extends State<ThemePage> {
                                       themeColors.commentColor = colorsList[5];
                                       themeColors.commonColor = colorsList[6];
                                       themeColors.otherColor = colorsList[7];
-                                      updateColorFile(themeColors, extensionIndex);
+                                      updateColorFile(themeColors, currentExtensionIndex);
                                     });
                                   });
                                 },
@@ -164,8 +166,8 @@ class _ThemePageState extends State<ThemePage> {
                         ),
                       ),
                       Container(
-                        width: windowSize.width / 4,
-                        height: windowSize.height / 5.4,
+                        width: usableWidth / 4,
+                        height: windowSize.height / 4,
                         decoration: BoxDecoration(
                           color: scheme.surface,
                           border: Border(
@@ -242,7 +244,7 @@ class _ThemePageState extends State<ThemePage> {
                                       themeColors.commentColor = colorsList[5];
                                       themeColors.commonColor = colorsList[6];
                                       themeColors.otherColor = colorsList[7];
-                                      updateColorFile(themeColors, extensionIndex);
+                                      updateColorFile(themeColors, currentExtensionIndex);
                                     });
                                   });
                                 },
@@ -265,7 +267,9 @@ class _ThemePageState extends State<ThemePage> {
             visualization(
               windowSize,
               themeColors,
+              usableWidth
             ),
+            NavBar(),
           ],
         ),
       ),

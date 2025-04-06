@@ -30,7 +30,7 @@ Container headRowPart(WindowSize windowSize, String text, String bordersRadius,
         ),
         right: BorderSide(
           color: scheme.onSurface,
-          width: text == "Select" ? 2 : 0.1,
+          width: text == "Version" ? 2 : 0.1,
         ),
       ),
       borderRadius: BorderRadius.only(
@@ -61,6 +61,7 @@ Container headRowPart(WindowSize windowSize, String text, String bordersRadius,
 Container tableElement(WindowSize windowSize, String text, String bordersRadius,
     double inWidth, String margins, ColorScheme scheme,
     {bool isSelected = false}) {
+  bool isVersion = RegExp(r'^\d+\.\d+\.\d+$').hasMatch(text);
   return Container(
     alignment: Alignment.center,
     margin: EdgeInsets.only(
@@ -88,7 +89,7 @@ Container tableElement(WindowSize windowSize, String text, String bordersRadius,
         ),
         right: BorderSide(
           color: isSelected ? scheme.primary : scheme.onSurface,
-          width: text == "Select" ? 2 : 0.1,
+          width: isVersion ? 2 : 0.1,
         ),
       ),
       borderRadius: BorderRadius.only(

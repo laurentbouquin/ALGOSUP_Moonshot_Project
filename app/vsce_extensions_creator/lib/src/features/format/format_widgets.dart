@@ -109,7 +109,7 @@ Container extensionOptionsPart(
 Container categoriesButton(WindowSize windowSize, ColorScheme scheme,
     int extensionIndex, Categories categories, String text, State state) {
   return Container(
-    width: windowSize.width / 9.6,
+    width: windowSize.width / 12,
     decoration: BoxDecoration(
       color: scheme.surface,
       border: Border.all(

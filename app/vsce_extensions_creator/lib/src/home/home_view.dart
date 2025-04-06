@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'package:vsce_extensions_creator/src/common_widgets/redirect_widgets.dart';
 
 // ==== Pages Imports ==== //
 
@@ -44,7 +43,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  int selected = 0;
 
   // Update the color scheme when getting back from the settings page (will be called later)
   /// Updates the color scheme when called
@@ -63,10 +61,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: scheme.surface,
       body: SingleChildScrollView(
         // Create a Stack to have the settings button on the bottom left independent of the table
-        child: Stack(
-          children: [
-            // Create a SizedBox to have the Column inherit the height of the screen
-            SizedBox(
+        child: SizedBox(
               height: windowSize.height,
               child: Column(
                 children: <Widget>[
@@ -91,18 +86,17 @@ class _HomePageState extends State<HomePage> {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            selected = index;
-                            debugPrint(selected.toString());
+                            currentExtensionIndex = index;
                           });
                         },
                         child: Row(
                           children: <Widget>[
                             tableElement(windowSize, data[index]["name"],
                                 "TL,BL", windowSize.width * 0.2, "LT", scheme,
-                                isSelected: index == selected ? true : false),
+                                isSelected: index == currentExtensionIndex ? true : false),
                             tableElement(windowSize, data[index]["description"],
                                 "", windowSize.width * 0.45, "T", scheme,
-                                isSelected: index == selected ? true : false),
+                                isSelected: index == currentExtensionIndex ? true : false),
                             tableElement(
                                 windowSize,
                                 DateFormat('yyyy-MM-dd - kk:mm:ss').format(
@@ -111,10 +105,10 @@ class _HomePageState extends State<HomePage> {
                                 windowSize.width * 0.2,
                                 "T",
                                 scheme,
-                                isSelected: index == selected ? true : false),
+                                isSelected: index == currentExtensionIndex ? true : false),
                             tableElement(windowSize, data[index]["version"],
                                 "TR,BR", windowSize.width * 0.05, "T", scheme,
-                                isSelected: index == selected ? true : false),
+                                isSelected: index == currentExtensionIndex ? true : false),
                           ],
                         ),
                       );
@@ -123,27 +117,6 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-
-            // Create the settings button on the bottom left
-            Positioned(
-              top: windowSize.height * 0.90,
-              left: windowSize.width * 0.01,
-              child: IconButton(
-                hoverColor: Colors.transparent,
-                icon: Icon(Icons.settings, color: scheme.onSurface, size: 40),
-                onPressed: () {
-                  redirectToStateless(context, "/settings",
-                      arguments: {"extensionIndex": 0}).then(
-                    (_) {
-                      // Update the color scheme when getting back from the settings page
-                      onGoBack();
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
       ), // Floating action button to open the menu to save, publish and cancel
       floatingActionButton: FloatingActionButton(
         backgroundColor: scheme.primary,
@@ -154,8 +127,7 @@ class _HomePageState extends State<HomePage> {
         heroTag: 'menu',
         onPressed: () {
           setState(() {
-            Navigator.pushNamed(context, '/customizables',
-                arguments: {"extensionIndex": selected});
+            Navigator.pushNamed(context, '/formatPage');
           });
         },
         // tooltip: isMenuOpen ? 'Close Menu' : 'Open Menu',
