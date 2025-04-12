@@ -24,7 +24,7 @@ Container extensionOptionsPart(
     width: width,
     height: height,
     decoration: BoxDecoration(
-      color: scheme.surface,
+      color: scheme.secondary,
       border: Border(
         bottom: BorderSide(
           color: scheme.onSurface,
@@ -111,7 +111,7 @@ Container categoriesButton(WindowSize windowSize, ColorScheme scheme,
   return Container(
     width: windowSize.width / 12,
     decoration: BoxDecoration(
-      color: scheme.surface,
+      color: scheme.secondary,
       border: Border.all(
         color: scheme.onSurface,
         width: 1,

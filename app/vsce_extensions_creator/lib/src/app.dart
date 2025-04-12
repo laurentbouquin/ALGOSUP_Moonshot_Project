@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:vsce_extensions_creator/src/constants/variables.dart';
 import 'package:vsce_extensions_creator/src/features/comments&strings/comments&strings_view.dart';
 import 'package:vsce_extensions_creator/src/features/format/format_view.dart';
 import 'package:vsce_extensions_creator/src/features/theme/theme_view.dart';
@@ -68,15 +69,20 @@ class MyApp extends StatelessWidget {
               builder: (BuildContext context) {
                 switch (routeSettings.name) {
                   case SettingsPage.routeName:
+                    currentPage = "settings";
                     return const SettingsPage();
                   case FormatPage.routeName:
+                    currentPage = "format";
                     return const FormatPage();
                   case ThemePage.routeName:
+                    currentPage = "theme";
                     return const ThemePage();
                   case CommentsAndStringsPage.routeName:
+                    currentPage = "commentsAndStrings";
                     return const CommentsAndStringsPage();
                   case HomePage.routeName:
                   default:
+                    currentPage = "home";
                     return const HomePage();
                 }
               },

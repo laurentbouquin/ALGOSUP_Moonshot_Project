@@ -16,8 +16,16 @@ class NavBar extends StatelessWidget {
     return Container(
       height: windowSize.height,
       width: windowSize.width / 7,
+      margin: EdgeInsets.only(
+        top: windowSize.height * 0.01,
+        bottom: windowSize.height * 0.01,
+      ),
       decoration: BoxDecoration(
-        color: scheme.onSurface,
+        color: scheme.surface,
+        border: Border.all(
+          color: scheme.onSurface,
+          width: 3,
+        ),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(windowSize.width * 0.02),
           bottomLeft: Radius.circular(windowSize.width * 0.02),
@@ -35,11 +43,16 @@ class NavBar extends StatelessWidget {
             ),
           ),
           // navBarButton(Icons.home_rounded, scheme),
-          navBarButton(Icons.format_align_center_rounded, scheme, "/formatPage", context),
-          navBarButton(Icons.format_color_fill_rounded, scheme, "/themePage", context),
-          navBarButton(Icons.snippet_folder_rounded, scheme, "/snippetsPage", context),
-          navBarButton(Icons.format_quote_rounded, scheme, "/commentsAndStringsPage", context),
-          navBarButton(Icons.code_rounded, scheme, "/functionalitiesPage", context),
+          navBarButton(Icons.format_align_center_rounded, scheme, "/formatPage",
+              context),
+          navBarButton(
+              Icons.format_color_fill_rounded, scheme, "/themePage", context),
+          navBarButton(
+              Icons.snippet_folder_rounded, scheme, "/snippetsPage", context),
+          navBarButton(Icons.format_quote_rounded, scheme,
+              "/commentsAndStringsPage", context),
+          navBarButton(
+              Icons.code_rounded, scheme, "/functionalitiesPage", context),
           navBarButton(Icons.save, scheme, "/menu", context),
           navBarButton(Icons.settings_rounded, scheme, "/settings", context),
         ],
