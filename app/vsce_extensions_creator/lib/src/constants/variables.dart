@@ -11,7 +11,7 @@ int index = 0;
 
 int currentExtensionIndex = 0;
 
-String currentPage = "home";
+String currentPage = "/menu";
 
 const int CATEGORIES_NUM = 8;
 
@@ -113,15 +113,12 @@ ThemeData lightTheme = ThemeData(
 ThemeData darkTheme = ThemeData(
   colorScheme: const ColorScheme(
     brightness: Brightness.dark,
-    primary: Color(0xffBF94FF),
-    onPrimary: Color(0xfff0f0f0),
-    secondary: Color(0xff1F1F1F),
-    onSecondary: Color(0xfff0f0f0),
-    // tertiary: Color.fromARGB(255, 216, 189, 255),
-    tertiary: Color(0xffD8BDFF),
-    onTertiary: Color(0xfff0f0f0),
-    surface: Color(0xff0f0f0f),
-    onSurface: Color(0xFFf0f0f0),
+    primary: Color(0xff1F1F1F),
+    onPrimary: Color(0xffFFFFFF),
+    secondary: Color(0xff434343),
+    onSecondary: Color(0xffFFFFFF),
+    surface: Color(0xff332E3C),
+    onSurface: Color(0xFFD8D6F2),
     error: Color(0xffB00020),
     onError: Color(0xffFFFFFF),
   ),

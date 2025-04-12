@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vsce_extensions_creator/src/constants/variables.dart';
@@ -57,9 +59,16 @@ class MyApp extends StatelessWidget {
           // Define a light and dark color theme. Then, read the user's
           // preferred ThemeMode (light, dark, or system default) from the
           // SettingsController to display the correct theme.
+          // Set page transitions duration to 0
           theme: ThemeData(),
-          darkTheme: ThemeData.dark(),
+          darkTheme: ThemeData.dark(
+            useMaterial3: true,
+          ),
           themeMode: settingsController.themeMode,
+
+          
+
+
 
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.
@@ -69,20 +78,19 @@ class MyApp extends StatelessWidget {
               builder: (BuildContext context) {
                 switch (routeSettings.name) {
                   case SettingsPage.routeName:
-                    currentPage = "settings";
                     return const SettingsPage();
                   case FormatPage.routeName:
-                    currentPage = "format";
+                    currentPage = "/formatPage";
                     return const FormatPage();
                   case ThemePage.routeName:
-                    currentPage = "theme";
+                    currentPage = "/themePage";
                     return const ThemePage();
                   case CommentsAndStringsPage.routeName:
-                    currentPage = "commentsAndStrings";
+                    currentPage = "/commentsAndStringsPage";
                     return const CommentsAndStringsPage();
                   case HomePage.routeName:
                   default:
-                    currentPage = "home";
+                    currentPage = "/menu";
                     return const HomePage();
                 }
               },

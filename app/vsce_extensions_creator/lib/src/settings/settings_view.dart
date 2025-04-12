@@ -1,5 +1,6 @@
 // ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
+import 'package:vsce_extensions_creator/src/common_widgets/redirect_widgets.dart';
 import 'package:vsce_extensions_creator/src/features/convert/convert_widgets_to_json.dart';
 import 'dart:io';
 import 'dart:convert';
@@ -78,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 hoverColor: Colors.transparent,
                 onPressed: () {
                   setState(() {
-                    Navigator.pop(context);
+                    redirectToStateless(context, currentPage).then((value) {});
                   });
                 },
                 icon: Icon(Icons.arrow_back, color: scheme.onSurface),

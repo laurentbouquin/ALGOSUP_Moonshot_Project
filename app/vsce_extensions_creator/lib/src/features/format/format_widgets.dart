@@ -108,107 +108,83 @@ Container extensionOptionsPart(
 
 Container categoriesButton(WindowSize windowSize, ColorScheme scheme,
     int extensionIndex, Categories categories, String text, State state) {
+  bool isSelected = false;
+  if (text == "Programming Languages" && categories.languages) {
+    isSelected = true;
+  } else if (text == "Themes" && categories.themes) {
+    isSelected = true;
+  } else if (text == "Snippets" && categories.snippets) {
+    isSelected = true;
+  } else if (text == "Debuggers" && categories.debuggers) {
+    isSelected = true;
+  } else if (text == "Keymaps" && categories.keymaps) {
+    isSelected = true;
+  } else if (text == "Testing" && categories.testing) {
+    isSelected = true;
+  } else if (text == "Linters" && categories.linters) {
+    isSelected = true;
+  } else if (text == "Other" && categories.other) {
+    isSelected = true;
+  }
   return Container(
-    width: windowSize.width / 12,
+    width: windowSize.width / 5,
+    height: windowSize.height * 0.05,
+    margin: EdgeInsets.only(
+      top: windowSize.height * 0.05,
+    ),
     decoration: BoxDecoration(
-      color: scheme.secondary,
-      border: Border.all(
-        color: scheme.onSurface,
-        width: 1,
-      ),
-      borderRadius: BorderRadius.circular(25),
+      color: isSelected ? scheme.onSurface : scheme.surface,
+      border: isSelected
+          ? null
+          : Border.all(
+              color: scheme.onSurface,
+              width: 1,
+            ),
+      borderRadius: BorderRadius.circular(15),
     ),
     child: TextButton(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all<Color>(
-              text == "Programming Languages"
-                  ? (categories.languages ? scheme.onSurface : scheme.primary)
-                  : text == "Themes"
-                      ? (categories.themes ? scheme.onSurface : scheme.primary)
-                      : text == "Snippets"
-                          ? (categories.snippets
-                              ? scheme.onSurface
-                              : scheme.primary)
-                          : text == "Debuggers"
-                              ? (categories.debuggers
-                                  ? scheme.onSurface
-                                  : scheme.primary)
-                              : text == "Keymaps"
-                                  ? (categories.keymaps
-                                      ? scheme.onSurface
-                                      : scheme.primary)
-                                  : text == "Testing"
-                                      ? (categories.testing
-                                          ? scheme.onSurface
-                                          : scheme.primary)
-                                      : text == "Linters"
-                                          ? (categories.linters
-                                              ? scheme.onSurface
-                                              : scheme.primary)
-                                          : text == "Other" 
-                                            ? (categories.other
-                                                ? scheme.onSurface
-                                                : scheme.primary)
-                                                :const Color(0xFF000000)),
+            isSelected ? scheme.onSurface : scheme.surface,
+          ),
         ),
         child: FittedBox(
           child: Text(
             text,
             maxLines: 1,
             style: TextStyle(
-                color: text == "Programming Languages"
-                    ? (categories.languages
-                        ? scheme.onPrimary
-                        : scheme.onSurface)
-                    : text == "Themes"
-                        ? (categories.themes
-                            ? scheme.onPrimary
-                            : scheme.onSurface)
-                        : text == "Snippets"
-                            ? (categories.snippets
-                                ? scheme.onPrimary
-                                : scheme.onSurface)
-                            : text == "Debuggers"
-                                ? (categories.debuggers
-                                    ? scheme.onPrimary
-                                    : scheme.onSurface)
-                                : text == "Keymaps"
-                                    ? (categories.keymaps
-                                        ? scheme.onPrimary
-                                        : scheme.onSurface)
-                                    : text == "Testing"
-                                        ? (categories.testing
-                                            ? scheme.onPrimary
-                                            : scheme.onSurface)
-                                        : text == "Linters"
-                                            ? (categories.linters
-                                                ? scheme.onPrimary
-                                                : scheme.onSurface)
-                                            : text == "Other" 
-                                              ? (categories.other
-                                                  ? scheme.onPrimary
-                                                  : scheme.onSurface)
-                                                  : scheme.onSurface),
+              color: isSelected ? scheme.surface : scheme.onSurface,
+              fontSize: 18,
+            ),
           ),
         ),
         onPressed: () async {
-          text == "Programming Languages"
-              ? categories.languages = !categories.languages
-              : text == "Themes"
-                  ? categories.themes = !categories.themes
-                  : text == "Snippets"
-                      ? categories.snippets = !categories.snippets
-                      : text == "Debuggers"
-                          ? categories.debuggers = !categories.debuggers
-                          : text == "Keymaps"
-                              ? categories.keymaps = !categories.keymaps
-                              : text == "Testing"
-                                  ? categories.testing = !categories.testing
-                                  : text == "Linters"
-                                      ? categories.linters = !categories.linters
-                                      : text == "Other" 
-                                        ? categories.other = !categories.other
-                                        : null;
+          switch (text) {
+            case "Programming Languages":
+              categories.languages = !categories.languages;
+              break;
+            case "Themes":
+              categories.themes = !categories.themes;
+              break;
+            case "Snippets":
+              categories.snippets = !categories.snippets;
+              break;
+            case "Debuggers":
+              categories.debuggers = !categories.debuggers;
+              break;
+            case "Keymaps":
+              categories.keymaps = !categories.keymaps;
+              break;
+            case "Testing":
+              categories.testing = !categories.testing;
+              break;
+            case "Linters":
+              categories.linters = !categories.linters;
+              break;
+            case "Other":
+              categories.other = !categories.other;
+              break;
+          }
           updateData("extensions", extensionIndex, categories: categories).then(
             (value) {
               // ignore: invalid_use_of_protected_member

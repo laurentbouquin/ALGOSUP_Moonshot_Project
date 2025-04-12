@@ -4,32 +4,29 @@ import 'package:vsce_extensions_creator/src/common_widgets/redirect_widgets.dart
 import 'package:vsce_extensions_creator/src/constants/variables.dart';
 
 
+
+
+
 Container navBarButton(IconData icon, ColorScheme scheme, String page, BuildContext context) {
   bool isCurrent = false;
   switch (icon) {
     case Icons.home_rounded:
-      isCurrent = currentPage == "menu";
+      isCurrent = currentPage == "/menu";
       break;
     case Icons.format_align_center_rounded:
-      isCurrent = currentPage == "format";
+      isCurrent = currentPage == "/formatPage";
       break;
     case Icons.format_color_fill_rounded:
-      isCurrent = currentPage == "theme";
+      isCurrent = currentPage == "/themePage";
       break;
     case Icons.snippet_folder_rounded:
-      isCurrent = currentPage == "snippets";
+      isCurrent = currentPage == "/snippetspage";
       break;
     case Icons.format_quote_rounded:
-      isCurrent = currentPage == "commentsAndStrings";
+      isCurrent = currentPage == "/commentsAndStringsPage";
       break;
     case Icons.code_rounded:
-      isCurrent = currentPage == "functionalities";
-      break;
-    case Icons.save_rounded:
-      isCurrent = currentPage == "menu";
-      break;
-    case Icons.settings_rounded:
-      isCurrent = currentPage == "settings";
+      isCurrent = currentPage == "/functionalitiesPage";
       break;
     default:
       isCurrent = false;

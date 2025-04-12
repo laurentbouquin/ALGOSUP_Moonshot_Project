@@ -1,6 +1,8 @@
 // ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
 import 'package:vsce_extensions_creator/src/common_widgets/icons.dart';
+import 'package:vsce_extensions_creator/src/constants/styles.dart';
+import 'package:vsce_extensions_creator/src/features/format/format_styles.dart';
 import 'package:vsce_extensions_creator/src/features/nav_bar/nav_bar_view.dart';
 import 'package:vsce_extensions_creator/src/features/format/format_widgets.dart';
 import 'package:vsce_extensions_creator/src/features/convert/convert_widgets_to_json.dart';
@@ -90,39 +92,23 @@ class _FormatPageState extends State<FormatPage> {
               top: windowSize.height * margins,
               bottom: windowSize.height * margins,
             ),
-            decoration: BoxDecoration(
-              color: scheme.secondary,
-              borderRadius: const BorderRadius.all(Radius.circular(30)),
-              border: Border.all(
-                color: scheme.tertiary,
-                width: 3,
-              ),
-            ),
+            decoration: mainCards(scheme),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  height: windowSize.height / 10.8,
-                  width: windowSize.width * 0.27,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    ),
-                    border: Border(
-                      bottom: BorderSide(
-                        color: scheme.tertiary,
-                        width: 2,
-                      ),
-                    ),
+                  height: windowSize.height / 13.8,
+                  width: windowSize.width * 0.265,
+                  decoration: mainCardsHead(scheme),
+                  margin: EdgeInsets.only(
+                    top: windowSize.height * 0.0025,
                   ),
                   child: Center(
                     child: Text(
                       'keywords',
                       style: TextStyle(
                         fontSize: 25,
-                        color: scheme.onSecondary
+                        color: scheme.surface,
                       ),
                     ),
                   ),
@@ -136,35 +122,27 @@ class _FormatPageState extends State<FormatPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Container(
-                              height: windowSize.height * 0.065,
-                              width: windowSize.width * 0.18,
+                              height: windowSize.height * 0.05,
+                              width: windowSize.width * 0.2 -
+                                  windowSize.width * 0.002,
                               margin: EdgeInsets.only(
                                 top: windowSize.height * margins,
                                 left: windowSize.width * margins,
+                                right: windowSize.width * 0.002,
                               ),
-                              decoration: BoxDecoration(
-                                color: scheme.secondary,
-                                border: Border.all(
-                                  color: scheme.tertiary,
-                                  width: 2,
-                                ),
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  bottomLeft: Radius.circular(30),
-                                ),
-                              ),
+                              decoration: elementNameBox(scheme),
                               child: TextField(
                                 readOnly: true,
                                 controller:
                                     TextEditingController(text: keywords[i]),
                                 textAlign: TextAlign.center,
-                                textAlignVertical: TextAlignVertical.center,
+                                textAlignVertical: TextAlignVertical.top,
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
                                 ),
                                 style: TextStyle(
                                   fontSize: 20,
-                                  color: scheme.onPrimary,
+                                  color: scheme.onSurface,
                                 ),
                                 onChanged: (value) {
                                   keywords[i] = value;
@@ -172,32 +150,12 @@ class _FormatPageState extends State<FormatPage> {
                               ),
                             ),
                             Container(
-                              width: windowSize.width * 0.05,
-                              height: windowSize.height * 0.065,
+                              width: windowSize.width * 0.03,
+                              height: windowSize.height * 0.05,
                               margin: EdgeInsets.only(
                                 top: windowSize.height * margins,
                               ),
-                              decoration: BoxDecoration(
-                                color: scheme.secondary,
-                                border: Border(
-                                  right: BorderSide(
-                                    color: scheme.tertiary,
-                                    width: 2,
-                                  ),
-                                  top: BorderSide(
-                                    color: scheme.tertiary,
-                                    width: 2,
-                                  ),
-                                  bottom: BorderSide(
-                                    color: scheme.tertiary,
-                                    width: 2,
-                                  ),
-                                ),
-                                borderRadius: const BorderRadius.only(
-                                  topRight: Radius.circular(30),
-                                  bottomRight: Radius.circular(30),
-                                ),
-                              ),
+                              decoration: elementInteractBox(scheme),
                               child: IconButton(
                                 hoverColor: Colors.transparent,
                                 onPressed: () async {
@@ -209,7 +167,7 @@ class _FormatPageState extends State<FormatPage> {
                                   });
                                 },
                                 icon: Icon(Icons.highlight_remove_sharp,
-                                    color: scheme.primary),
+                                    color: scheme.onSurface),
                               ),
                             ),
                           ],
@@ -217,10 +175,10 @@ class _FormatPageState extends State<FormatPage> {
                       ),
                       Container(
                         margin: EdgeInsets.only(
-                          top: ((windowSize.height - windowSize.height / 7.5) -
-                              windowSize.height / 10.8 -
-                              ((windowSize.height / 10.8) * keywords.length) -
-                              50),
+                          top: ((windowSize.height * 0.84 -
+                              (windowSize.height * 0.05 +
+                                      windowSize.height * margins) *
+                                  keywords.length)),
                         ),
                         decoration: iconsDecoration(scheme),
                         child: IconButton(
@@ -300,38 +258,23 @@ class _FormatPageState extends State<FormatPage> {
               top: windowSize.height * margins,
               bottom: windowSize.height * margins,
             ),
-            decoration: BoxDecoration(
-              color: scheme.secondary,
-              borderRadius: const BorderRadius.all(Radius.circular(30)),
-              border: Border.all(
-                color: scheme.onSurface,
-                width: 3,
-              ),
-            ),
+            decoration: mainCards(scheme),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  height: windowSize.height / 10.8,
-                  width: windowSize.width * 0.27,
-                  decoration: BoxDecoration(
-                    color: scheme.secondary,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    ),
-                    border: Border(
-                      bottom: BorderSide(
-                        color: scheme.onSurface,
-                        width: 2,
-                      ),
-                    ),
+                  height: windowSize.height / 13.8,
+                  width: windowSize.width * 0.265,
+                  decoration: mainCardsHead(scheme),
+                  margin: EdgeInsets.only(
+                    top: windowSize.height * 0.0025,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       'Types',
                       style: TextStyle(
                         fontSize: 25,
+                        color: scheme.surface,
                       ),
                     ),
                   ),
@@ -343,23 +286,15 @@ class _FormatPageState extends State<FormatPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        height: windowSize.height * 0.065,
-                        width:windowSize.width * 0.18,
+                        height: windowSize.height * 0.05,
+                        width:
+                            windowSize.width * 0.2 - windowSize.width * 0.002,
                         margin: EdgeInsets.only(
                           top: windowSize.height * margins,
                           left: windowSize.width * margins,
+                          right: windowSize.width * 0.002,
                         ),
-                        decoration: BoxDecoration(
-                          color: scheme.secondary,
-                          border: Border.all(
-                            color: scheme.onSurface,
-                            width: 2,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            bottomLeft: Radius.circular(30),
-                          ),
-                        ),
+                        decoration: elementNameBox(scheme),
                         child: TextField(
                           readOnly: true,
                           controller: TextEditingController(text: types[j]),
@@ -377,32 +312,12 @@ class _FormatPageState extends State<FormatPage> {
                         ),
                       ),
                       Container(
-                        width: windowSize.width * 0.05,
-                        height: windowSize.height * 0.065,
+                        width: windowSize.width * 0.03,
+                        height: windowSize.height * 0.05,
                         margin: EdgeInsets.only(
                           top: windowSize.height * margins,
                         ),
-                        decoration: BoxDecoration(
-                          color: scheme.secondary,
-                          border: Border(
-                            right: BorderSide(
-                              color: scheme.onSurface,
-                              width: 2,
-                            ),
-                            top: BorderSide(
-                              color: scheme.onSurface,
-                              width: 2,
-                            ),
-                            bottom: BorderSide(
-                              color: scheme.onSurface,
-                              width: 2,
-                            ),
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30),
-                          ),
-                        ),
+                        decoration: elementInteractBox(scheme),
                         child: IconButton(
                           hoverColor: Colors.transparent,
                           onPressed: () async {
@@ -422,10 +337,10 @@ class _FormatPageState extends State<FormatPage> {
                 ),
                 Container(
                   margin: EdgeInsets.only(
-                    top: ((windowSize.height - windowSize.height / 7.5) -
-                        windowSize.height / 10.8 -
-                        ((windowSize.height / 10.8) * types.length) -
-                        50),
+                    top: ((windowSize.height * 0.84 -
+                        (windowSize.height * 0.05 +
+                                windowSize.height * margins) *
+                            types.length)),
                   ),
                   decoration: iconsDecoration(scheme),
                   child: IconButton(
@@ -503,17 +418,54 @@ class _FormatPageState extends State<FormatPage> {
               top: windowSize.height * margins,
               bottom: windowSize.height * margins,
             ),
-            decoration: BoxDecoration(
-              color: scheme.secondary,
-              borderRadius: const BorderRadius.all(Radius.circular(30)),
-              border: Border.all(
-                color: scheme.onSurface,
-                width: 3,
-              ),
-            ),
+            decoration: mainCards(scheme),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Container(
+                  height: windowSize.height / 13.8,
+                  width: windowSize.width * 0.265,
+                  decoration: mainCardsHead(scheme),
+                  margin: EdgeInsets.only(
+                    top: windowSize.height * 0.0025,
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Categories',
+                      style: TextStyle(
+                        fontSize: 25,
+                        color: scheme.surface,
+                      ),
+                    ),
+                  ),
+                ),
+                ...List.generate(8, (index) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      categoriesButton(
+                        windowSize,
+                        scheme,
+                        currentExtensionIndex,
+                        categories,
+                        categoriesList[index],
+                        this,
+                      ),
+                    ],
+                  );
+                }),
+              ],
+            ),
+          ),
+          NavBar()
+        ],
+      ),
+    );
+  }
+}
+
+/*
+
                 Container(
                   height: windowSize.height / 10.8,
                   width: windowSize.width * 0.27,
@@ -575,70 +527,4 @@ class _FormatPageState extends State<FormatPage> {
                   windowSize.width / 3.5,
                   windowSize.height / 10.8,
                 ),
-                Container(
-                  width: windowSize.width / 3.5,
-                  margin: EdgeInsets.only(top: windowSize.height / 108),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: windowSize.width / 13,
-                        child: Text(
-                          '   Categories: ',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: scheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      categoriesButton(
-                          windowSize,
-                          scheme,
-                          currentExtensionIndex,
-                          categories,
-                          "Programming Languages",
-                          this),
-                      categoriesButton(windowSize, scheme,
-                          currentExtensionIndex, categories, "Themes", this),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: windowSize.width / 3.5,
-                  margin: EdgeInsets.only(top: windowSize.height / 108),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      categoriesButton(windowSize, scheme,
-                          currentExtensionIndex, categories, "Snippets", this),
-                      categoriesButton(windowSize, scheme,
-                          currentExtensionIndex, categories, "Debuggers", this),
-                      categoriesButton(windowSize, scheme,
-                          currentExtensionIndex, categories, "Keymaps", this),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: windowSize.width / 3.5,
-                  margin: EdgeInsets.only(top: windowSize.height / 108),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      categoriesButton(windowSize, scheme,
-                          currentExtensionIndex, categories, "Testing", this),
-                      categoriesButton(windowSize, scheme,
-                          currentExtensionIndex, categories, "Linters", this),
-                      categoriesButton(windowSize, scheme,
-                          currentExtensionIndex, categories, "Other", this),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          NavBar()
-        ],
-      ),
-    );
-  }
-}
+                */

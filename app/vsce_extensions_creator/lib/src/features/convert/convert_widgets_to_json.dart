@@ -54,9 +54,10 @@ Future<void> updateData(String extensionCategory, int extensionIndex,
     );
   } else if (extensionCategory == "format"){
     var formatData = json.decode(formatFile.readAsStringSync());
+    var formatDataF = formatData["extensions"][extensionIndex] as Map<String, dynamic>;
     Map<String, dynamic> data = {
-    "keywords": keywords ?? formatData.keywords,
-    "types": types ?? formatData.types,
+    "keywords": keywords ?? formatDataF["keywords"],
+    "types": types ?? formatDataF["types"],
     };
     formatData["extensions"][extensionIndex] = data;
     String datas = jsonEncode(formatData);

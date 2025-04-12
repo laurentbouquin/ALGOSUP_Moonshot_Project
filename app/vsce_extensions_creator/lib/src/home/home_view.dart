@@ -44,13 +44,6 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-  // Update the color scheme when getting back from the settings page (will be called later)
-  /// Updates the color scheme when called
-  void onGoBack() {
-    setState(() {
-      scheme = isDark ? darkTheme.colorScheme : lightTheme.colorScheme;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
