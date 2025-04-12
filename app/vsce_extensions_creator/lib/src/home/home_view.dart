@@ -68,14 +68,14 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     children: <Widget>[
                       // Create a head cell for each label of the extension
-                      headRowPart(windowSize, "Name", "TL,BL",
-                          windowSize.width * 0.2, "TL", scheme),
+                      headRowPart(windowSize, "Name", "TL",
+                          windowSize.width * 0.2, "TLR", scheme),
                       headRowPart(windowSize, "Description", "",
-                          windowSize.width * 0.45, "T", scheme),
+                          windowSize.width * 0.45, "TR", scheme),
                       headRowPart(windowSize, "Last Updated", "",
-                          windowSize.width * 0.2, "T", scheme),
-                      headRowPart(windowSize, "Version", "TR,BR",
-                          windowSize.width * 0.05, "T", scheme)
+                          windowSize.width * 0.15, "TR", scheme),
+                      headRowPart(windowSize, "Version", "TR",
+                          windowSize.width * 0.1, "T", scheme)
                     ],
                   ),
                   ListView.builder(
@@ -92,22 +92,22 @@ class _HomePageState extends State<HomePage> {
                         child: Row(
                           children: <Widget>[
                             tableElement(windowSize, data[index]["name"],
-                                "TL,BL", windowSize.width * 0.2, "LT", scheme,
+                                "", windowSize.width * 0.2, "LTR", scheme,
                                 isSelected: index == currentExtensionIndex ? true : false),
                             tableElement(windowSize, data[index]["description"],
-                                "", windowSize.width * 0.45, "T", scheme,
+                                "", windowSize.width * 0.45, "TR", scheme,
                                 isSelected: index == currentExtensionIndex ? true : false),
                             tableElement(
                                 windowSize,
                                 DateFormat('yyyy-MM-dd - kk:mm:ss').format(
                                     DateTime.parse(data[index]["lastUpdated"])),
                                 "",
-                                windowSize.width * 0.2,
-                                "T",
+                                windowSize.width * 0.15,
+                                "TR",
                                 scheme,
                                 isSelected: index == currentExtensionIndex ? true : false),
                             tableElement(windowSize, data[index]["version"],
-                                "TR,BR", windowSize.width * 0.05, "T", scheme,
+                                "", windowSize.width * 0.1, "T", scheme,
                                 isSelected: index == currentExtensionIndex ? true : false),
                           ],
                         ),

@@ -7,32 +7,14 @@ Container headRowPart(WindowSize windowSize, String text, String bordersRadius,
     alignment: Alignment.center,
     margin: EdgeInsets.only(
       left: margins.contains("L") ? windowSize.width * 0.05 : 0,
-      right: margins.contains("R") ? windowSize.width * 0.01 : 0,
+      right: margins.contains("R") ? windowSize.width * 0.002 : 0,
       top: margins.contains("T") ? windowSize.height * 0.01 : 0,
       bottom: margins.contains("B") ? windowSize.height * 0.01 : 0,
     ),
-    width: inWidth,
-    height: windowSize.height * 0.05,
+    width: inWidth - windowSize.width * 0.002,
+    height: windowSize.height * 0.04,
     decoration: BoxDecoration(
-      color: scheme.secondary,
-      border: Border(
-        left: BorderSide(
-          color: scheme.onSurface,
-          width: 2,
-        ),
-        bottom: BorderSide(
-          color: scheme.onSurface,
-          width: 2,
-        ),
-        top: BorderSide(
-          color: scheme.onSurface,
-          width: 2,
-        ),
-        right: BorderSide(
-          color: scheme.onSurface,
-          width: text == "Version" ? 2 : 0.1,
-        ),
-      ),
+      color: scheme.onSurface,
       borderRadius: BorderRadius.only(
         topLeft: bordersRadius.contains("TL")
             ? const Radius.circular(10)
@@ -51,7 +33,7 @@ Container headRowPart(WindowSize windowSize, String text, String bordersRadius,
     child: Text(
       text,
       style: TextStyle(
-        color: scheme.onSecondary,
+        color: scheme.surface,
         fontWeight: FontWeight.bold,
       ),
     ),
@@ -61,37 +43,36 @@ Container headRowPart(WindowSize windowSize, String text, String bordersRadius,
 Container tableElement(WindowSize windowSize, String text, String bordersRadius,
     double inWidth, String margins, ColorScheme scheme,
     {bool isSelected = false}) {
-  bool isVersion = RegExp(r'^\d+\.\d+\.\d+$').hasMatch(text);
   return Container(
     alignment: Alignment.center,
     margin: EdgeInsets.only(
       left: margins.contains("L") ? windowSize.width * 0.05 : 0,
-      right: margins.contains("R") ? windowSize.width * 0.01 : 0,
+      right: margins.contains("R") ? windowSize.width * 0.002 : 0,
       top: margins.contains("T") ? windowSize.height * 0.01 : 0,
       bottom: margins.contains("B") ? windowSize.height * 0.01 : 0,
     ),
-    width: inWidth,
-    height: windowSize.height * 0.1,
+    width: inWidth - windowSize.width * 0.002,
+    height: windowSize.height * 0.08,
     decoration: BoxDecoration(
-      color: isSelected ? scheme.onSurface : scheme.primary,
-      border: Border(
-        left: BorderSide(
-          color: isSelected ? scheme.primary : scheme.onSurface,
+      color: isSelected ? scheme.onSurface : scheme.surface,
+      border: !isSelected ? Border(
+        left:  BorderSide(
+          color: scheme.onSurface,
           width: 2,
         ),
         bottom: BorderSide(
-          color: isSelected ? scheme.primary : scheme.onSurface,
+          color: scheme.onSurface,
           width: 2,
         ),
         top: BorderSide(
-          color: isSelected ? scheme.primary : scheme.onSurface,
+          color: scheme.onSurface,
           width: 2,
         ),
         right: BorderSide(
-          color: isSelected ? scheme.primary : scheme.onSurface,
-          width: isVersion ? 2 : 0.1,
+          color: scheme.onSurface,
+          width: 2,
         ),
-      ),
+      ): null,
       borderRadius: BorderRadius.only(
         topLeft: bordersRadius.contains("TL")
             ? const Radius.circular(10)
@@ -110,7 +91,7 @@ Container tableElement(WindowSize windowSize, String text, String bordersRadius,
     child: Text(
             text,
             style: TextStyle(
-              color: isSelected ? scheme.primary : scheme.onSecondary,
+              color: isSelected ? scheme.surface : scheme.onSecondary,
               fontWeight: FontWeight.bold,
             ),
           ),
