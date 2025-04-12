@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:vsce_extensions_creator/src/features/convert/convert_widgets_to_json.dart';
-import 'package:vsce_extensions_creator/src/constants/classes.dart';
 import 'package:vsce_extensions_creator/src/constants/variables.dart';
 
 Container commentsOptionsPart(
-  WindowSize windowSize,
   ColorScheme scheme,
   int extensionIndex,
   String text,
   String type,
   double width,
   double height,
+  bool isSelected,
   State state,
 ) {
   return Container(
-    width: windowSize.width / 8,
-    height: windowSize.height / 10.8,
+    width: width,
+    height: height,
     decoration: BoxDecoration(
-      color: scheme.surface,
+      color: isSelected ? scheme.onSurface : scheme.surface,
       borderRadius: BorderRadius.circular(10),
-      border: Border.all(
-        color: scheme.onSurface,
-        width: 1,
-      ),
+      border: isSelected
+          ? null
+          : Border.all(
+              color: scheme.onSurface,
+              width: 1,
+            ),
     ),
     child: TextButton(
       style: ButtonStyle(
@@ -59,7 +60,7 @@ Container commentsOptionsPart(
       child: Text(
         text,
         style: TextStyle(
-          color: scheme.onSurface,
+          color: isSelected ? scheme.surface : scheme.onSurface,
         ),
       ),
     ),
@@ -67,7 +68,6 @@ Container commentsOptionsPart(
 }
 
 Container quotesOptionsPart(
-  WindowSize windowSize,
   ColorScheme scheme,
   int extensionIndex,
   String text,
@@ -77,34 +77,50 @@ Container quotesOptionsPart(
 ) {
   return Container(
     width: width,
+    height: width * 0.2,
     decoration: BoxDecoration(
-      color: scheme.surface,
+      color: text == "\"string example\""
+          ? (checkbox1 ? scheme.onSurface : scheme.surface)
+          : text == "'string example'"
+              ? (checkbox2 ? scheme.onSurface : scheme.surface)
+              : scheme.onError,
       borderRadius: BorderRadius.circular(10),
-      border: Border.all(
-        color: text == "\""
-            ? (checkbox1 ? scheme.onSurface : scheme.error)
-            : text == "'"
-                ? (checkbox2 ? scheme.onSurface : scheme.error)
-                : scheme.onSurface,
-        width: 2,
-      ),
+      border: text == "\"string example\""
+          ? (checkbox1
+              ? null
+              : Border.all(
+                  color: scheme.onSurface,
+                  width: 2,
+                ))
+          : text == "'string example'"
+              ? (checkbox2
+                  ? null
+                  : Border.all(
+                      color: scheme.onSurface,
+                      width: 2,
+                    ))
+              : Border.all(
+                  color: scheme.onSurface,
+                  width: 2,
+                ),
     ),
     child: TextButton(
       child: Text(
         text,
         style: TextStyle(
-          color: text == "\"" ? (checkbox1 ? scheme.onSurface : scheme.error)
-              : text == "'"
-                  ? (checkbox2 ? scheme.onSurface : scheme.error)
+          color: text == "\"string example\""
+              ? (checkbox1 ? scheme.surface : scheme.onSurface)
+              : text == "'string example'"
+                  ? (checkbox2 ? scheme.surface : scheme.onSurface)
                   : scheme.onSurface,
-          fontSize: windowSize.width * 0.05,
+          fontSize: width * 0.1,
         ),
       ),
       onPressed: () {
         // ignore: invalid_use_of_protected_member
         state.setState(() {
-          checkbox1 = text == "\"" ? !checkbox1 : checkbox1;
-          checkbox2 = text == "'" ? !checkbox2 : checkbox2;
+          checkbox1 = text == "\"string example\"" ? !checkbox1 : checkbox1;
+          checkbox2 = text == "'string example'" ? !checkbox2 : checkbox2;
           valuesIndex[2] = checkbox2
               ? checkbox1
                   ? 2
@@ -122,5 +138,3 @@ Container quotesOptionsPart(
     ),
   );
 }
-
-
