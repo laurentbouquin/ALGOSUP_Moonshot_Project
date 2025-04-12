@@ -195,9 +195,9 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
                         valuesIndex[0] == 0
                             ? '// This type of comments are\n// made one line at a time.'
                             : valuesIndex[0] == 1
-                                ? '# This type of comments are\n// made one line at a time.'
+                                ? '# This type of comments are\n# made one line at a time.'
                                 : valuesIndex[0] == 2
-                                    ? '## This type of comments are\n// made one line at a time.'
+                                    ? '## This type of comments are\n## made one line at a time.'
                                     : '',
                         style: TextStyle(
                           fontSize: windowSize.width * 0.018,
