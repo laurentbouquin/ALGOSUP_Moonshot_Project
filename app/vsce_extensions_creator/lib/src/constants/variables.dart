@@ -15,6 +15,8 @@ String currentPage = "/menu";
 
 const int CATEGORIES_NUM = 8;
 
+bool isConnected = false;
+
 const List<String> categoriesList = [
   "Programming Languages",
   "Themes",
