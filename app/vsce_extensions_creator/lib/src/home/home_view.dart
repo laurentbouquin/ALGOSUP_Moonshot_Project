@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:vsce_extensions_creator/src/common_widgets/redirect_widgets.dart';
 
 // ==== Pages Imports ==== //
 
@@ -44,7 +45,6 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     windowSize.width = MediaQuery.of(context).size.width;
@@ -54,7 +54,9 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: scheme.surface,
       body: SingleChildScrollView(
         // Create a Stack to have the settings button on the bottom left independent of the table
-        child: SizedBox(
+        child: Stack(
+          children: [
+            SizedBox(
               height: windowSize.height,
               child: Column(
                 children: <Widget>[
@@ -84,12 +86,16 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: Row(
                           children: <Widget>[
-                            tableElement(windowSize, data[index]["name"],
-                                "", windowSize.width * 0.2, "LTR", scheme,
-                                isSelected: index == currentExtensionIndex ? true : false),
+                            tableElement(windowSize, data[index]["name"], "",
+                                windowSize.width * 0.2, "LTR", scheme,
+                                isSelected: index == currentExtensionIndex
+                                    ? true
+                                    : false),
                             tableElement(windowSize, data[index]["description"],
                                 "", windowSize.width * 0.45, "TR", scheme,
-                                isSelected: index == currentExtensionIndex ? true : false),
+                                isSelected: index == currentExtensionIndex
+                                    ? true
+                                    : false),
                             tableElement(
                                 windowSize,
                                 DateFormat('yyyy-MM-dd - kk:mm:ss').format(
@@ -98,10 +104,14 @@ class _HomePageState extends State<HomePage> {
                                 windowSize.width * 0.15,
                                 "TR",
                                 scheme,
-                                isSelected: index == currentExtensionIndex ? true : false),
-                            tableElement(windowSize, data[index]["version"],
-                                "", windowSize.width * 0.1, "T", scheme,
-                                isSelected: index == currentExtensionIndex ? true : false),
+                                isSelected: index == currentExtensionIndex
+                                    ? true
+                                    : false),
+                            tableElement(windowSize, data[index]["version"], "",
+                                windowSize.width * 0.1, "T", scheme,
+                                isSelected: index == currentExtensionIndex
+                                    ? true
+                                    : false),
                           ],
                         ),
                       );
@@ -110,9 +120,23 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            Positioned(
+              top: windowSize.height * 0.955 - windowSize.width * 0.01,
+              left: windowSize.width * 0.01,
+              child: IconButton(
+                hoverColor: Colors.transparent,
+                icon: Icon(Icons.settings, color: scheme.onSurface, size: 40),
+                onPressed: () {
+                  redirectToStateless(context, "/settings",
+                      arguments: {"extensionIndex": 0});
+                },
+              ),
+            ),
+          ],
+        ),
       ), // Floating action button to open the menu to save, publish and cancel
       floatingActionButton: FloatingActionButton(
-        backgroundColor: scheme.primary,
+        backgroundColor: scheme.surface,
         foregroundColor: scheme.onSurface,
         shape: RoundedRectangleBorder(
             side: BorderSide(width: 2, color: scheme.onSurface),
@@ -120,7 +144,8 @@ class _HomePageState extends State<HomePage> {
         heroTag: 'menu',
         onPressed: () {
           setState(() {
-            Navigator.pushNamed(context, '/formatPage');
+            redirectToStateless(context, '/formatPage',
+                arguments: {"extensionIndex": currentExtensionIndex});
           });
         },
         // tooltip: isMenuOpen ? 'Close Menu' : 'Open Menu',
