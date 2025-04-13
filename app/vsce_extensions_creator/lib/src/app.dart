@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vsce_extensions_creator/src/constants/variables.dart';
 import 'package:vsce_extensions_creator/src/features/comments&strings/comments&strings_view.dart';
+import 'package:vsce_extensions_creator/src/features/extension_settings/extension_settings_view.dart';
 import 'package:vsce_extensions_creator/src/features/format/format_view.dart';
 import 'package:vsce_extensions_creator/src/features/theme/theme_view.dart';
 
@@ -86,6 +87,9 @@ class MyApp extends StatelessWidget {
                   case CommentsAndStringsPage.routeName:
                     currentPage = "/commentsAndStringsPage";
                     return const CommentsAndStringsPage();
+                  case ExtensionSettingsView.routeName:
+                    currentPage = "/extensionSettingsPage";
+                    return const ExtensionSettingsView();
                   case HomePage.routeName:
                   default:
                     currentPage = "/menu";

@@ -15,7 +15,7 @@ class NavBar extends StatelessWidget {
     windowSize.height = MediaQuery.of(context).size.height;
     return Container(
       height: windowSize.height,
-      width: windowSize.width / 7,
+      width: windowSize.width * 0.14,
       margin: EdgeInsets.only(
         top: windowSize.height * 0.01,
         bottom: windowSize.height * 0.01,
@@ -54,7 +54,7 @@ class NavBar extends StatelessWidget {
           navBarButton(
               Icons.code_rounded, scheme, "/functionalitiesPage", context),
           navBarButton(Icons.save, scheme, "/menu", context),
-          navBarButton(Icons.settings_rounded, scheme, "/settings", context),
+          navBarButton(Icons.settings_rounded, scheme, "/extensionSettingsPage", context),
         ],
       ),
     );

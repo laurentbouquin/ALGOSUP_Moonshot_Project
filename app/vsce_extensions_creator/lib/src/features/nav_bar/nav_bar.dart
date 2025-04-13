@@ -28,6 +28,9 @@ Container navBarButton(IconData icon, ColorScheme scheme, String page, BuildCont
     case Icons.code_rounded:
       isCurrent = currentPage == "/functionalitiesPage";
       break;
+    case Icons.settings_rounded:
+      isCurrent = currentPage == "/extensionSettingsPage";
+      break;
     default:
       isCurrent = false;
   }

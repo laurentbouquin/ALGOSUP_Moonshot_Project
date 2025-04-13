@@ -29,3 +29,11 @@ BoxDecoration mainCardsHead(scheme) {
     ),
   );
 }
+
+TextStyle mainCardsHeadText(ColorScheme scheme) {
+  return TextStyle(
+    fontSize: 35,
+    color: scheme.surface,
+    fontWeight: FontWeight.w900,
+  );
+}
