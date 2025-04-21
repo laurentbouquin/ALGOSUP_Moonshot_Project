@@ -1,5 +1,6 @@
 // ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
+import 'package:vsce_extensions_creator/src/constants/styles.dart';
 import 'package:vsce_extensions_creator/src/features/nav_bar/nav_bar_view.dart';
 import 'dart:convert';
 
@@ -14,12 +15,10 @@ import 'theme_widgets.dart';
 class ThemePage extends StatefulWidget {
   const ThemePage({super.key});
 
-
   static const String routeName = '/themePage';
 
   @override
-  State<ThemePage> createState() =>
-      _ThemePageState();
+  State<ThemePage> createState() => _ThemePageState();
 }
 
 class _ThemePageState extends State<ThemePage> {
@@ -75,200 +74,139 @@ class _ThemePageState extends State<ThemePage> {
         height: windowSize.height,
         child: Row(
           children: [
-            Column(
-              children: <Widget>[
-                ...List.generate(
-                  CATEGORIES_NUM ~/ 2,
-                  (k) => Row(
-                    children: <Widget>[
-                      Container(
-                        width: usableWidth / 4,
-                        height: windowSize.height / 4,
-                        decoration: BoxDecoration(
-                          color: scheme.surface,
-                          border: Border(
-                            bottom: BorderSide(
-                              color: scheme.onSurface,
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "   ${categories[k * 2]}",
-                                style: TextStyle(
-                                  fontSize: windowSize.width * 0.025,
-                                  color: scheme.onSurface,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.centerRight,
-                              width: windowSize.height / 5.4 / 2,
-                              height: windowSize.height / 5.4 / 2,
-                              margin:
-                                  EdgeInsets.only(right: windowSize.width / 96),
-                              decoration: BoxDecoration(
-                                color: Color(
-                                    int.parse("0xFF${colorsList[k * 2]}")),
-                                border: Border.all(
-                                  color: scheme.onSurface,
-                                  width: 1,
-                                ),
-                              ),
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  shape: WidgetStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(0),
-                                    ),
-                                  ),
-                                  fixedSize: WidgetStateProperty.all<Size>(
-                                    Size(windowSize.height / 5.4 / 2,
-                                        windowSize.height / 5.4 / 2),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  createDialog(
-                                          context,
-                                          _formKey,
-                                          windowSize,
-                                          scheme,
-                                          jsonDataTemp,
-                                          names,
-                                          k,
-                                          colorsList,
-                                          themeColors,
-                                          0)
-                                      .then((value) {
-                                    setState(() {
-                                      themeColors.bgColor = colorsList[0];
-                                      themeColors.keywordColor = colorsList[1];
-                                      themeColors.functionColor = colorsList[2];
-                                      themeColors.variableColor = colorsList[3];
-                                      themeColors.stringColor = colorsList[4];
-                                      themeColors.commentColor = colorsList[5];
-                                      themeColors.commonColor = colorsList[6];
-                                      themeColors.otherColor = colorsList[7];
-                                      updateColorFile(themeColors, currentExtensionIndex);
-                                    });
-                                  });
-                                },
-                                child: const Text(""),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: usableWidth / 4,
-                        height: windowSize.height / 4,
-                        decoration: BoxDecoration(
-                          color: scheme.surface,
-                          border: Border(
-                            bottom: BorderSide(
-                              color: scheme.onSurface,
-                              width: 1,
-                            ),
-                            left: BorderSide(
-                              color: scheme.onSurface,
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                textAlign: TextAlign.start,
-                                "   ${categories[k * 2 + 1]}",
-                                style: TextStyle(
-                                  fontSize: windowSize.width * 0.025,
-                                  color: scheme.onSurface,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.centerRight,
-                              width: windowSize.height / 5.4 / 2,
-                              height: windowSize.height / 5.4 / 2,
-                              margin:
-                                  EdgeInsets.only(right: windowSize.width / 96),
-                              decoration: BoxDecoration(
-                                color: Color(
-                                    int.parse("0xFF${colorsList[k * 2 + 1]}")),
-                                border: Border.all(
-                                  color: scheme.onSurface,
-                                  width: 1,
-                                ),
-                              ),
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  shape: WidgetStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(0),
-                                    ),
-                                  ),
-                                  fixedSize: WidgetStateProperty.all<Size>(
-                                    Size(windowSize.height / 5.4 / 2,
-                                        windowSize.height / 5.4 / 2),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  createDialog(
-                                          context,
-                                          _formKey,
-                                          windowSize,
-                                          scheme,
-                                          jsonDataTemp,
-                                          names,
-                                          k,
-                                          colorsList,
-                                          themeColors,
-                                          1)
-                                      .then((value) {
-                                    setState(() {
-                                      themeColors.bgColor = colorsList[0];
-                                      themeColors.keywordColor = colorsList[1];
-                                      themeColors.functionColor = colorsList[2];
-                                      themeColors.variableColor = colorsList[3];
-                                      themeColors.stringColor = colorsList[4];
-                                      themeColors.commentColor = colorsList[5];
-                                      themeColors.commonColor = colorsList[6];
-                                      themeColors.otherColor = colorsList[7];
-                                      updateColorFile(themeColors, currentExtensionIndex);
-                                    });
-                                  });
-                                },
-                                child: const Text(""),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
+            Container(
+              decoration: mainCards(scheme),
+              width: windowSize.width * 0.3,
+              height: windowSize.height * 0.9,
+              margin: EdgeInsets.only(
+                left: windowSize.width * 0.04,
+                right: windowSize.width * 0.18,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    width: windowSize.width * 0.294,
+                    height: windowSize.height * 0.1,
+                    margin: EdgeInsets.only(
+                      top: windowSize.width * 0.002,
+                    ),
+                    decoration: mainCardsHead(scheme),
+                    child: Center(
+                      child: Text("Colors", style: mainCardsHeadText(scheme)),
+                    ),
                   ),
-                ),
-              ],
+                  ...List.generate(
+                    CATEGORIES_NUM,
+                    (k) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: windowSize.width * 0.2,
+                          height: windowSize.height * 0.05,
+                          margin: EdgeInsets.only(
+                            top: windowSize.height * 0.02,
+                            bottom: k == CATEGORIES_NUM - 1
+                                ? windowSize.height * 0.02
+                                : 0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: scheme.surface,
+                            border: Border.all(
+                              color: scheme.onSurface,
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "   ${categories[k]}",
+                                  style: TextStyle(
+                                    fontSize: windowSize.width * 0.017,
+                                    color: scheme.onSurface,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                alignment: Alignment.centerRight,
+                                height: windowSize.height * 0.05,
+                                width: windowSize.height * 0.05,
+                                decoration: BoxDecoration(
+                                  color:
+                                      Color(int.parse("0xFF${colorsList[k]}")),
+                                  border: Border(
+                                    left: BorderSide(
+                                      color: scheme.onSurface,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(15),
+                                  ),
+                                ),
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    shape: WidgetStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(0),
+                                      ),
+                                    ),
+                                    fixedSize: WidgetStateProperty.all<Size>(
+                                      Size(windowSize.height / 5.4 / 2,
+                                          windowSize.height / 5.4 / 2),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    createDialog(
+                                            context,
+                                            _formKey,
+                                            windowSize,
+                                            scheme,
+                                            jsonDataTemp,
+                                            names,
+                                            k,
+                                            colorsList,
+                                            themeColors,
+                                            0)
+                                        .then((value) {
+                                      setState(() {
+                                        themeColors.bgColor = colorsList[0];
+                                        themeColors.keywordColor =
+                                            colorsList[1];
+                                        themeColors.functionColor =
+                                            colorsList[2];
+                                        themeColors.variableColor =
+                                            colorsList[3];
+                                        themeColors.stringColor = colorsList[4];
+                                        themeColors.commentColor =
+                                            colorsList[5];
+                                        themeColors.commonColor = colorsList[6];
+                                        themeColors.otherColor = colorsList[7];
+                                        updateColorFile(
+                                            themeColors, currentExtensionIndex);
+                                      });
+                                    });
+                                  },
+                                  child: const Text(""),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            VerticalDivider(
-              color: scheme.onSurface,
-              width: 2,
-              thickness: 2,
-            ),
-            visualization(
-              windowSize,
-              themeColors,
-              usableWidth
-            ),
+            visualization(windowSize, themeColors, usableWidth, scheme),
             NavBar(),
           ],
         ),

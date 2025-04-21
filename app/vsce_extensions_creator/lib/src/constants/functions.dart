@@ -2,9 +2,9 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:vsce_extensions_creator/src/common_widgets/visualization.dart';
+import 'package:vsce_extensions_creator/src/constants/styles.dart';
 import 'dart:convert';
 import 'dart:io';
-
 
 // ==== Pages Imports ==== //
 import 'classes.dart';
@@ -58,26 +58,32 @@ Future<void> createBaseFilesContent(String path) async {
 }
 
 /// Returns a Column widget with the data called from the textToVisualize function
-Column visualization(WindowSize windowSize, Theming themeColors, usableWidth) {
-  return Column(
-    children: <Widget>[
-      Container(
-        width: usableWidth / 2 - 2,
-        height: windowSize.height,
-        decoration: BoxDecoration(
-          color: Color(int.parse("0xFF${themeColors.bgColor}")),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Container(
-          width: usableWidth / 2 - 2 * 0.25,
-          margin: EdgeInsets.only(left: usableWidth / 2 - 2 * 0.125),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: textToVisualize(themeColors),
+Container visualization(WindowSize windowSize, Theming themeColors, usableWidth,
+    ColorScheme scheme) {
+  return Container(
+    width: windowSize.width * 0.3,
+    height: windowSize.height * 0.9,
+    margin: EdgeInsets.only(
+      right: windowSize.width * 0.04,
+    ),
+    decoration: mainCards(scheme),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          width: windowSize.width * 0.294,
+          height: windowSize.height * 0.1,
+          margin: EdgeInsets.only(
+            top: windowSize.width * 0.002,
+          ),
+          decoration: mainCardsHead(scheme),
+          child: Center(
+            child: Text("Preview", style: mainCardsHeadText(scheme)),
           ),
         ),
-      )
-    ],
+        textToVisualize(themeColors, windowSize),
+      ],
+    ),
   );
 }
 
