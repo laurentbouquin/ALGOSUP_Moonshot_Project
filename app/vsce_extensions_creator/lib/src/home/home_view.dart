@@ -84,6 +84,15 @@ class _HomePageState extends State<HomePage> {
                             currentExtensionIndex = index;
                           });
                         },
+                        onDoubleTap: () {
+                          setState(() {
+                            currentExtensionIndex = index;
+                            redirectToStateless(context, '/formatPage',
+                                arguments: {
+                                  "extensionIndex": currentExtensionIndex
+                                });
+                          });
+                        },
                         child: Row(
                           children: <Widget>[
                             tableElement(windowSize, data[index]["name"], "",
