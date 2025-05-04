@@ -1,1 +1,8 @@
 .vscode/
+app/vsce_extensions_creator/linux/flutter/generated_plugin_registrant.cc
+app/vsce_extensions_creator/linux/flutter/generated_plugin_registrant.h
+app/vsce_extensions_creator/linux/flutter/generated_plugins.cmake
+app/vsce_extensions_creator/macos/Flutter/GeneratedPluginRegistrant.swift
+app/vsce_extensions_creator/windows/flutter/generated_plugin_registrant.cc
+app/vsce_extensions_creator/windows/flutter/generated_plugin_registrant.h
+app/vsce_extensions_creator/windows/flutter/generated_plugins.cmake
