@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 // === Constants ===
-const DEBUG = true;
+const DEBUG = false;
 
 bool isDark = false;
 
