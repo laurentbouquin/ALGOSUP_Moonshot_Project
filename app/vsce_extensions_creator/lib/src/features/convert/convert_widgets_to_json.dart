@@ -38,7 +38,7 @@ Future<void> updateData(String extensionCategory, int extensionIndex,
     await writeData(
       datas,
       storageAddress,
-      'extensions_list.json',
+      extensionsFileName,
     );
   } else if (extensionCategory == "settings"){
     var settingsData = json.decode(settingsFile.readAsStringSync());
@@ -50,7 +50,7 @@ Future<void> updateData(String extensionCategory, int extensionIndex,
     await writeData(
       datas,
       storageAddress,
-      'settings.json',
+      settingsFileName,
     );
   } else if (extensionCategory == "format"){
     var formatData = json.decode(formatFile.readAsStringSync());
@@ -64,7 +64,7 @@ Future<void> updateData(String extensionCategory, int extensionIndex,
     await writeData(
       datas,
       storageAddress,
-      'format.json',
+      formatFileName,
     );
   } else if (extensionCategory == "comments"){
     var commentsData = json.decode(commentsAndStringsFile.readAsStringSync());
@@ -78,7 +78,7 @@ Future<void> updateData(String extensionCategory, int extensionIndex,
     await writeData(
       datas,
       storageAddress,
-      'commentsandstrings.json',
+      commentsAndStringsFileName,
     );
   }
 }

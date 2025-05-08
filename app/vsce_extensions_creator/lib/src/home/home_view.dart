@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:vsce_extensions_creator/src/common_widgets/redirect_widgets.dart';
-import 'package:vsce_extensions_creator/src/constants/functions.dart';
-import 'package:vsce_extensions_creator/src/features/convert/convert_json_to_files.dart';
 
 // ==== Pages Imports ==== //
 
@@ -139,47 +137,6 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   redirectToStateless(context, "/settings",
                       arguments: {"extensionIndex": 0});
-                },
-              ),
-            ),
-            Positioned(
-              top: windowSize.height * 0.955 - windowSize.width * 0.01,
-              left: windowSize.width * 0.1,
-              child: IconButton(
-                hoverColor: Colors.transparent,
-                icon: Icon(Icons.settings, color: scheme.onSurface, size: 40),
-                onPressed: () async {
-                  convertLocalsToFullExtension(
-                      Extension().fromJson(currentExtensionIndex), "", true);
-                  await Future.delayed(const Duration(seconds: 1));
-                  final TextEditingController textController =
-                      TextEditingController();
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text("Dialog Title"),
-                        content:
-                            const Text("This is the content of the dialog."),
-                        actions: [
-                          TextField(
-                            controller: textController,
-                            decoration: const InputDecoration(
-                              labelText: 'Enter token',
-                            ),
-                          ),
-                          TextButton(
-                            child: const Text("OK"),
-                            onPressed: () {
-                              String textFieldValue = textController.text;
-                              Navigator.of(context).pop();
-                              runCmdCommand(textFieldValue);
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
                 },
               ),
             ),

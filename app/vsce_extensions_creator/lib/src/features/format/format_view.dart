@@ -457,7 +457,7 @@ class _FormatPageState extends State<FormatPage> {
               ],
             ),
           ),
-          NavBar()
+          NavBar(state: this),
         ],
       ),
     );

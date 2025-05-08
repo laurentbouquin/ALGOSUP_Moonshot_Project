@@ -207,7 +207,7 @@ class _ThemePageState extends State<ThemePage> {
               ),
             ),
             visualization(windowSize, themeColors, usableWidth, scheme),
-            NavBar(),
+            NavBar(state: this),
           ],
         ),
       ),

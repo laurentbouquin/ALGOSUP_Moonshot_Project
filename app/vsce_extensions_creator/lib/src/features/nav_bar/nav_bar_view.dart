@@ -4,7 +4,9 @@ import 'package:vsce_extensions_creator/src/constants/variables.dart';
 import 'package:vsce_extensions_creator/src/features/nav_bar/nav_bar.dart';
 
 class NavBar extends StatelessWidget {
-  NavBar({super.key});
+  NavBar({super.key, required this.state});
+
+  final State state;
 
   final windowSize = WindowSize();
 
@@ -54,7 +56,38 @@ class NavBar extends StatelessWidget {
           navBarButton(
               Icons.code_rounded, scheme, "/functionalitiesPage", context),
           navBarButton(Icons.save, scheme, "/menu", context),
-          navBarButton(Icons.settings_rounded, scheme, "/extensionSettingsPage", context),
+          navBarButton(Icons.publish_sharp, scheme, "/none", context),
+          navBarButton(Icons.settings_rounded, scheme, "/extensionSettingsPage",
+              context),
+          Container(
+            margin: EdgeInsets.only(top: windowSize.height / 8),
+            child: Transform.scale(
+              scale: 1.5,
+              child: Switch(
+                value: isDark,
+                onChanged: (bool newValue) {
+                  // ignore: invalid_use_of_protected_member
+                  state.setState(() {
+                    isDark = !isDark;
+                    colorUpdated = true;
+                    currentTheme = isDark ? darkTheme : lightTheme;
+                  });
+                },
+                thumbColor: WidgetStateProperty.all<Color>(scheme.primary),
+                inactiveThumbColor: scheme.primary,
+                activeTrackColor: scheme.onSurface,
+                inactiveTrackColor: scheme.onSurface,
+                trackOutlineColor:
+                    WidgetStateProperty.all<Color>(scheme.onSurface),
+                thumbIcon: WidgetStateProperty.all<Icon?>(
+                  Icon(
+                    isDark ? Icons.nightlight_round : Icons.wb_sunny,
+                    color: scheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

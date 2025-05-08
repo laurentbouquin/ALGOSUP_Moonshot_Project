@@ -456,6 +456,6 @@ void updateColorFile(Theming themeColors, int extensionIndex) async {
       DateTime.now().toString();
   String datas = jsonEncode(themeData);
   String datas2 = jsonEncode(extensionData);
-  await writeData(datas, storageAddress, 'theming.json');
-  await writeData(datas2, storageAddress, 'extensionsList.json');
+  await writeData(datas, storageAddress, themingFileName);
+  await writeData(datas2, storageAddress, extensionsFileName);
 }

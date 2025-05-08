@@ -344,7 +344,7 @@ class _CommentsAndStringsPageState extends State<CommentsAndStringsPage> {
               ],
             ),
           ),
-          NavBar(),
+          NavBar(state: this),
         ],
       ),
     );

@@ -271,7 +271,7 @@ class _ExtensionSettingsViewState extends State<ExtensionSettingsView> {
                 ],
               ),
             ),
-            NavBar(),
+            NavBar(state: this),
           ],
         ));
   }
