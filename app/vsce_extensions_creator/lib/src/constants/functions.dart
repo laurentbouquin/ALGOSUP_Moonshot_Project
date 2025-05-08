@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:vsce_extensions_creator/src/common_widgets/visualization.dart';
 import 'package:vsce_extensions_creator/src/constants/styles.dart';
+import 'package:vsce_extensions_creator/src/constants/variables.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -266,4 +267,34 @@ Categories setCategories(List<String> categoriesList) {
     }
   }
   return categories;
+}
+
+void runCmdCommand(String token) async {
+  var path = json.decode(settingsFile.readAsStringSync())["extensions"]
+      [currentExtensionIndex]['outputDirectory'];
+  var name = json.decode(extensionsFile.readAsStringSync())['extensions']
+      [currentExtensionIndex]['name'];
+  print(
+      'cd $path\\out\\$name && vsce publish -p $token --allow-missing-repository');
+  final process = await Process.start(
+      'cmd',
+      [
+        '/c',
+        'cd $path\\out\\$name && vsce publish -p $token --allow-missing-repository'
+      ],
+      runInShell: true);
+
+  // Listen to stdout
+  process.stdout.transform(const SystemEncoding().decoder).listen((data) {
+    print('[STDOUT] $data');
+  });
+
+  // Listen to stderr
+  process.stderr.transform(const SystemEncoding().decoder).listen((data) {
+    print('[STDERR] $data');
+  });
+
+  // Wait for the process to exit
+  int exitCode = await process.exitCode;
+  print('Process exited with code $exitCode');
 }

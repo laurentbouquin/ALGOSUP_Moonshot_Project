@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:vsce_extensions_creator/src/constants/functions.dart';
 import 'package:vsce_extensions_creator/src/constants/links.dart';
+import 'package:vsce_extensions_creator/src/constants/variables.dart';
 import 'dart:io';
 import 'dart:convert';
 
 import '../../constants/classes.dart';
 
 void convertLocalsToFullExtension(Extension extension, String iconPath,
-    bool isThemeActive, String outputPath) async {
+    bool isThemeActive) async {
   // Get the path of the project
-  String projectPath = outputPath;
+  var extensionsData = json.decode(settingsFile.readAsStringSync());
+  String projectPath = extensionsData["extensions"][extension.extensionIndex]['outputDirectory'];
 
   // Create the extension folder
   Directory('$projectPath\\out\\${extension.name}').createSync(recursive: true);
@@ -170,15 +172,16 @@ String generatePackageJson(Extension extension, bool isThemeActive) {
 
   return '''
 {
-	"name": "${extension.name}",
+	"name": "${extension.name.toLowerCase()}",
 	"displayName": "${extension.name}",
 	"description": "${extension.description}",
 	"version": "${extension.version}",
-	"publisher": "${extension.publisherName}",
+	"publisher": "${extension.publisherName}Laurent-B",
+  "license": "MIT",
 	"engines": {
 		"vscode": "^1.92.0"
 	},
-	"categories": ${getCategories(extension.categories)},
+	"categories": ${jsonEncode(getCategories(extension.categories))},
 	"contributes": {
 		"languages": [{
 			"id": "${extension.extensionFileName}",
@@ -317,8 +320,8 @@ Future<String> generateLanguageConfigurationJSON() async {
 
   File jsonFile = commentsAndStringsFile;
   var jsonData = json.decode(jsonFile.readAsStringSync());
-  String slc = singleLineComments[jsonData['slc']];
-  String mlc = multiLineComments[jsonData['mlc']];
+  String slc = singleLineComments[jsonData["extensions"][currentExtensionIndex]['slc']];
+  String mlc = multiLineComments[jsonData["extensions"][currentExtensionIndex]['mlc']];
 
   String mlc1 = mlc.split(' ')[0];
   String mlc2 = mlc.split(' ')[1];
@@ -362,13 +365,13 @@ Future<String> generateLanguageConfigurationJSON() async {
 Future<String> generateSyntax(String extension) async {
   File jsonFile = formatFile;
   var jsonData = json.decode(jsonFile.readAsStringSync());
-  List<String> keywords = jsonData['keywords'].cast<String>();
-  List<String> types = jsonData['types'].cast<String>();
+  List<String> keywords = jsonData["extensions"][currentExtensionIndex]['keywords'].cast<String>();
+  List<String> types = jsonData["extensions"][currentExtensionIndex]['types'].cast<String>();
 
   File jsonFile2 = commentsAndStringsFile;
   var jsonData2 = json.decode(jsonFile2.readAsStringSync());
-  int stringType = jsonData2['quotes'];
-  int multiCommentType = jsonData2['mlc'];
+  int stringType = jsonData2["extensions"][currentExtensionIndex]['quotes'];
+  int multiCommentType = jsonData2["extensions"][currentExtensionIndex]['mlc'];
   String multiComment = multiCommentType == 0
       ? ''',
 				{
@@ -520,13 +523,13 @@ Future<String> generateTheme(String name) async {
   File jsonFile = themingFile;
   var jsonData = json.decode(jsonFile.readAsStringSync());
 
-  String background = colorsIds[jsonData['bgColor']];
-  String keywords = colorsIds[jsonData['keywordColor']];
-  String functions = colorsIds[jsonData['functionColor']];
-  String strings = colorsIds[jsonData['stringColor']];
-  String comments = colorsIds[jsonData['commentColor']];
-  String variables = colorsIds[jsonData['variableColor']];
-  String common = colorsIds[jsonData['commonColor']];
+  String background = colorsIds[jsonData["extensions"][currentExtensionIndex]['bgColor']];
+  String keywords = colorsIds[jsonData["extensions"][currentExtensionIndex]['keywordColor']];
+  String functions = colorsIds[jsonData["extensions"][currentExtensionIndex]['functionColor']];
+  String strings = colorsIds[jsonData["extensions"][currentExtensionIndex]['stringColor']];
+  String comments = colorsIds[jsonData["extensions"][currentExtensionIndex]['commentColor']];
+  String variables = colorsIds[jsonData["extensions"][currentExtensionIndex]['variableColor']];
+  String common = colorsIds[jsonData["extensions"][currentExtensionIndex]['commonColor']];
 
   return '''
 {

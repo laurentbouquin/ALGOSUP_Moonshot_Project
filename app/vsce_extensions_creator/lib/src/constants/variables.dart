@@ -1,9 +1,10 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // === Constants ===
-const DEBUG = false;
+const DEBUG = kDebugMode;
 
 bool isDark = false;
 
