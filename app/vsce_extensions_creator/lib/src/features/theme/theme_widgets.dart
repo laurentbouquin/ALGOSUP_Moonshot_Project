@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:vsce_extensions_creator/src/constants/classes.dart';
 import 'package:vsce_extensions_creator/src/constants/functions.dart';

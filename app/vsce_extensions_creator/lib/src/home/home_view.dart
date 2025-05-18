@@ -1,6 +1,7 @@
 // ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
 import 'dart:convert';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:vsce_extensions_creator/src/common_widgets/redirect_widgets.dart';
 

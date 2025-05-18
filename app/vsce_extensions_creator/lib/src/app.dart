@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vsce_extensions_creator/src/constants/variables.dart';
-import 'package:vsce_extensions_creator/src/features/comments&strings/comments&strings_view.dart';
+import 'package:vsce_extensions_creator/src/features/comments_and_strings/comments_and_strings_view.dart';
 import 'package:vsce_extensions_creator/src/features/extension_settings/extension_settings_view.dart';
 import 'package:vsce_extensions_creator/src/features/format/format_view.dart';
 import 'package:vsce_extensions_creator/src/features/theme/theme_view.dart';

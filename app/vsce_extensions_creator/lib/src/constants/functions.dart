@@ -274,7 +274,7 @@ void runCmdCommand(String token) async {
       [currentExtensionIndex]['outputDirectory'];
   var name = json.decode(extensionsFile.readAsStringSync())['extensions']
       [currentExtensionIndex]['name'];
-  print(
+  debugPrint(
       'cd $path\\out\\$name && vsce publish -p $token --allow-missing-repository');
   final process = await Process.start(
       'cmd',
@@ -286,15 +286,15 @@ void runCmdCommand(String token) async {
 
   // Listen to stdout
   process.stdout.transform(const SystemEncoding().decoder).listen((data) {
-    print('[STDOUT] $data');
+    debugPrint('[STDOUT] $data');
   });
 
   // Listen to stderr
   process.stderr.transform(const SystemEncoding().decoder).listen((data) {
-    print('[STDERR] $data');
+    debugPrint('[STDERR] $data');
   });
 
   // Wait for the process to exit
   int exitCode = await process.exitCode;
-  print('Process exited with code $exitCode');
+  debugPrint('Process exited with code $exitCode');
 }

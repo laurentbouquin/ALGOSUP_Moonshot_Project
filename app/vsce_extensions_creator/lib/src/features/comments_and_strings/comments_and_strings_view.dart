@@ -1,7 +1,7 @@
 // ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
 import 'package:vsce_extensions_creator/src/constants/styles.dart';
-import 'package:vsce_extensions_creator/src/features/comments&strings/comments&strings_widgets.dart';
+import 'package:vsce_extensions_creator/src/features/comments_and_strings/comments_and_strings_widgets.dart';
 import 'package:vsce_extensions_creator/src/constants/classes.dart';
 import 'package:vsce_extensions_creator/src/features/nav_bar/nav_bar_view.dart';
 import 'dart:convert';
