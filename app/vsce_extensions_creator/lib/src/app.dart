@@ -79,16 +79,16 @@ class MyApp extends StatelessWidget {
                   case SettingsPage.routeName:
                     return const SettingsPage();
                   case FormatPage.routeName:
-                    currentPage = "/formatPage";
+                    currentPage = "/FormatPage";
                     return const FormatPage();
                   case ThemePage.routeName:
-                    currentPage = "/themePage";
+                    currentPage = "/ThemePage";
                     return const ThemePage();
                   case CommentsAndStringsPage.routeName:
-                    currentPage = "/commentsAndStringsPage";
+                    currentPage = "/CommentsAndStringsPage";
                     return const CommentsAndStringsPage();
                   case ExtensionSettingsView.routeName:
-                    currentPage = "/extensionSettingsPage";
+                    currentPage = "/ExtensionSettingsPage";
                     return const ExtensionSettingsView();
                   case HomePage.routeName:
                   default:

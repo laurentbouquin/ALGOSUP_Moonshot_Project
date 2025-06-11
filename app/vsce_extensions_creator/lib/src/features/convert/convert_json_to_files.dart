@@ -157,13 +157,13 @@ void convertLocalsToFullExtension(
     // Write the icon.json file
     await icon.writeAsString(iconData);
   }
-  
+
   // Create the themes folder
   Directory('${'$projectPath\\out\\${extension.name}'}\\client').createSync();
 
   // Create the themes file
-  final clientTsconfig = File(
-      '${'$projectPath\\out\\${extension.name}'}\\client\\tsconfig.json');
+  final clientTsconfig =
+      File('${'$projectPath\\out\\${extension.name}'}\\client\\tsconfig.json');
   if (!clientTsconfig.existsSync()) {
     clientTsconfig.createSync();
   }
@@ -174,13 +174,12 @@ void convertLocalsToFullExtension(
   // Write the themes file
   await clientTsconfig.writeAsString(clientTsconfigData);
 
-  
   // Create the themes folder
   Directory('${'$projectPath\\out\\${extension.name}'}\\server').createSync();
 
   // Create the themes file
-  final serverTsconfig = File(
-      '${'$projectPath\\out\\${extension.name}'}\\server\\tsconfig.json');
+  final serverTsconfig =
+      File('${'$projectPath\\out\\${extension.name}'}\\server\\tsconfig.json');
   if (!serverTsconfig.existsSync()) {
     serverTsconfig.createSync();
   }
@@ -191,39 +190,37 @@ void convertLocalsToFullExtension(
   // Write the themes file
   await serverTsconfig.writeAsString(serverTsconfigData);
 
-
-
   // Create the themes file
-  final serverExtensionTs = File(
-      '${'$projectPath\\out\\${extension.name}'}\\server\\server.ts');
+  final serverExtensionTs =
+      File('${'$projectPath\\out\\${extension.name}'}\\server\\server.ts');
   if (!serverExtensionTs.existsSync()) {
     serverExtensionTs.createSync();
   }
 
   // Generate the themes file's content
-  final serverExtensionTsData = await generateServerServerTs(extension.extensionFileName);
+  final serverExtensionTsData =
+      await generateServerServerTs(extension.extensionFileName);
 
   // Write the themes file
   await serverExtensionTs.writeAsString(serverExtensionTsData);
 
-  
-
   // Create the themes file
-  final clientExtensionTs = File(
-      '${'$projectPath\\out\\${extension.name}'}\\client\\extension.ts');
+  final clientExtensionTs =
+      File('${'$projectPath\\out\\${extension.name}'}\\client\\extension.ts');
   if (!clientExtensionTs.existsSync()) {
     clientExtensionTs.createSync();
   }
 
   // Generate the themes file's content
-  final clientExtensionTsData = await generateClientExtensionTs(extension.extensionFileName);
+  final clientExtensionTsData =
+      await generateClientExtensionTs(extension.extensionFileName);
 
   // Write the themes file
   await clientExtensionTs.writeAsString(clientExtensionTsData);
 
   // Create the themes file
-  final rootTsconfig = File(
-      '${'$projectPath\\out\\${extension.name}'}\\tsconfig.json');
+  final rootTsconfig =
+      File('${'$projectPath\\out\\${extension.name}'}\\tsconfig.json');
   if (!rootTsconfig.existsSync()) {
     rootTsconfig.createSync();
   }
@@ -301,12 +298,15 @@ String generatePackageJson(Extension extension, bool isThemeActive) {
 	"displayName": "${extension.name}",
 	"description": "${extension.description}",
 	"version": "${extension.version}",
-	"publisher": "${extension.publisherName}Laurent-B",
-  "main": "./client/out/extension.js",
+	"publisher": "${extension.publisherName}",
+  "main": "./out/client/extension.js",
   "license": "MIT",
 	"engines": {
 		"vscode": "^1.92.0"
 	},
+  "scripts": {
+    "compile": "npx tsc -b"
+  },
 	"categories": ${jsonEncode(getCategories(extension.categories))},
 	"contributes": {
 		"languages": [{
@@ -315,22 +315,19 @@ String generatePackageJson(Extension extension, bool isThemeActive) {
 			"extensions": [".${extension.extensionFileName}"],
 			"configuration": "./language-configuration.json"
 		}],
-    "scripts": {
-      "compile": "tsc -b"
-    },
     "devDependencies": {
       "typescript": "^5.0.0",
       "vscode": "^1.87.0",
       "vscode-languageclient": "^9.0.0",
       "vscode-languageserver": "^8.0.0",
       "vscode-languageserver-textdocument": "^1.0.1"
-    },
+    }${isThemeActive ? theme : ''},
 		"grammars": [{
 			"language": "${extension.extensionFileName}",
 			"scopeName": "source.${extension.extensionFileName}",
 			"path": "./syntaxes/${extension.extensionFileName}.tmLanguage.json"
 		}]
-	}${isThemeActive ? theme : ''}
+	}
 }''';
 }
 
@@ -639,7 +636,7 @@ Future<String> generateSyntax(String extension) async {
 			"patterns": [
 				{
 					"name": "variable.other.$extension",
-					"match": "\\\\b\\\\w+\\\\b"
+					"match": "\\\\b[a-zA-Z_]\\\\w*\\\\b"
 				}
 			]
 		}
@@ -650,24 +647,20 @@ Future<String> generateSyntax(String extension) async {
 }
 
 Future<String> generateTheme(String name) async {
-
   File jsonFile = themingFile;
   var jsonData = json.decode(jsonFile.readAsStringSync());
 
-  String background =
-      jsonData["extensions"][currentExtensionIndex]['bgColor'];
+  String background = jsonData["extensions"][currentExtensionIndex]['bgColor'];
   String keywords =
       jsonData["extensions"][currentExtensionIndex]['keywordColor'];
   String functions =
       jsonData["extensions"][currentExtensionIndex]['functionColor'];
-  String strings =
-      jsonData["extensions"][currentExtensionIndex]['stringColor'];
+  String strings = jsonData["extensions"][currentExtensionIndex]['stringColor'];
   String comments =
       jsonData["extensions"][currentExtensionIndex]['commentColor'];
   String variables =
       jsonData["extensions"][currentExtensionIndex]['variableColor'];
-  String common =
-      jsonData["extensions"][currentExtensionIndex]['commonColor'];
+  String common = jsonData["extensions"][currentExtensionIndex]['commonColor'];
 
   return '''
 {
@@ -814,59 +807,166 @@ export function deactivate(): Thenable<void> | undefined {
 }
 
 Future<String> generateServerServerTs(String extensionFileName) async {
-  return '''
-import {
-  createConnection,
-  TextDocuments,
-  ProposedFeatures,
-  InitializeParams,
-  TextDocumentSyncKind,
-  Hover,
-  CompletionItem,
-  CompletionItemKind
+  File jsonFile = formatFile;
+  var jsonData = json.decode(jsonFile.readAsStringSync());
+  List<String> keywords =
+      jsonData["extensions"][currentExtensionIndex]['keywords'].cast<String>();
+  String functionKeyword = "function";
+  return '''import {
+	createConnection,
+	TextDocuments,
+	ProposedFeatures,
+	InitializeParams,
+	TextDocumentSyncKind,
+	Hover,
+	CompletionItem,
+	CompletionItemKind,
+	Position
 } from 'vscode-languageserver/node';
 
-import {
-  TextDocument
-} from 'vscode-languageserver-textdocument';
+import { TextDocument } from 'vscode-languageserver-textdocument';
 
 const connection = createConnection(ProposedFeatures.all);
 const documents = new TextDocuments(TextDocument);
 
-connection.onInitialize((params: InitializeParams) => {
-  return {
-    capabilities: {
-      textDocumentSync: TextDocumentSyncKind.Incremental,
-      hoverProvider: true,
-      completionProvider: {
-        resolveProvider: false
-      }
-    }
-  };
+interface SymbolInfo {
+	type: string;
+	line: number;
+	scope?: string; // e.g., function name
+}
+
+type SymbolTable = Record<string, SymbolInfo>;
+const documentSymbols: Map<string, SymbolTable> = new Map();
+
+function analyzeDocument(text: string): SymbolTable {
+	const lines = text.split('\\n');
+	const symbols: SymbolTable = {};
+	let currentFunction: string | undefined;
+
+	const varDeclRegex = /^(${keywords.map((e) => e).join('|')})\\s+(\\w+)\\s*=\\s*(.+)\$/;
+	const varAssignRegex = /^(\\w+)\\s*=\\s*(.+)\$/;
+	const funcRegex = /^$functionKeyword\\s+(\\w+)\\s*\\(.*\\):/;
+
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i].trim();
+		let match;
+
+		if ((match = funcRegex.exec(line))) {
+			const [, name] = match;
+			symbols[name] = { type: 'function', line: i };
+			currentFunction = name;
+		} else if ((match = varDeclRegex.exec(line))) {
+			const [, type, name] = match;
+			symbols[name] = { type, line: i, scope: currentFunction };
+		}
+	}
+
+	return symbols;
+}
+
+function getCurrentScope(symbols: SymbolTable, line: number): string | undefined {
+	let currentScope: string | undefined;
+	for (const [name, info] of Object.entries(symbols)) {
+		if (info.type === 'function' && info.line <= line) {
+			if (!currentScope || info.line > symbols[currentScope]?.line) {
+				currentScope = name;
+			}
+		}
+	}
+	return currentScope;
+}
+
+
+function isValueValidForType(type: string, value: string): boolean {
+	switch (type) {
+		case 'int':
+			return /^-?\\d+\$/.test(value);
+		case 'float':
+			return /^-?\\d+(\\.\\d+)?\$/.test(value);
+		case 'string':
+			return /^".*"|'.*'\$/.test(value);
+		default:
+			return false;
+	}
+}
+
+
+function getWordAt(line: string, character: number): string {
+	const left = line.slice(0, character).match(/[\\w\$]+\$/)?.[0] ?? '';
+	const right = line.slice(character).match(/^[\\w\$]+/)?.[0] ?? '';
+	return left + right;
+}
+
+connection.onInitialize((_params: InitializeParams) => {
+	return {
+		capabilities: {
+			textDocumentSync: TextDocumentSyncKind.Incremental,
+			hoverProvider: true,
+			completionProvider: {
+				resolveProvider: false
+			}
+		}
+	};
 });
 
-connection.onHover((params): Hover => {
-  return {
-    contents: {
-      kind: 'plaintext',
-      value: '${extensionFileName.toUpperCase()} Hover Info'
-    }
-  };
+// On document open/change → re-analyze
+documents.onDidChangeContent(change => {
+	const text = change.document.getText();
+	const symbols = analyzeDocument(text);
+	documentSymbols.set(change.document.uri, symbols);
 });
 
-connection.onCompletion((_params): CompletionItem[] => {
-  return [
-    {
-      label: '${extensionFileName}Keyword',
-      kind: CompletionItemKind.Keyword,
-      detail: 'A sample keyword'
-    },
-    {
-      label: '${extensionFileName}Function',
-      kind: CompletionItemKind.Function,
-      detail: 'A sample function'
-    }
-  ];
+// Hover: show type info
+connection.onHover((params): Hover | null => {
+	const doc = documents.get(params.textDocument.uri);
+	if (!doc) return null;
+
+	const pos: Position = params.position;
+	const fullLine = doc.getText({
+		start: { line: pos.line, character: 0 },
+		end: { line: pos.line, character: Number.MAX_SAFE_INTEGER }
+	});
+
+	const word = getWordAt(fullLine, pos.character);
+	const symbols = documentSymbols.get(doc.uri) || {};
+	const type = symbols[word];
+
+	if (!type) return null;
+
+	return {
+		contents: {
+			kind: 'markdown',
+			value: `**\${word}**: \\`\${type.type}\\`\${type.scope ? ` (in \${type.scope})` : ''}`
+		}
+	};
+});
+
+// Completion: suggest Python-like keywords
+connection.onCompletion((params): CompletionItem[] => {
+	const doc = documents.get(params.textDocument.uri);
+	if (!doc) return [];
+
+	const position = params.position;
+	const symbols = documentSymbols.get(doc.uri) || {};
+
+	const currentScope = getCurrentScope(symbols, position.line);
+
+	const completions: CompletionItem[] = [];
+
+	for (const [name, info] of Object.entries(symbols)) {
+		if (
+			info.line <= position.line &&
+			(info.scope === undefined || info.scope === currentScope)
+		) {
+			completions.push({
+				label: name,
+				kind: info.type === 'function' ? CompletionItemKind.Function : CompletionItemKind.Variable,
+				detail: info.type
+			});
+		}
+	}
+
+	return completions;
 });
 
 documents.listen(connection);
@@ -876,12 +976,22 @@ connection.listen();
 
 Future<String> generateRootTsConfig() async {
   return '''
-{{
-  "files": [],
-  "references": [
-    { "path": "./client" },
-    { "path": "./server" }
-  ]
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "rootDir": ".",
+    "outDir": "./out/",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "types": ["node", "vscode"]
+  },
+  "include": ["./server/*.ts", "./client/*.ts"],
 }
 ''';
 }

@@ -1,1 +1,1 @@
-{"extensions":[{"keywords":["if","else"],"types":["int","string"]},{"keywords":[],"types":[]}]}
+{"extensions":[{"keywords":["if","else","for"],"types":["int","string","bool"]},{"keywords":["if","for","while"],"types":["int","string","bol"]}]}

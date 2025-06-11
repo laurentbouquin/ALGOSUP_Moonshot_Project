@@ -13,7 +13,7 @@ import '../../constants/links.dart';
 class CommentsAndStringsPage extends StatefulWidget {
   const CommentsAndStringsPage({super.key});
 
-  static const String routeName = '/commentsAndStringsPage';
+  static const String routeName = '/CommentsAndStringsPage';
 
   @override
   State<CommentsAndStringsPage> createState() => _CommentsAndStringsPageState();

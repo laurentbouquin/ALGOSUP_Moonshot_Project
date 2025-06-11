@@ -34,33 +34,26 @@ class NavBar extends StatelessWidget {
         ),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          const Text(
-            'NavBar',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
           // navBarButton(Icons.home_rounded, scheme),
-          navBarButton(Icons.format_align_center_rounded, scheme, "/formatPage",
-              context),
+          navBarButton(Icons.format_align_center_rounded, scheme, "/FormatPage",
+              context, windowSize),
           navBarButton(
-              Icons.format_color_fill_rounded, scheme, "/themePage", context),
+              Icons.format_color_fill_rounded, scheme, "/ThemePage", context, windowSize),
           navBarButton(
-              Icons.snippet_folder_rounded, scheme, "/snippetsPage", context),
+              Icons.snippet_folder_rounded, scheme, "*/SnippetsPage", context, windowSize), // ""
           navBarButton(Icons.format_quote_rounded, scheme,
-              "/commentsAndStringsPage", context),
+              "/CommentsAndStringsPage", context, windowSize),
           navBarButton(
-              Icons.code_rounded, scheme, "/functionalitiesPage", context),
-          navBarButton(Icons.save, scheme, "/menu", context),
-          navBarButton(Icons.publish_sharp, scheme, "/none", context),
-          navBarButton(Icons.settings_rounded, scheme, "/extensionSettingsPage",
-              context),
+              Icons.code_rounded, scheme, "*/FunctionalitiesPage", context, windowSize), // ""
+          navBarButton(Icons.save, scheme, "/menu", context, windowSize),
+          navBarButton(Icons.publish_sharp, scheme, "/none", context, windowSize),
+          navBarButton(Icons.settings_rounded, scheme, "/ExtensionSettingsPage",
+              context, windowSize),
           Container(
-            margin: EdgeInsets.only(top: windowSize.height / 8),
+            margin: EdgeInsets.only(
+              top: windowSize.height * 0.04),
             child: Transform.scale(
               scale: 1.5,
               child: Switch(

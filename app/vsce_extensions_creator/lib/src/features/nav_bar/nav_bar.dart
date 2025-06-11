@@ -6,63 +6,98 @@ import 'package:vsce_extensions_creator/src/constants/functions.dart';
 import 'package:vsce_extensions_creator/src/constants/variables.dart';
 import 'package:vsce_extensions_creator/src/features/convert/convert_json_to_files.dart';
 
-Container navBarButton(
-    IconData icon, ColorScheme scheme, String page, BuildContext context) {
+MouseRegion navBarButton(IconData icon, ColorScheme scheme, String page,
+    BuildContext context, WindowSize windowSize) {
   bool isCurrent = false;
   switch (icon) {
     case Icons.home_rounded:
       isCurrent = currentPage == "/menu";
       break;
     case Icons.format_align_center_rounded:
-      isCurrent = currentPage == "/formatPage";
+      isCurrent = currentPage == "/FormatPage";
       break;
     case Icons.format_color_fill_rounded:
-      isCurrent = currentPage == "/themePage";
+      isCurrent = currentPage == "/ThemePage";
       break;
     case Icons.snippet_folder_rounded:
-      isCurrent = currentPage == "/snippetspage";
+      isCurrent = currentPage == "/Snippetspage";
       break;
     case Icons.format_quote_rounded:
-      isCurrent = currentPage == "/commentsAndStringsPage";
+      isCurrent = currentPage == "/CommentsAndStringsPage";
       break;
     case Icons.code_rounded:
-      isCurrent = currentPage == "/functionalitiesPage";
+      isCurrent = currentPage == "/FunctionalitiesPage";
       break;
     case Icons.settings_rounded:
-      isCurrent = currentPage == "/extensionSettingsPage";
+      isCurrent = currentPage == "/ExtensionSettingsPage";
       break;
     default:
       isCurrent = false;
   }
   if (page != "/none") {
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      decoration:
-          isCurrent ? selectedIconsDecoration(scheme) : iconsDecoration(scheme),
-      child: IconButton(
-        onPressed: () async {
-          redirectToStateless(context, page).then((value) {});
-        },
-        icon: Icon(icon),
-        iconSize: 30,
-        color: isCurrent ? scheme.primary : scheme.onSurface,
+    return MouseRegion(
+      cursor: isCurrent
+          ? SystemMouseCursors.basic
+          : SystemMouseCursors.click,
+      child: TapRegion(
+        onTapInside: page[0] != "*" && page != currentPage
+            ? (PointerDownEvent event) async {
+                redirectToStateless(context, page).then((value) {});
+              }
+            : null,
+        child: Container(
+          width: windowSize.width * 0.1,
+          height: windowSize.width * 0.027,
+          decoration: isCurrent
+              ? selectedIconsDecoration(scheme)
+              : iconsDecoration(scheme),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: windowSize.width * 0.005),
+              Icon(
+                icon,
+                size: 30,
+                color: isCurrent ? scheme.primary : scheme.onSurface,
+              ),
+              Text(" ${page.characters.isNotEmpty &&
+                        page != "/CommentsAndStringsPage" &&
+                        page != "/menu" &&
+                        page != "/ExtensionSettingsPage"
+                    ? page
+                        .replaceAll("/", "")
+                        .replaceAll("Page", "")
+                        .replaceAll("*", "")
+                    : page == "/CommentsAndStringsPage"
+                        ? "Comments & Strings"
+                        : page == "/menu"
+                            ? "Home"
+                            : page == "/ExtensionSettingsPage"
+                                ? "Extension Settings"
+                                : ""}",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isCurrent ? scheme.primary : scheme.onSurface,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   } else {
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      decoration: iconsDecoration(scheme),
-      child: IconButton(
-        hoverColor: Colors.transparent,
-        icon: Icon(icon),
-        iconSize: 30,
-        color: isCurrent ? scheme.primary : scheme.onSurface,
-        onPressed: () async {
+    return MouseRegion(
+      cursor: isCurrent
+          ? SystemMouseCursors.basic
+          : SystemMouseCursors.click,
+      child: TapRegion(
+        onTapInside: (PointerDownEvent event) async {
+          checkForNPM();
           convertLocalsToFullExtension(
               Extension().fromJson(currentExtensionIndex), "", true);
           await Future.delayed(const Duration(seconds: 1));
           final TextEditingController textController = TextEditingController();
-          showDialog(
+          await showDialog(
             // ignore: use_build_context_synchronously
             context: context,
             builder: (BuildContext context) {
@@ -89,6 +124,29 @@ Container navBarButton(
             },
           );
         },
+        child: Container(
+          width: windowSize.width * 0.1,
+          height: windowSize.width * 0.027,
+          decoration: iconsDecoration(scheme),
+          child: Row(
+            children: [
+              SizedBox(width: windowSize.width * 0.005),
+              Icon(
+                icon,
+                size: 30,
+                color: isCurrent ? scheme.primary : scheme.onSurface,
+              ),
+              Text(
+                " Publish",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isCurrent ? scheme.primary : scheme.onSurface,
+                  // fontSize: 10,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
