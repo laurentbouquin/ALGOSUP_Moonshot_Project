@@ -15,7 +15,7 @@ import 'theme_widgets.dart';
 class ThemePage extends StatefulWidget {
   const ThemePage({super.key});
 
-  static const String routeName = '/themePage';
+  static const String routeName = '/ThemePage';
 
   @override
   State<ThemePage> createState() => _ThemePageState();
@@ -207,7 +207,7 @@ class _ThemePageState extends State<ThemePage> {
               ),
             ),
             visualization(windowSize, themeColors, usableWidth, scheme),
-            NavBar(),
+            NavBar(state: this),
           ],
         ),
       ),

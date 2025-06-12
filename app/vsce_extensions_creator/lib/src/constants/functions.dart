@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:vsce_extensions_creator/src/common_widgets/visualization.dart';
 import 'package:vsce_extensions_creator/src/constants/styles.dart';
+import 'package:vsce_extensions_creator/src/constants/variables.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -266,4 +267,223 @@ Categories setCategories(List<String> categoriesList) {
     }
   }
   return categories;
+}
+
+void runCmdCommand(String token) async {
+  var path = json.decode(settingsFile.readAsStringSync())["extensions"]
+      [currentExtensionIndex]['outputDirectory'];
+  var name = json.decode(extensionsFile.readAsStringSync())['extensions']
+      [currentExtensionIndex]['name'];
+  debugPrint(
+      'cd $path\\out\\$name && vsce publish -p $token --allow-missing-repository');
+  await compileExtension('$path\\out\\$name');
+  final process = await Process.start(
+      'cmd',
+      [
+        '/c',
+        'cd $path\\out\\$name && vsce publish -p $token --allow-missing-repository'
+      ],
+      runInShell: true);
+
+  // Listen to stdout
+  process.stdout.transform(const SystemEncoding().decoder).listen((data) {
+    debugPrint('[STDOUT] $data');
+  });
+
+  // Listen to stderr
+  process.stderr.transform(const SystemEncoding().decoder).listen((data) {
+    debugPrint('[STDERR] $data');
+  });
+
+  // Wait for the process to exit
+  int exitCode = await process.exitCode;
+  debugPrint('Process exited with code $exitCode');
+}
+
+void installNodeJsOnWindows() async {
+  const installerUrl =
+      'https://nodejs.org/dist/v18.18.2/node-v18.18.2-x64.msi'; // LTS version
+
+  try {
+    // Step 1: Download installer using PowerShell
+    const downloadScript = '''
+      \$client = New-Object System.Net.WebClient
+      \$path = "\$env:TEMP\\node-installer.msi"
+      \$client.DownloadFile("$installerUrl", \$path)
+      Write-Output \$path
+    ''';
+
+    final downloadResult = await Process.run(
+      'powershell',
+      ['-Command', downloadScript],
+    );
+
+    final installerPath = (downloadResult.stdout as String).trim();
+
+    if (!File(installerPath).existsSync()) {
+      debugPrint('Failed to download Node.js installer.');
+      return;
+    }
+
+    // Step 2: Run installer silently
+    final installResult = await Process.run(
+      'msiexec',
+      ['/i', installerPath, '/quiet', '/norestart'],
+    );
+
+    if (installResult.exitCode == 0) {
+      debugPrint(
+          'Node.js installed successfully. Please restart your app or PC.');
+    } else {
+      debugPrint('Node.js installation failed: ${installResult.stderr}');
+    }
+  } catch (e) {
+    debugPrint('Error installing Node.js: $e');
+  }
+}
+
+void checkForNPM() async {
+  try {
+    final npmCommand = Platform.isWindows ? 'npm.cmd' : 'npm';
+    final result = await Process.run(npmCommand, ['-v']);
+
+    if (result.exitCode == 0) {
+      debugPrint('npm is installed: ${result.stdout}');
+    } else {
+      debugPrint('npm not found. Installing Node.js...');
+      if (Platform.isWindows) {
+        installNodeJsOnWindows();
+      } else {
+        debugPrint('Auto-install not supported on this OS yet.');
+      }
+    }
+  } catch (e) {
+    debugPrint('npm check failed: $e\nAttempting to install...');
+    if (Platform.isWindows) {
+      installNodeJsOnWindows();
+    }
+  }
+}
+
+
+Future<void> compileExtension(String extensionPath) async {
+  final npmCommand = Platform.isWindows ? 'npm.cmd' : 'npm';
+
+  try {
+    await Process.run(npmCommand, 'install typescript'
+        .split(' '), workingDirectory: extensionPath, runInShell: true);
+    debugPrint('📦 Running `npm run compile` in: $extensionPath');
+
+    final result = await Process.start(
+      npmCommand,
+      ['run', 'compile'],
+      workingDirectory: extensionPath,
+      runInShell: true,
+    );
+
+    // Stream stdout and stderr to console
+    await stdout.addStream(result.stdout);
+    await stderr.addStream(result.stderr);
+
+    final exitCode = await result.exitCode;
+
+    if (exitCode == 0) {
+      debugPrint('✅ Compilation succeeded (tsc -b).');
+    } else {
+      debugPrint('❌ Compilation failed with exit code $exitCode.');
+    }
+  } catch (e) {
+    debugPrint('❌ Error running `npm run compile`: $e');
+  }
+}
+
+
+void createNewExtension(String name, String description, String version,
+    List<String> categories, String publisher, String extensionFileName) {
+  Map<String, dynamic> newExtension = {
+    "name": name,
+    "description": description,
+    "version": version,
+    "categories": categories,
+    "lastUpdated": DateTime.now().toString(),
+    "publisher": publisher,
+    "extensionFileName": extensionFileName
+  };
+
+  var jsonData = json.decode(extensionsFile.readAsStringSync());
+  jsonData['extensions'].add(newExtension);
+  extensionsFile.writeAsStringSync(json.encode(jsonData));
+
+  var formatData = json.decode(formatFile.readAsStringSync());
+  formatData['extensions'].add({"keywords": [], "types": []});
+  formatFile.writeAsStringSync(json.encode(formatData));
+
+  var commentsAndStringsData =
+      json.decode(commentsAndStringsFile.readAsStringSync());
+  commentsAndStringsData['extensions'].add({
+    "slc": 0,
+    "mlc": 0,
+    "quotes": 2
+  });
+  commentsAndStringsFile.writeAsStringSync(json.encode(commentsAndStringsData));
+
+  var themingData = json.decode(themingFile.readAsStringSync());
+  themingData['extensions'].add({
+  "bgColor": "FFFFFF",
+  "keywordColor": "FFFFFF",
+  "functionColor": "FFFFFF",
+  "variableColor": "FFFFFF",
+  "stringColor": "FFFFFF",
+  "commentColor": "FFFFFF",
+  "commonColor": "FFFFFF",
+  "otherColor": "FFFFFF"});
+  themingFile.writeAsStringSync(json.encode(themingData));
+
+  var settingsData =
+      json.decode(settingsFile.readAsStringSync());
+  settingsData['extensions'].add({
+    "outputDirectory": ""
+  });
+  settingsFile.writeAsStringSync(json.encode(settingsData));
+}
+
+void removeExtension(int index) {
+  var jsonData = json.decode(extensionsFile.readAsStringSync());
+  if (index >= 0 && index < jsonData['extensions'].length) {
+    jsonData['extensions'].removeAt(index);
+    extensionsFile.writeAsStringSync(json.encode(jsonData));
+  } else {
+    debugPrint('Invalid index: $index');
+  }
+  var formatData = json.decode(formatFile.readAsStringSync());
+  if (index >= 0 && index < formatData['extensions'].length) {
+    formatData['extensions'].removeAt(index);
+    formatFile.writeAsStringSync(json.encode(formatData));
+  } else {
+    debugPrint('Invalid index: $index');
+  }
+  var commentsAndStringsData =
+      json.decode(commentsAndStringsFile.readAsStringSync());
+  if (index >= 0 && index < commentsAndStringsData['extensions'].length) {
+    commentsAndStringsData['extensions'].removeAt(index);
+    commentsAndStringsFile.writeAsStringSync(json.encode(commentsAndStringsData));
+  } else {
+    debugPrint('Invalid index: $index');
+  }
+  var themingData = json.decode(themingFile.readAsStringSync());
+  if (index >= 0 && index < themingData['extensions'].length) {
+    themingData['extensions'].removeAt(index);
+    themingFile.writeAsStringSync(json.encode(themingData));
+  } else {
+    debugPrint('Invalid index: $index');
+  }
+
+  var settingsData =
+      json.decode(settingsFile.readAsStringSync());
+  if (index >= 0 && index < settingsData['extensions'].length) {
+    settingsData['extensions'].removeAt(index);
+    settingsFile.writeAsStringSync(json.encode(settingsData));
+  } else {
+    debugPrint('Invalid index: $index');
+  }
 }

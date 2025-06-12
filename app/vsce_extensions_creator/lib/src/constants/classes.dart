@@ -1,6 +1,8 @@
 // This file contains all the classes used in the application
 
+import 'dart:convert';
 
+import 'package:vsce_extensions_creator/src/constants/links.dart';
 
 /// Class to store the theming information such as background color, keyword color, function color, variable color, string color, comment color, common color and other color
 class Theming {
@@ -14,14 +16,14 @@ class Theming {
   String otherColor;
 
   Theming(
-      {this.bgColor = "FFFFFF",
-      this.keywordColor = "FFFFFF",
-      this.functionColor = "FFFFFF",
-      this.variableColor = "FFFFFF",
-      this.stringColor = "FFFFFF",
-      this.commentColor = "FFFFFF",
-      this.commonColor = "FFFFFF",
-      this.otherColor = "FFFFFF"});
+	  {this.bgColor = "FFFFFF",
+	  this.keywordColor = "FFFFFF",
+	  this.functionColor = "FFFFFF",
+	  this.variableColor = "FFFFFF",
+	  this.stringColor = "FFFFFF",
+	  this.commentColor = "FFFFFF",
+	  this.commonColor = "FFFFFF",
+	  this.otherColor = "FFFFFF"});
 }
 
 /// Class to store the categories of the extension and if they are selected or not
@@ -36,14 +38,14 @@ class Categories {
   bool other;
 
   Categories({
-    this.languages = false,
-    this.themes = false,
-    this.snippets = false,
-    this.debuggers = false,
-    this.keymaps = false,
-    this.testing = false,
-    this.linters = false,
-    this.other = false,
+	this.languages = false,
+	this.themes = false,
+	this.snippets = false,
+	this.debuggers = false,
+	this.keymaps = false,
+	this.testing = false,
+	this.linters = false,
+	this.other = false,
   });
 }
 
@@ -64,15 +66,40 @@ class Extension {
   String extensionFileName = '';
   DateTime? lastUpdate;
   Categories categories;
+  int? extensionIndex;
 
   Extension(
-      {this.name = '',
-      this.description = '',
-      this.version = '',
-      this.publisherName = '',
-      this.extensionFileName = '',
+	  {this.name = '',
+	  this.description = '',
+	  this.version = '',
+	  this.publisherName = '',
+	  this.extensionFileName = '',
+	  this.extensionIndex,
 
-      // Default value for categories
-      Categories? categories})
-      : categories = categories ?? Categories();
+	  // Default value for categories
+	  Categories? categories})
+	  : categories = categories ?? Categories();
+
+  Extension fromJson(int extensionIndex) {
+	var extensionsData = json.decode(extensionsFile.readAsStringSync());
+	var extensionD = extensionsData['extensions'][extensionIndex];
+	this.extensionIndex = extensionIndex;
+	name = extensionD['name'] ?? '';
+	description = extensionD['description'] ?? '';
+	version = extensionD['version'] ?? '';
+	publisherName = extensionD['publisherName'] ?? '';
+	extensionFileName = extensionD['extensionFileName'] ?? '';
+	lastUpdate = DateTime.tryParse(extensionD['lastUpdate'] ?? '');
+	categories = Categories(
+	  languages: extensionD['categories'].contains("Programming Languages") ?? false,
+	  themes: extensionD['categories'].contains("Themes") ?? false,
+	  snippets: extensionD['categories'].contains("Snippets") ?? false,
+	  debuggers: extensionD['categories'].contains("Debuggers") ?? false,
+	  keymaps: extensionD['categories'].contains("Keymaps") ?? false,
+	  testing: extensionD['categories'].contains("Testing") ?? false,
+	  linters: extensionD['categories'].contains("Linters") ?? false,
+	  other: extensionD['categories'].contains("Other") ?? false,
+	);
+	return this;
+  }
 }

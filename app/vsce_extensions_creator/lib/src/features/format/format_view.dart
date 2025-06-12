@@ -17,7 +17,7 @@ import '../../constants/classes.dart';
 class FormatPage extends StatefulWidget {
   const FormatPage({super.key});
 
-  static const String routeName = '/formatPage';
+  static const String routeName = '/FormatPage';
 
   @override
   State<FormatPage> createState() => _FormatPageState();
@@ -457,7 +457,7 @@ class _FormatPageState extends State<FormatPage> {
               ],
             ),
           ),
-          NavBar()
+          NavBar(state: this),
         ],
       ),
     );

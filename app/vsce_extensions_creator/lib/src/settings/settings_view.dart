@@ -94,39 +94,6 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Change Publisher Name
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: windowSize.height / 8,
-                      width: windowSize.width / 2.25,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              WidgetStateProperty.all<Color>(scheme.onSurface),
-                          shape:
-                              WidgetStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          isConnected
-                              ? "Connected as: ${currentExtension.publisherName}"
-                              : "Click to connect to publisher",
-                          style: TextStyle(
-                            fontSize: windowSize.height * 0.025,
-                            color: scheme.surface,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 // Manage Output Directory
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -209,60 +176,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                   ],
-                ),
-                Container(
-                  height: windowSize.height / 8,
-                  width: windowSize.width / 2.25,
-                  margin: const EdgeInsets.only(top: 50, left: 10),
-                  decoration: BoxDecoration(
-                    color: scheme.surface,
-                    border: Border.all(color: scheme.onSurface, width: 2),
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: TextButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          WidgetStateProperty.all<Color>(scheme.surface),
-                      overlayColor:
-                          WidgetStateProperty.all<Color>(Colors.transparent),
-                    ),
-                    onPressed: () async {},
-                    child: Text(
-                      "Set Current Parameters As Template",
-                      style: TextStyle(
-                          color: scheme.onSurface, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                // Change Theme
-                Container(
-                  margin: EdgeInsets.only(top: windowSize.height / 8),
-                  child: Transform.scale(
-                    scale: 1.5,
-                    child: Switch(
-                      value: isDark,
-                      onChanged: (bool newValue) {
-                        setState(() {
-                          isDark = !isDark;
-                          colorUpdated = true;
-                          currentTheme = isDark ? darkTheme : lightTheme;
-                        });
-                      },
-                      thumbColor:
-                          WidgetStateProperty.all<Color>(scheme.primary),
-                      inactiveThumbColor: scheme.primary,
-                      activeTrackColor: scheme.onSurface,
-                      inactiveTrackColor: scheme.onSurface,
-                      trackOutlineColor:
-                          WidgetStateProperty.all<Color>(scheme.onSurface),
-                      thumbIcon: WidgetStateProperty.all<Icon?>(
-                        Icon(
-                          isDark ? Icons.nightlight_round : Icons.wb_sunny,
-                          color: scheme.onSurface,
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),

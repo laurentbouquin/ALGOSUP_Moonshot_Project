@@ -14,7 +14,7 @@ import 'package:vsce_extensions_creator/src/features/nav_bar/nav_bar_view.dart';
 class ExtensionSettingsView extends StatefulWidget {
   const ExtensionSettingsView({super.key});
 
-  static const routeName = '/extensionSettingsPage';
+  static const routeName = '/ExtensionSettingsPage';
 
   @override
   State<ExtensionSettingsView> createState() => _ExtensionSettingsViewState();
@@ -271,7 +271,7 @@ class _ExtensionSettingsViewState extends State<ExtensionSettingsView> {
                 ],
               ),
             ),
-            NavBar(),
+            NavBar(state: this),
           ],
         ));
   }

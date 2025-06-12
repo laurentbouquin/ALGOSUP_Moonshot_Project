@@ -1,8 +1,10 @@
 // ==== Built-in Imports ==== //
 import 'package:flutter/material.dart';
 import 'dart:convert';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:vsce_extensions_creator/src/common_widgets/redirect_widgets.dart';
+import 'package:vsce_extensions_creator/src/constants/functions.dart';
 
 // ==== Pages Imports ==== //
 
@@ -43,7 +45,6 @@ class _HomePageState extends State<HomePage> {
       data = jsonData['extensions'];
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                         onDoubleTap: () {
                           setState(() {
                             currentExtensionIndex = index;
-                            redirectToStateless(context, '/formatPage',
+                            redirectToStateless(context, '/FormatPage',
                                 arguments: {
                                   "extensionIndex": currentExtensionIndex
                                 });
@@ -144,21 +145,69 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ), // Floating action button to open the menu to save, publish and cancel
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: scheme.surface,
-        foregroundColor: scheme.onSurface,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(width: 2, color: scheme.onSurface),
-            borderRadius: BorderRadius.circular(10)),
-        heroTag: 'menu',
-        onPressed: () {
-          setState(() {
-            redirectToStateless(context, '/formatPage',
-                arguments: {"extensionIndex": currentExtensionIndex});
-          });
-        },
-        // tooltip: isMenuOpen ? 'Close Menu' : 'Open Menu',
-        child: const Icon(Icons.arrow_circle_right_outlined),
+      floatingActionButton: SizedBox(
+        width: windowSize.width * 0.04,
+        height: windowSize.width * 0.12,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            FloatingActionButton(
+              backgroundColor: scheme.surface,
+              foregroundColor: scheme.onSurface,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(width: 2, color: scheme.onSurface),
+                  borderRadius: BorderRadius.circular(10)),
+              heroTag: 'create',
+              onPressed: () {
+                setState(() {
+                  currentExtensionIndex = -1;
+                  data.add({
+                    "name": "",
+                    "description": "",
+                    "lastUpdated": DateTime.now().toIso8601String(),
+                    "version": "0.0.1",
+                  });
+                  createNewExtension("", "", "0.0.1", [], "", "");
+                });
+              },
+              // tooltip: isMenuOpen ? 'Close Menu' : 'Open Menu',
+              child: const Icon(Icons.add_rounded),
+            ),
+            FloatingActionButton(
+              backgroundColor: scheme.surface,
+              foregroundColor: scheme.onSurface,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(width: 2, color: scheme.onSurface),
+                  borderRadius: BorderRadius.circular(10)),
+              heroTag: 'delete',
+              onPressed: () {
+                setState(() {
+                  removeExtension(currentExtensionIndex);
+                  _asyncCallForKeywords();
+                  currentExtensionIndex = -1;
+                });
+              },
+              // tooltip: isMenuOpen ? 'Close Menu' : 'Open Menu',
+              child: const Icon(Icons.delete_rounded),
+            ),
+            FloatingActionButton(
+              backgroundColor: scheme.surface,
+              foregroundColor: scheme.onSurface,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(width: 2, color: scheme.onSurface),
+                  borderRadius: BorderRadius.circular(10)),
+              heroTag: 'menu',
+              onPressed: currentExtensionIndex != -1 ?() {
+                setState(() {
+                  redirectToStateless(context, '/FormatPage',
+                      arguments: {"extensionIndex": currentExtensionIndex});
+                });
+              }: null,
+              // tooltip: isMenuOpen ? 'Close Menu' : 'Open Menu',
+              child: const Icon(Icons.keyboard_double_arrow_right_rounded),
+            ),
+          ],
+        ),
       ),
     );
   }

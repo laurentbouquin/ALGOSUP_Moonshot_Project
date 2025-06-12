@@ -1,15 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:vsce_extensions_creator/src/constants/functions.dart';
 import 'package:vsce_extensions_creator/src/constants/links.dart';
+import 'package:vsce_extensions_creator/src/constants/variables.dart';
 import 'dart:io';
 import 'dart:convert';
 
 import '../../constants/classes.dart';
 
-void convertLocalsToFullExtension(Extension extension, String iconPath,
-    bool isThemeActive, String outputPath) async {
+/*
+
+
+Folder structure:
+
+extensionName
+├── .vscode
+│   ├── launch.json
+│   ├── icon.json
+│   └── settings.json
+├── syntaxes
+│   └── extensionName.tmLanguage.json
+├── themes
+│   └── extensionName.thTheme.json
+├── language-configuration.json
+├── .vscodeignore
+├── CHANGELOG.md
+├── README.md
+├── package.json
+└── vsc-extension-quickstart.md
+
+
+
+extensionName
+├── .vscode
+│   ├── launch.json
+│   ├── icon.json
+│   └── settings.json
+├── syntaxes
+│   └── extensionName.tmLanguage.json
+├── themes
+│   └── extensionName.thTheme.json
+├── language-configuration.json
+├── client x
+├── ├── tsconfig.json x
+│   └── client.dart x
+├── server x
+├── ├── tsconfig.json x
+│   └── server.ts x
+├── tsconfig.json x
+├── .vscodeignore
+├── CHANGELOG.md
+├── README.md
+├── package.json
+└── vsc-extension-quickstart.md
+
+
+
+ */
+
+void convertLocalsToFullExtension(
+    Extension extension, String iconPath, bool isThemeActive) async {
   // Get the path of the project
-  String projectPath = outputPath;
+  var extensionsData = json.decode(settingsFile.readAsStringSync());
+  String projectPath =
+      extensionsData["extensions"][extension.extensionIndex]['outputDirectory'];
 
   // Create the extension folder
   Directory('$projectPath\\out\\${extension.name}').createSync(recursive: true);
@@ -105,6 +158,79 @@ void convertLocalsToFullExtension(Extension extension, String iconPath,
     await icon.writeAsString(iconData);
   }
 
+  // Create the themes folder
+  Directory('${'$projectPath\\out\\${extension.name}'}\\client').createSync();
+
+  // Create the themes file
+  final clientTsconfig =
+      File('${'$projectPath\\out\\${extension.name}'}\\client\\tsconfig.json');
+  if (!clientTsconfig.existsSync()) {
+    clientTsconfig.createSync();
+  }
+
+  // Generate the themes file's content
+  final clientTsconfigData = await generateClientTsConfig();
+
+  // Write the themes file
+  await clientTsconfig.writeAsString(clientTsconfigData);
+
+  // Create the themes folder
+  Directory('${'$projectPath\\out\\${extension.name}'}\\server').createSync();
+
+  // Create the themes file
+  final serverTsconfig =
+      File('${'$projectPath\\out\\${extension.name}'}\\server\\tsconfig.json');
+  if (!serverTsconfig.existsSync()) {
+    serverTsconfig.createSync();
+  }
+
+  // Generate the themes file's content
+  final serverTsconfigData = await generateServerTsConfig();
+
+  // Write the themes file
+  await serverTsconfig.writeAsString(serverTsconfigData);
+
+  // Create the themes file
+  final serverExtensionTs =
+      File('${'$projectPath\\out\\${extension.name}'}\\server\\server.ts');
+  if (!serverExtensionTs.existsSync()) {
+    serverExtensionTs.createSync();
+  }
+
+  // Generate the themes file's content
+  final serverExtensionTsData =
+      await generateServerServerTs(extension.extensionFileName);
+
+  // Write the themes file
+  await serverExtensionTs.writeAsString(serverExtensionTsData);
+
+  // Create the themes file
+  final clientExtensionTs =
+      File('${'$projectPath\\out\\${extension.name}'}\\client\\extension.ts');
+  if (!clientExtensionTs.existsSync()) {
+    clientExtensionTs.createSync();
+  }
+
+  // Generate the themes file's content
+  final clientExtensionTsData =
+      await generateClientExtensionTs(extension.extensionFileName);
+
+  // Write the themes file
+  await clientExtensionTs.writeAsString(clientExtensionTsData);
+
+  // Create the themes file
+  final rootTsconfig =
+      File('${'$projectPath\\out\\${extension.name}'}\\tsconfig.json');
+  if (!rootTsconfig.existsSync()) {
+    rootTsconfig.createSync();
+  }
+
+  // Generate the themes file's content
+  final rootTsconfigData = await generateRootTsConfig();
+
+  // Write the themes file
+  await rootTsconfig.writeAsString(rootTsconfigData);
+
   // Create the language-configuration.json file
   final languageConfiguration = File(
       '${'$projectPath\\out\\${extension.name}'}\\language-configuration.json');
@@ -134,23 +260,21 @@ void convertLocalsToFullExtension(Extension extension, String iconPath,
   // Write the syntaxes file
   await syntax.writeAsString(syntaxData);
 
-/*
-	// Create the themes folder
-	Directory('${'$projectPath\\out\\$name'}\\themes').createSync();
+  // Create the themes folder
+  Directory('${'$projectPath\\out\\${extension.name}'}\\themes').createSync();
 
-	// Create the themes file
-	final theme = File(
-			'${'$projectPath\\out\\$name'}\\themes\\${extension.extensionFileName}.thTheme.json');
-	if (!theme.existsSync()) {
-		theme.createSync();
-	}
+  // Create the themes file
+  final theme = File(
+      '${'$projectPath\\out\\${extension.name}'}\\themes\\${extension.extensionFileName}.thTheme.json');
+  if (!theme.existsSync()) {
+    theme.createSync();
+  }
 
-	// Generate the themes file's content
-	final themeData = await generateTheme(name);
+  // Generate the themes file's content
+  final themeData = await generateTheme(extension.name);
 
-	// Write the themes file
-	await theme.writeAsString(themeData);
-*/
+  // Write the themes file
+  await theme.writeAsString(themeData);
 }
 
 String generatePackageJson(Extension extension, bool isThemeActive) {
@@ -170,28 +294,40 @@ String generatePackageJson(Extension extension, bool isThemeActive) {
 
   return '''
 {
-	"name": "${extension.name}",
+	"name": "${extension.name.toLowerCase()}",
 	"displayName": "${extension.name}",
 	"description": "${extension.description}",
 	"version": "${extension.version}",
 	"publisher": "${extension.publisherName}",
+  "main": "./out/client/extension.js",
+  "license": "MIT",
 	"engines": {
 		"vscode": "^1.92.0"
 	},
-	"categories": ${getCategories(extension.categories)},
+  "scripts": {
+    "compile": "npx tsc -b"
+  },
+	"categories": ${jsonEncode(getCategories(extension.categories))},
 	"contributes": {
 		"languages": [{
 			"id": "${extension.extensionFileName}",
 			"aliases": ["${extension.extensionFileName.toLowerCase()}", "${extension.extensionFileName.toUpperCase()}"],
-			"extensions": ["${extension.extensionFileName}"],
+			"extensions": [".${extension.extensionFileName}"],
 			"configuration": "./language-configuration.json"
 		}],
+    "devDependencies": {
+      "typescript": "^5.0.0",
+      "vscode": "^1.87.0",
+      "vscode-languageclient": "^9.0.0",
+      "vscode-languageserver": "^8.0.0",
+      "vscode-languageserver-textdocument": "^1.0.1"
+    }${isThemeActive ? theme : ''},
 		"grammars": [{
 			"language": "${extension.extensionFileName}",
 			"scopeName": "source.${extension.extensionFileName}",
 			"path": "./syntaxes/${extension.extensionFileName}.tmLanguage.json"
 		}]
-	}${isThemeActive ? theme : ''}
+	}
 }''';
 }
 
@@ -317,8 +453,10 @@ Future<String> generateLanguageConfigurationJSON() async {
 
   File jsonFile = commentsAndStringsFile;
   var jsonData = json.decode(jsonFile.readAsStringSync());
-  String slc = singleLineComments[jsonData['slc']];
-  String mlc = multiLineComments[jsonData['mlc']];
+  String slc =
+      singleLineComments[jsonData["extensions"][currentExtensionIndex]['slc']];
+  String mlc =
+      multiLineComments[jsonData["extensions"][currentExtensionIndex]['mlc']];
 
   String mlc1 = mlc.split(' ')[0];
   String mlc2 = mlc.split(' ')[1];
@@ -362,13 +500,15 @@ Future<String> generateLanguageConfigurationJSON() async {
 Future<String> generateSyntax(String extension) async {
   File jsonFile = formatFile;
   var jsonData = json.decode(jsonFile.readAsStringSync());
-  List<String> keywords = jsonData['keywords'].cast<String>();
-  List<String> types = jsonData['types'].cast<String>();
+  List<String> keywords =
+      jsonData["extensions"][currentExtensionIndex]['keywords'].cast<String>();
+  List<String> types =
+      jsonData["extensions"][currentExtensionIndex]['types'].cast<String>();
 
   File jsonFile2 = commentsAndStringsFile;
   var jsonData2 = json.decode(jsonFile2.readAsStringSync());
-  int stringType = jsonData2['quotes'];
-  int multiCommentType = jsonData2['mlc'];
+  int stringType = jsonData2["extensions"][currentExtensionIndex]['quotes'];
+  int multiCommentType = jsonData2["extensions"][currentExtensionIndex]['mlc'];
   String multiComment = multiCommentType == 0
       ? ''',
 				{
@@ -496,7 +636,7 @@ Future<String> generateSyntax(String extension) async {
 			"patterns": [
 				{
 					"name": "variable.other.$extension",
-					"match": "\\\\b\\\\w+\\\\b"
+					"match": "\\\\b[a-zA-Z_]\\\\w*\\\\b"
 				}
 			]
 		}
@@ -507,26 +647,20 @@ Future<String> generateSyntax(String extension) async {
 }
 
 Future<String> generateTheme(String name) async {
-
-  List<String> colorsIds = [
-    "#ffffff",
-    "#000000",
-    "#2196f3",
-    "#9c27b0",
-    "#ff9800",
-    "#4caf50"
-  ];
-
   File jsonFile = themingFile;
   var jsonData = json.decode(jsonFile.readAsStringSync());
 
-  String background = colorsIds[jsonData['bgColor']];
-  String keywords = colorsIds[jsonData['keywordColor']];
-  String functions = colorsIds[jsonData['functionColor']];
-  String strings = colorsIds[jsonData['stringColor']];
-  String comments = colorsIds[jsonData['commentColor']];
-  String variables = colorsIds[jsonData['variableColor']];
-  String common = colorsIds[jsonData['commonColor']];
+  String background = jsonData["extensions"][currentExtensionIndex]['bgColor'];
+  String keywords =
+      jsonData["extensions"][currentExtensionIndex]['keywordColor'];
+  String functions =
+      jsonData["extensions"][currentExtensionIndex]['functionColor'];
+  String strings = jsonData["extensions"][currentExtensionIndex]['stringColor'];
+  String comments =
+      jsonData["extensions"][currentExtensionIndex]['commentColor'];
+  String variables =
+      jsonData["extensions"][currentExtensionIndex]['variableColor'];
+  String common = jsonData["extensions"][currentExtensionIndex]['commonColor'];
 
   return '''
 {
@@ -626,5 +760,271 @@ Future<String> generateTheme(String name) async {
 	"semanticHighlighting": true
 }
 
+''';
+}
+
+Future<String> generateClientExtensionTs(String extensionFileName) async {
+  return '''
+import * as path from 'path';
+import { ExtensionContext } from 'vscode';
+import {
+  LanguageClient,
+  LanguageClientOptions,
+  ServerOptions,
+  TransportKind,
+} from 'vscode-languageclient/node';
+
+let client: LanguageClient;
+
+export function activate(context: ExtensionContext) {
+  const serverModule = context.asAbsolutePath(
+    path.join('server', 'out', 'server.js')
+  );
+
+  const serverOptions: ServerOptions = {
+    run: { module: serverModule, transport: TransportKind.ipc },
+    debug: { module: serverModule, transport: TransportKind.ipc }
+  };
+
+  const clientOptions: LanguageClientOptions = {
+    documentSelector: [{ scheme: 'file', language: '$extensionFileName' }],
+  };
+
+  client = new LanguageClient(
+    '$extensionFileName',
+    '${extensionFileName.toUpperCase()} Language Server',
+    serverOptions,
+    clientOptions
+  );
+
+  client.start();
+}
+
+export function deactivate(): Thenable<void> | undefined {
+  return client?.stop();
+}
+''';
+}
+
+Future<String> generateServerServerTs(String extensionFileName) async {
+  File jsonFile = formatFile;
+  var jsonData = json.decode(jsonFile.readAsStringSync());
+  List<String> keywords =
+      jsonData["extensions"][currentExtensionIndex]['keywords'].cast<String>();
+  String functionKeyword = "function";
+  return '''import {
+	createConnection,
+	TextDocuments,
+	ProposedFeatures,
+	InitializeParams,
+	TextDocumentSyncKind,
+	Hover,
+	CompletionItem,
+	CompletionItemKind,
+	Position
+} from 'vscode-languageserver/node';
+
+import { TextDocument } from 'vscode-languageserver-textdocument';
+
+const connection = createConnection(ProposedFeatures.all);
+const documents = new TextDocuments(TextDocument);
+
+interface SymbolInfo {
+	type: string;
+	line: number;
+	scope?: string; // e.g., function name
+}
+
+type SymbolTable = Record<string, SymbolInfo>;
+const documentSymbols: Map<string, SymbolTable> = new Map();
+
+function analyzeDocument(text: string): SymbolTable {
+	const lines = text.split('\\n');
+	const symbols: SymbolTable = {};
+	let currentFunction: string | undefined;
+
+	const varDeclRegex = /^(${keywords.map((e) => e).join('|')})\\s+(\\w+)\\s*=\\s*(.+)\$/;
+	const varAssignRegex = /^(\\w+)\\s*=\\s*(.+)\$/;
+	const funcRegex = /^$functionKeyword\\s+(\\w+)\\s*\\(.*\\):/;
+
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i].trim();
+		let match;
+
+		if ((match = funcRegex.exec(line))) {
+			const [, name] = match;
+			symbols[name] = { type: 'function', line: i };
+			currentFunction = name;
+		} else if ((match = varDeclRegex.exec(line))) {
+			const [, type, name] = match;
+			symbols[name] = { type, line: i, scope: currentFunction };
+		}
+	}
+
+	return symbols;
+}
+
+function getCurrentScope(symbols: SymbolTable, line: number): string | undefined {
+	let currentScope: string | undefined;
+	for (const [name, info] of Object.entries(symbols)) {
+		if (info.type === 'function' && info.line <= line) {
+			if (!currentScope || info.line > symbols[currentScope]?.line) {
+				currentScope = name;
+			}
+		}
+	}
+	return currentScope;
+}
+
+
+function isValueValidForType(type: string, value: string): boolean {
+	switch (type) {
+		case 'int':
+			return /^-?\\d+\$/.test(value);
+		case 'float':
+			return /^-?\\d+(\\.\\d+)?\$/.test(value);
+		case 'string':
+			return /^".*"|'.*'\$/.test(value);
+		default:
+			return false;
+	}
+}
+
+
+function getWordAt(line: string, character: number): string {
+	const left = line.slice(0, character).match(/[\\w\$]+\$/)?.[0] ?? '';
+	const right = line.slice(character).match(/^[\\w\$]+/)?.[0] ?? '';
+	return left + right;
+}
+
+connection.onInitialize((_params: InitializeParams) => {
+	return {
+		capabilities: {
+			textDocumentSync: TextDocumentSyncKind.Incremental,
+			hoverProvider: true,
+			completionProvider: {
+				resolveProvider: false
+			}
+		}
+	};
+});
+
+// On document open/change → re-analyze
+documents.onDidChangeContent(change => {
+	const text = change.document.getText();
+	const symbols = analyzeDocument(text);
+	documentSymbols.set(change.document.uri, symbols);
+});
+
+// Hover: show type info
+connection.onHover((params): Hover | null => {
+	const doc = documents.get(params.textDocument.uri);
+	if (!doc) return null;
+
+	const pos: Position = params.position;
+	const fullLine = doc.getText({
+		start: { line: pos.line, character: 0 },
+		end: { line: pos.line, character: Number.MAX_SAFE_INTEGER }
+	});
+
+	const word = getWordAt(fullLine, pos.character);
+	const symbols = documentSymbols.get(doc.uri) || {};
+	const type = symbols[word];
+
+	if (!type) return null;
+
+	return {
+		contents: {
+			kind: 'markdown',
+			value: `**\${word}**: \\`\${type.type}\\`\${type.scope ? ` (in \${type.scope})` : ''}`
+		}
+	};
+});
+
+// Completion: suggest Python-like keywords
+connection.onCompletion((params): CompletionItem[] => {
+	const doc = documents.get(params.textDocument.uri);
+	if (!doc) return [];
+
+	const position = params.position;
+	const symbols = documentSymbols.get(doc.uri) || {};
+
+	const currentScope = getCurrentScope(symbols, position.line);
+
+	const completions: CompletionItem[] = [];
+
+	for (const [name, info] of Object.entries(symbols)) {
+		if (
+			info.line <= position.line &&
+			(info.scope === undefined || info.scope === currentScope)
+		) {
+			completions.push({
+				label: name,
+				kind: info.type === 'function' ? CompletionItemKind.Function : CompletionItemKind.Variable,
+				detail: info.type
+			});
+		}
+	}
+
+	return completions;
+});
+
+documents.listen(connection);
+connection.listen();
+''';
+}
+
+Future<String> generateRootTsConfig() async {
+  return '''
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "rootDir": ".",
+    "outDir": "./out/",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "types": ["node", "vscode"]
+  },
+  "include": ["./server/*.ts", "./client/*.ts"],
+}
+''';
+}
+
+Future<String> generateClientTsConfig() async {
+  return '''
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "outDir": "out",
+    "lib": ["es6"],
+    "sourceMap": true,
+    "rootDir": ".",
+    "strict": true
+  },
+  "include": ["extension.ts"]
+}
+''';
+}
+
+Future<String> generateServerTsConfig() async {
+  return '''
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "outDir": "out",
+    "lib": ["es6"],
+    "rootDir": ".",
+    "strict": true
+  },
+  "include": ["server.ts"]
+}
 ''';
 }
